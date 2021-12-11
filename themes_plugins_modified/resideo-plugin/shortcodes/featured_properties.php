@@ -213,6 +213,7 @@ if (!function_exists('resideo_featured_properties_shortcode')) :
 
             $p_price       = get_post_meta($post['ID'], 'property_price', true);
             $p_price_label = get_post_meta($post['ID'], 'property_price_label', true);
+            $p_price_reserved = get_post_meta($post['ID'], 'property_price_reserved', true) == 'true';
 
             if (is_numeric($p_price)) {
                 if ($decimals == '1') {
@@ -237,11 +238,15 @@ if (!function_exists('resideo_featured_properties_shortcode')) :
                         <div class="pxp-prop-card-1-details">
                             <div class="pxp-prop-card-1-details-title">' . esc_html($p_title) . '</div>
                             <div class="pxp-prop-card-1-details-price">';
-            if ($currency_pos == 'before') {
-                $return_string .= esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
-            } else {
-                $return_string .= esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
-            }
+                            if (!$p_price_reserved) {
+                                if ($currency_pos == 'before') {
+                                    $return_string .= esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
+                                } else {
+                                    $return_string .= esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
+                                }
+                            } else {
+                                $return_string .= 'Prezzo riservato' . ' <span>' . esc_html($p_price_label) . '</span>';
+                            }
             $return_string .= '
                             </div>
                             <div class="pxp-prop-card-1-details-features text-uppercase">';

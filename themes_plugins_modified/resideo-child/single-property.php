@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package WordPress
  * @subpackage Resideo
@@ -73,6 +74,7 @@ while (have_posts()) : the_post();
     setlocale(LC_MONETARY, $locale);
 
     $price       = get_post_meta($prop_id, 'property_price', true);
+    $price_reserved = get_post_meta($prop_id, 'property_price_reserved', true) == 'true';
     $price_label = get_post_meta($prop_id, 'property_price_label', true);
 
     $taxes = get_post_meta($prop_id, 'property_taxes', true);
@@ -123,7 +125,7 @@ while (have_posts()) : the_post();
                 $amenities_count++;
             }
         }
-    } 
+    }
 
     $video = get_post_meta($prop_id, 'property_video', true);
     $virtual_tour = get_post_meta($prop_id, 'property_virtual_tour', true);
@@ -134,10 +136,10 @@ while (have_posts()) : the_post();
     $calculator = get_post_meta($prop_id, 'property_calc', true);
 
     $agent_id = get_post_meta($prop_id, 'property_agent', true);
-    $agent    = ($agent_id != '') ? get_post($agent_id) : ''; 
+    $agent    = ($agent_id != '') ? get_post($agent_id) : '';
 
     $top_element = isset($appearance_settings['resideo_property_top_field']) ? $appearance_settings['resideo_property_top_field'] : 'title';
-    $gallery_class = $top_element == 'title' ? 'mt-4 mt-md-5' : 'pxp-single-property-top'; 
+    $gallery_class = $top_element == 'title' ? 'mt-4 mt-md-5' : 'pxp-single-property-top';
 
     $show_print = isset($general_settings['resideo_show_print_property_field']) ? $general_settings['resideo_show_print_property_field'] : '';
     $show_report = isset($general_settings['resideo_show_report_property_field']) ? $general_settings['resideo_show_report_property_field'] : ''; ?>
@@ -155,7 +157,7 @@ while (have_posts()) : the_post();
                     <div class="row">
                         <div class="col-sm-12 col-md-5">
                             <h2 class="pxp-sp-top-title"><?php the_title(); ?></h2>
-							
+
                             <p class="pxp-sp-top-address pxp-text-light"><?php echo esc_html($address); ?></p>
                         </div>
                         <div class="col-sm-12 col-md-7">
@@ -181,8 +183,8 @@ while (have_posts()) : the_post();
                                         print '<a href="javascript:void(0);" data-toggle="modal" data-target="#pxp-signin-modal" class="pxp-sp-top-btn"><span class="fa fa-star-o"></span> ' . esc_html__('Save', 'resideo') . '</a>';
                                     }
                                 }
-                                wp_nonce_field('wishlist_ajax_nonce', 'pxp-single-property-save-security', true); 
-                                
+                                wp_nonce_field('wishlist_ajax_nonce', 'pxp-single-property-save-security', true);
+
                                 if (function_exists('resideo_get_share_menu')) {
                                     resideo_get_share_menu($prop_id);
                                 } ?>
@@ -224,10 +226,16 @@ while (have_posts()) : the_post();
                             </div>
                             <div class="pxp-sp-top-price mt-3 mt-md-0">
                                 <?php if ($currency_pos == 'before') {
-                                    echo esc_html($currency) . esc_html($price) . ' <span>' . esc_html($price_label) . '</span>';
+                                    $price_str = esc_html($currency) . esc_html($price) . ' <span>' . esc_html($price_label) . '</span>';
                                 } else {
-                                    echo esc_html($price) . esc_html($currency) . ' <span>' . esc_html($price_label) . '</span>';
-                                } ?>
+                                    $price_str = esc_html($price) . esc_html($currency) . ' <span>' . esc_html($price_label) . '</span>';
+                                } 
+                                
+                                if ($price_reserved) {
+                                    $price_str = 'Prezzo riservato' . ' <span>' . esc_html($price_label) . '</span>';
+                                }
+                                
+                                echo $price_str; ?>
                             </div>
                         </div>
                     </div>
@@ -280,8 +288,9 @@ while (have_posts()) : the_post();
 
                         $d_none = $i > 4 ? 'd-none' : ''; ?>
 
-                        <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="<?php if ($i == 0) echo esc_attr($first_fig_class); else echo esc_attr($fig_class); ?> <?php echo esc_attr($d_none); ?>">
-                            <a href="<?php echo "https://img.miogest.com/24229/" . $photos[$i]; ?>" itemprop="contentUrl" data-size="<?php echo "1280x700"; /*echo esc_attr($p_photo_full[1]); */?>x<?php echo esc_attr($p_photo_full[2]); ?>" class="pxp-cover" style="background-image: url(<?php echo "https://img.miogest.com/24229/" . $photos[$i]; ?>);"></a>
+                        <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="<?php if ($i == 0) echo esc_attr($first_fig_class);
+                                                                                                                        else echo esc_attr($fig_class); ?> <?php echo esc_attr($d_none); ?>">
+                            <a href="<?php echo "https://img.miogest.com/24229/" . $photos[$i]; ?>" itemprop="contentUrl" data-size="<?php echo "1280x700"; /*echo esc_attr($p_photo_full[1]); */ ?>x<?php echo esc_attr($p_photo_full[2]); ?>" class="pxp-cover" style="background-image: url(<?php echo "https://img.miogest.com/24229/" . $photos[$i]; ?>);"></a>
                             <figcaption itemprop="caption description"><?php echo esc_html($p_photo_info['caption']); ?></figcaption>
                         </figure>
                     <?php } ?>
@@ -322,8 +331,8 @@ while (have_posts()) : the_post();
                                         print '<a href="javascript:void(0);" data-toggle="modal" data-target="#pxp-signin-modal" class="pxp-sp-top-btn"><span class="fa fa-star-o"></span> ' . esc_html__('Save', 'resideo') . '</a>';
                                     }
                                 }
-                                wp_nonce_field('wishlist_ajax_nonce', 'pxp-single-property-save-security', true); 
-                                
+                                wp_nonce_field('wishlist_ajax_nonce', 'pxp-single-property-save-security', true);
+
                                 if (function_exists('resideo_get_share_menu')) {
                                     resideo_get_share_menu($prop_id);
                                 } ?>
@@ -341,11 +350,17 @@ while (have_posts()) : the_post();
                                 <?php } ?>
                             </div>
                             <div class="pxp-sp-top-price mt-3 mt-md-0">
-                                <?php if ($currency_pos == 'before') {
-                                    echo esc_html($currency) . esc_html($price) . ' <span>' . esc_html($price_label) . '</span>';
+                            <?php if ($currency_pos == 'before') {
+                                    $price_str = esc_html($currency) . esc_html($price) . ' <span>' . esc_html($price_label) . '</span>';
                                 } else {
-                                    echo esc_html($price) . esc_html($currency) . ' <span>' . esc_html($price_label) . '</span>';
-                                } ?>
+                                    $price_str = esc_html($price) . esc_html($currency) . ' <span>' . esc_html($price_label) . '</span>';
+                                } 
+                                
+                                if ($price_reserved) {
+                                    $price_str = 'Prezzo riservato' . ' <span>' . esc_html($price_label) . '</span>';
+                                }
+                                
+                                echo $price_str; ?>
                             </div>
                         </div>
                     </div>
@@ -366,7 +381,7 @@ while (have_posts()) : the_post();
                                         <div class="pxp-sp-kd-item-value"><?php echo esc_html($status[0]->name); ?></div>
                                     </div>
                                 </div>
-                            <?php }
+                                <?php }
 
                             //REMOVE
 
@@ -380,7 +395,7 @@ while (have_posts()) : the_post();
                                     }
 
                                     $field_value = get_post_meta($prop_id, $key, true);
-								
+
 
                                     if ($field_value != '') { ?>
                                         <div class="col-sm-6">
@@ -395,24 +410,27 @@ while (have_posts()) : the_post();
                                                 <?php } ?>
                                             </div>
                                         </div>
-                                    <?php }
+                            <?php }
                                 }
                             } ?>
-							<div class="col-sm-12" >
-								<?php if ($type) { ?>
-									
-										<div class="pxp-sp-key-details-item" style="margin-top:20px; padding-top:20px; border-top: 1px solid #E2E2E2;">
-											<div class="pxp-sp-kd-item-label text-uppercase"><?php esc_html_e('Type', 'resideo'); ?></div>
-												<div class="pxp-sp-kd-item-value">
-												<!-- <div class="pxp-sp-kd-item-value"><?php echo esc_html($type[0]->name); ?></div> -->
-													<?php foreach ($type as $t) { ?>
-														<?php echo esc_html($t->name);  if( next( $type ) ) { echo " | "; } ?>
-													<?php } ?>
-												</div>
-										</div>
-									
-								<?php } ?>
-							</div>
+                            <div class="col-sm-12">
+                                <?php if ($type) { ?>
+
+                                    <div class="pxp-sp-key-details-item" style="margin-top:20px; padding-top:20px; border-top: 1px solid #E2E2E2;">
+                                        <div class="pxp-sp-kd-item-label text-uppercase"><?php esc_html_e('Type', 'resideo'); ?></div>
+                                        <div class="pxp-sp-kd-item-value">
+                                            <!-- <div class="pxp-sp-kd-item-value"><?php echo esc_html($type[0]->name); ?></div> -->
+                                            <?php foreach ($type as $t) { ?>
+                                                <?php echo esc_html($t->name);
+                                                if (next($type)) {
+                                                    echo " | ";
+                                                } ?>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
 
@@ -442,12 +460,12 @@ while (have_posts()) : the_post();
                                             <div class="col-sm-6 col-lg-4">
                                                 <div class="pxp-sp-amenities-item"><span class="<?php echo esc_attr($value['icon']); ?>"></span> <?php echo esc_html($am_label); ?></div>
                                             </div>
-                                        <?php }
+                                <?php }
                                     }
                                 } ?>
                             </div>
                         </div>
-                    <?php }
+                        <?php }
 
                     if ($video != '') {
                         if (function_exists('resideo_get_property_video')) { ?>
@@ -653,7 +671,7 @@ while (have_posts()) : the_post();
 
 
                 <div class="col-lg-4">
-                    <?php if ($agent_id != '') { 
+                    <?php if ($agent_id != '') {
                         $agent_avatar       = get_post_meta($agent_id, 'agent_avatar', true);
                         $agent_avatar_photo = wp_get_attachment_image_src($agent_avatar, 'pxp-thmb');
 
@@ -681,14 +699,14 @@ while (have_posts()) : the_post();
 
                                     if ($agent_email != '') { ?>
                                         <div class="pxp-sp-agent-info-email"><a href="mailto:<?php echo esc_attr($agent_email); ?>"><?php echo esc_html($agent_email); ?></a></div>
-                                    <?php }
+                                        <?php }
 
-                                    if ($agent_phone != '') { 
+                                    if ($agent_phone != '') {
                                         if ($hide_phone != '') { ?>
                                             <div class="pxp-sp-agent-info-show-phone" data-phone="<?php echo esc_attr($agent_phone); ?>"><span class="fa fa-phone"></span> <span class="pxp-is-number"><?php esc_html_e('Show phone number', 'resideo'); ?></span></div>
                                         <?php } else { ?>
                                             <div class="pxp-sp-agent-info-phone"><span class="fa fa-phone"></span> <?php echo esc_html($agent_phone); ?></div>
-                                        <?php }
+                                    <?php }
                                     } ?>
                                 </div>
                                 <div class="clearfix"></div>
@@ -772,7 +790,7 @@ while (have_posts()) : the_post();
                     </div>
                 </div>
                 <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                    <div class="pswp__share-tooltip"></div> 
+                    <div class="pswp__share-tooltip"></div>
                 </div>
                 <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
                 <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
@@ -783,7 +801,7 @@ while (have_posts()) : the_post();
         </div>
     </div>
 
-    <?php if (isset($modal_info)) { 
+<?php if (isset($modal_info)) {
         resideo_get_contact_agent_modal($modal_info);
     }
 
