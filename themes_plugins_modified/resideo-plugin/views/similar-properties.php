@@ -1,11 +1,13 @@
 <?php
+
 /**
  * @package WordPress
  * @subpackage Resideo
  */
 
-if (!function_exists('resideo_get_similar_properties')):
-    function resideo_get_similar_properties() {
+if (!function_exists('resideo_get_similar_properties')) :
+    function resideo_get_similar_properties()
+    {
         global $post;
 
         $orig_city   = get_post_meta($post->ID, 'locality', true);
@@ -71,17 +73,18 @@ if (!function_exists('resideo_get_similar_properties')):
                             $gallery     = get_post_meta($similar->ID, 'property_gallery', true);
                             $photos      = array_slice(explode(',', $gallery), 1);
                             //$first_photo = wp_get_attachment_image_src($photos[0], 'pxp-gallery');
-							$first_photo = $photos[0]; 												
-							
+                            $first_photo = $photos[0];
+
                             if ($first_photo != '') {
                                 $p_photo = $first_photo;
                             } else {
                                 $p_photo = RESIDEO_PLUGIN_PATH . 'images/property-tile.png';
                             }
-																					
+
 
                             $p_price       = get_post_meta($similar->ID, 'property_price', true);
                             $p_price_label = get_post_meta($similar->ID, 'property_price_label', true);
+                            $p_price_reserved = get_post_meta($post['ID'], 'property_price_reserved', true) == 'true';
 
                             if (is_numeric($p_price)) {
                                 if ($decimals == '1') {
@@ -106,10 +109,16 @@ if (!function_exists('resideo_get_similar_properties')):
                                         <div class="pxp-prop-card-1-details-title"><?php echo esc_html($p_title); ?></div>
                                         <div class="pxp-prop-card-1-details-price">
                                             <?php if ($currency_pos == 'before') {
-                                                echo esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
+                                                $price_str = esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
                                             } else {
-                                                echo esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
-                                            } ?>
+                                                $price_str = esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
+                                            }
+
+                                            if ($p_price_reserved) {
+                                                $price_str = 'Prezzo riservato' . ' <span>' . esc_html($p_price_label) . '</span>';
+                                            }
+
+                                            echo $price_str; ?>
                                         </div>
                                         <div class="pxp-prop-card-1-details-features text-uppercase">
                                             <?php if ($p_beds != '') {
@@ -130,7 +139,7 @@ if (!function_exists('resideo_get_similar_properties')):
                     </div>
                 </div>
             </div>
-        <?php }
+<?php }
     }
 endif;
 ?>
