@@ -86,6 +86,7 @@ class Syncer
             'locality' => strtolower(str_replace(' ', '', $annuncio['Comune'])),
             'property_gallery' => $this->getFotosFromAnnuncio($annuncio),
             'property_price' => !is_array($annuncio['Prezzo']) ? $annuncio['Prezzo'] : '',
+            'property_price_reserved' => $annuncio['Prezzo_Riservato'] == '1' ? 'true' : 'false',
             'built_in' => !is_array($annuncio['Anno']) ? $annuncio['Anno'] : '',
             'classe_energetica' => !is_array($annuncio['Classe']) ? $annuncio['Classe'] : '',
             'stato_immobile' => !is_array($annuncio['Scheda_StatoImmobile'])
