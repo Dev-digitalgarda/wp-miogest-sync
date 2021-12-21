@@ -177,9 +177,21 @@ class Syncer
     {
         global $wpdb;
 
-        // I have no idea of what this does
+        /* 
+            This ugly and absolutely dumb code of the old programmer works like this:
+            First of all, he inserted randomly all the terms from the miogest category xml (the one that fills $categorie in this code). They are all connected to the taxonomy "property_type".
+            Then it inserts them in the term-taxonomy table. All of this is done manually instead of being done in the plugin activation.
+            Then he creates a "map" with the wanted categories by using the below array: the value of an element of the array is the id of the category in miogest, while the
+        */
         $arr_cat_miogest = [17, 18, 25, 26, 28, 119, 50, 30, 32, 87, 44, 46, 91, 127, 117, 48, 84, 34, 105, 123, 125, 83, 95, 33, 93, 97, 40, 41, 42, 85, 99, 36, 82, 81, 86, 1];
-        $keys = [11];
+
+
+        $map_status_term_id = [
+            "V" => 11, // in vendita
+            "A" => 140 // in affitto
+        ];
+
+        $keys = [$map_status_term_id[$annuncio['Tipologia']]];
 
         if (array_key_exists('Categoria', $annuncio)) {
             $categorie = $annuncio['Categoria'];
@@ -326,12 +338,13 @@ class Syncer
         global $wpdb;
 
         $result = $wpdb->get_results("
-            SELECT * 
-            FROM $this->annunci_table
+            SELECT ID 
+            FROM $this->posts_table 
+            WHERE post_type = 'property'
         ");
 
         $this->miogest_sync_annunci_ids = array_map(function ($item) {
-            return $item->post_id;
+            return $item->ID;
         }, $result);
     }
 
@@ -350,6 +363,11 @@ class Syncer
                 WHERE $prop IN ($format)
             ";
         }
+        $annunci_table_query = "DELETE FROM $this->annunci_table";
+        $post_thumbnails_query = "
+            DELETE FROM $this->posts_table
+            WHERE post_name LIKE 'miogest_sync_%'
+        ";
 
         $queries = [
             getQuery($this->annunci_table, 'post_id', $format),
@@ -357,10 +375,8 @@ class Syncer
             getQuery($this->postmeta_table, 'post_id', $format),
             getQuery($this->term_relationships_table, 'object_id', $format),
             getQuery($this->icl_translations_table, 'element_id', $format),
-            "
-                DELETE FROM $this->posts_table
-                WHERE post_name LIKE 'miogest_sync_%'
-            "
+            $annunci_table_query,
+            $post_thumbnails_query
         ];
 
         foreach ($queries as $query) {
