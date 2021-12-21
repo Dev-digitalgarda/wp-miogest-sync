@@ -177,9 +177,21 @@ class Syncer
     {
         global $wpdb;
 
-        // I have no idea of what this does
+        /* 
+            This ugly and absolutely dumb code of the old programmer works like this:
+            First of all, he inserted randomly all the terms from the miogest category xml (the one that fills $categorie in this code). They are all connected to the taxonomy "property_type".
+            Then it inserts them in the term-taxonomy table. All of this is done manually instead of being done in the plugin activation.
+            Then he creates a "map" with the wanted categories by using the below array: the value of an element of the array is the id of the category in miogest, while the
+        */
         $arr_cat_miogest = [17, 18, 25, 26, 28, 119, 50, 30, 32, 87, 44, 46, 91, 127, 117, 48, 84, 34, 105, 123, 125, 83, 95, 33, 93, 97, 40, 41, 42, 85, 99, 36, 82, 81, 86, 1];
-        $keys = [11];
+
+
+        $map_status_term_id = [
+            "V" => 11, // in vendita
+            "A" => 140 // in affitto
+        ];
+
+        $keys = [$map_status_term_id[$annuncio['Tipologia']]];
 
         if (array_key_exists('Categoria', $annuncio)) {
             $categorie = $annuncio['Categoria'];
