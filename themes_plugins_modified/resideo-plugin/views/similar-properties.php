@@ -83,8 +83,8 @@ if (!function_exists('resideo_get_similar_properties')) :
 
 
                             $p_price       = get_post_meta($similar->ID, 'property_price', true);
+                            $p_price_reserved       = get_post_meta($similar->ID, 'property_price_reserved', true) == 'true';
                             $p_price_label = get_post_meta($similar->ID, 'property_price_label', true);
-                            $p_price_reserved = get_post_meta($post['ID'], 'property_price_reserved', true) == 'true';
 
                             if (is_numeric($p_price)) {
                                 if ($decimals == '1') {
@@ -117,7 +117,6 @@ if (!function_exists('resideo_get_similar_properties')) :
                                             if ($p_price_reserved) {
                                                 $price_str = 'Prezzo riservato' . ' <span>' . esc_html($p_price_label) . '</span>';
                                             }
-
                                             echo $price_str; ?>
                                         </div>
                                         <div class="pxp-prop-card-1-details-features text-uppercase">
