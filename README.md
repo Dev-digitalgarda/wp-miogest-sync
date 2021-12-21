@@ -69,6 +69,7 @@ The second programmer also solved the first issues:
 * The date of the post was **not in UTC**, which was wrong.
 * The thumbnail was missing. The issue was solved **by adding a real thumbnail attachment and by adding it also as first field of the meta gallery property**.
 * Added `"Prezzo riservato"` instead of the price if the price is reserved. Before that, `0€` appeared. The issue was solved **by adding a meta prop `price_reserved` and by changing slightly the resideo theme/plugin**.
+* There was a problem because all the properties posts **had "in vendita" (for sale) as status in the taxonomies**
 
 ## Deployment
 
