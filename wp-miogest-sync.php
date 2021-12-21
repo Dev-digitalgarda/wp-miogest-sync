@@ -4,7 +4,7 @@
 * Description: Integration with miogest for automatically synchronize posts
 * Text Domain: wp-miogest-sync
 * Domain Path: /languages
-* Version: 3.1.0
+* Version: 3.2.0
 * Author: s4web
 * Author URI: http://s4web.it
 */
