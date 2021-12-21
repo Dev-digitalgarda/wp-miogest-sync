@@ -326,12 +326,13 @@ class Syncer
         global $wpdb;
 
         $result = $wpdb->get_results("
-            SELECT * 
-            FROM $this->annunci_table
+            SELECT ID 
+            FROM $this->posts_table 
+            WHERE post_type = 'property'
         ");
 
         $this->miogest_sync_annunci_ids = array_map(function ($item) {
-            return $item->post_id;
+            return $item->ID;
         }, $result);
     }
 
@@ -350,6 +351,11 @@ class Syncer
                 WHERE $prop IN ($format)
             ";
         }
+        $annunci_table_query = "DELETE FROM $this->annunci_table";
+        $post_thumbnails_query = "
+            DELETE FROM $this->posts_table
+            WHERE post_name LIKE 'miogest_sync_%'
+        ";
 
         $queries = [
             getQuery($this->annunci_table, 'post_id', $format),
@@ -357,10 +363,8 @@ class Syncer
             getQuery($this->postmeta_table, 'post_id', $format),
             getQuery($this->term_relationships_table, 'object_id', $format),
             getQuery($this->icl_translations_table, 'element_id', $format),
-            "
-                DELETE FROM $this->posts_table
-                WHERE post_name LIKE 'miogest_sync_%'
-            "
+            $annunci_table_query,
+            $post_thumbnails_query
         ];
 
         foreach ($queries as $query) {

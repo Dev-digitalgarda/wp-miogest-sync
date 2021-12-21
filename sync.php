@@ -15,7 +15,7 @@ Logger::$logger->info('Fetching data from remote addresses');
 $syncer->fetchRemoteData();
 Logger::$logger->info('Get all the ids from the annunci table');
 $syncer->getAnnunciIds();
-Logger::$logger->info('Delete old annunci\'s data');
+Logger::$logger->info('Delete old annunci\'s data (actually erasing all the properties\' posts');
 $syncer->deleteOldAnnunci();
 Logger::$logger->info('Delete old annunci\'s thumbnails');
 $syncer->deleteOldAnnunciThumbs();
