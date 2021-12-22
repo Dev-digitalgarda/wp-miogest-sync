@@ -1,6 +1,6 @@
 {
     "name": "euber/wp-miogest-sync",
-    "version": "3.3.0",
+    "version": "3.3.1",
     "description": "The wordpress plugin internal to s4web for the synchronization of miogest data",
     "type": "project",
     "autoload": {
