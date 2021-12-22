@@ -115,6 +115,11 @@ class Syncer
         $this->stati_immobili = $stati_immobili;
     }
 
+    private function sleepMilliseconds(int $milliseconds = 10): void
+    {
+        usleep($milliseconds * 1000);
+    }
+
     private function getFotosFromAnnuncio(array $annuncio): ?string
     {
         $fotos_str = null;
@@ -227,8 +232,6 @@ class Syncer
     private function insertTranslationBinding(array $ids_mapped_by_lang, string $element_type): void
     {
         global $wpdb;
-
-        //tax_property_status / type
 
         $next_translation_id = 1 + $wpdb->get_var("SELECT MAX(trid) FROM $this->icl_translations_table");
         foreach ($this->langs as $lang) {
@@ -508,12 +511,12 @@ class Syncer
 
     public function insertNewTermsAndTaxonomies(): void
     {
-        global $wpdb;
-
         foreach ($this->categorie as $id => $names) {
             $it_ids = wp_insert_term($names['it'], 'property_type', ['slug' => "property-type-{$id}-it"]);
             $en_ids = wp_insert_term($names['en'], 'property_type', ['slug' => "property-type-{$id}-en"]);
             $de_ids = wp_insert_term($names['de'], 'property_type', ['slug' => "property-type-{$id}-de"]);
+
+            $this->sleepMilliseconds(50 * 1000);
 
             $this->insertTranslationBinding([
                 'it' => $it_ids['term_id'],
@@ -527,6 +530,8 @@ class Syncer
             $it_ids = wp_insert_term($names['it'], 'property_status', ['slug' => "property-status-{$lowerType}-it"]);
             $en_ids = wp_insert_term($names['en'], 'property_status', ['slug' => "property-status-{$lowerType}-en"]);
             $de_ids = wp_insert_term($names['de'], 'property_status', ['slug' => "property-status-{$lowerType}-de"]);
+
+            $this->sleepMilliseconds(50 * 1000);
 
             $this->insertTranslationBinding([
                 'it' => $it_ids['term_id'],
