@@ -38,7 +38,7 @@ The rest of the code is just the **wordpress plugin**, that offers the synchroni
 
 ### On the plugin activation
 
-The plugin creates the table `miogest_synced_annunci` if it does not already exist, which will contain the list of ads that are synchronized with miogest.
+Nothing special is done, apart from the activation itself. **If the plugin is not activated, the sync.php script won't do anything**.
 
 ### On the plugin disinstallation
 
@@ -49,11 +49,14 @@ It should remove every content related to miogest, including all posts. The **ta
 First of all, the synchronization is done in the file `sync.php` and should be done with a `cronjob`.
 
 What is done is:
-1. Fetching all the remote content from miogest. Namely, all ads and other two resources: their categories and the various translations for the "stato immobile".
-2. From the `miogest_synced_annunci` table, get all posts id. This will be done when resetting all the data before resyncing it.
-3. Resetting all data related to the posts of miogest. By using posts ids, all the posts, entries in the `miogest_synced_annunci` table, posts meta info, relationships and translation bindings are deleted.
-4. Also all the attachments are deleted before a new syncing, they are recognized by the prefix `miogest_sync_`.
-5. The new announcements are added to wordpress, this means:
+1. Create the table `miogest_synced_annunci` if it does not exist.
+2. Fetching all the remote content from miogest. Namely, all ads and other two resources: their categories and the various translations for the "stato immobile".
+3. Get all posts ids by looking for posts with `post_type` equal to `property`. This method was better than just looking for the ids in the `miogest_synced_annunci` table.
+4. Resetting all data related to the posts of miogest. By using posts ids, all the posts, entries in the `miogest_synced_annunci` table, posts meta info, relationships and translation bindings are deleted.
+5. Resetting all the taxonomies and terms related to the properties (`property_status` and `propery_type`).
+6. Also all the attachments are deleted before a new syncing, they are recognized by the prefix `miogest_sync_`.
+7. Insert the updated taxonomies and terms in base of the `categorie` fetched by the XML.
+8. The new announcements are added to wordpress, this means:
    - Adding a post for each ad
    - Adding meta data for each post
    - Adding a `miogest_synced_annunci` entry for each post
@@ -69,6 +72,8 @@ The second programmer also solved the first issues:
 * The date of the post was **not in UTC**, which was wrong.
 * The thumbnail was missing. The issue was solved **by adding a real thumbnail attachment and by adding it also as first field of the meta gallery property**.
 * Added `"Prezzo riservato"` instead of the price if the price is reserved. Before that, `0€` appeared. The issue was solved **by adding a meta prop `price_reserved` and by changing slightly the resideo theme/plugin**.
+* There was a problem because all the properties posts **had "in vendita" (for sale) as status in the taxonomies**
+* The taxonomies and terms for the properties **had been added manually to the db** and **the code used the specific ids** to connect xml annunci's categories with the taxonomies. It was not reproducible and very, very dumb. In addition all the languages' posts received the italian taxonomies, so filters worked only with the Italian language. All of this has been **rewritten from scratch**.
 
 ## Deployment
 
