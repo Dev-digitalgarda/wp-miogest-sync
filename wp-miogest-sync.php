@@ -19,8 +19,8 @@ use WpMiogestSync\Modules\Syncer;
 function create_plugin_database_table()
 {
   Logger::$logger->info('Initializing plugin');
-  $syncer = new Syncer();
-  $syncer->createTableIfNotExists();
+  Logger::$logger->debug('Nothing to do');
+  
   Logger::$logger->info('Plugin initialized');
 }
 register_activation_hook(__FILE__, 'create_plugin_database_table');

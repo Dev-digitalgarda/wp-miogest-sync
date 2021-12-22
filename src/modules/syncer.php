@@ -19,6 +19,10 @@ class Syncer
     private array $langs;
     private array $floors;
 
+    private array $property_statuses_map;
+    private array $considered_property_types;
+    private array $map_affitto_property_types_to_in_vendita_ones;
+
     private array $annunci;
     private array $categorie;
     private array $stati_immobili;
@@ -26,9 +30,90 @@ class Syncer
     private string $annunci_table;
     private string $posts_table;
     private string $postmeta_table;
+    private string $terms_table;
+    private string $term_taxonomy_table;
     private string $term_relationships_table;
     private string $icl_translations_table;
     public array $miogest_sync_annunci_ids;
+
+    private function fetchAnnunci(): void
+    {
+        Logger::$logger->debug('Fetching annunci');
+        $urlAnnunci = "http://partner.miogest.com/agenzie/gardahomeproject.xml";
+        $xmlAnnunci = simplexml_load_file($urlAnnunci);
+        $jsonAnnunci = json_encode($xmlAnnunci);
+        $annunci = json_decode($jsonAnnunci, true);
+        $this->annunci = $annunci['Annuncio'];
+    }
+
+    private function fetchCategorie(): void
+    {
+        Logger::$logger->debug('Fetching categorie');
+        $urlCategorie = "http://www.miogest.com/apps/revo.aspx?tipo=categorie";
+        $xmlCategorie = simplexml_load_file($urlCategorie);
+        $jsonCategorie = json_encode($xmlCategorie);
+        $rawCategorie = json_decode($jsonCategorie, true)['cat'];
+        $filteredCategorie = array_filter($rawCategorie, function ($categoria) {
+            return in_array($categoria['nome'], $this->considered_property_types);
+        });
+        $categorieWithAffittoAndVenditaSeparated = array_reduce($filteredCategorie, function ($carry, $item) {
+            $carry[$item['contratto']][$item['id']] = [
+                'it' => $item['nome'],
+                'en' => $item['nome_en'],
+                'de' => $item['nome_de']
+            ];
+            return $carry;
+        }, array_reduce(array_keys($this->property_statuses_map), function ($carry, $item) {
+            $carry[$item] = [];
+            return $carry;
+        }, []));
+        $categorie = $categorieWithAffittoAndVenditaSeparated['V'];
+        $this->categorie = $categorie;
+
+
+        foreach ($categorieWithAffittoAndVenditaSeparated['A'] as $id => $categoria) {
+            $name_it = $categoria['it'];
+
+            foreach ($categorieWithAffittoAndVenditaSeparated['V'] as $v_id => $v_categoria) {
+                if ($v_categoria['it'] === $name_it) {
+                    $this->map_affitto_property_types_to_in_vendita_ones[$id] = $v_id;
+                    break;
+                }
+            }
+        }
+    }
+
+    private function fetchStatiImmobili(): void
+    {
+        Logger::$logger->debug('Fetching stati immobili');
+        $urlSchedeImmobili = "http://www.miogest.com/apps/revo.aspx?tipo=schede";
+        $xmlSchedeImmobili = simplexml_load_file($urlSchedeImmobili);
+        $jsonSchedeImmobili = json_encode($xmlSchedeImmobili);
+        $schedeImmobili = json_decode($jsonSchedeImmobili, true)['scheda'];
+        $schedaStatiImmobili = array_values(
+            array_filter($schedeImmobili, function ($scheda) {
+                return $scheda['id'] == '57';
+            })
+        )[0];
+        $stati_immobili = [
+            'nomi' => [
+                'it' => $schedaStatiImmobili['nome'],
+                'en' => $schedaStatiImmobili['nome_en'],
+                'de' => $schedaStatiImmobili['nome_de']
+            ],
+            'valori' => []
+        ];
+        $stati_immobili_valori = $schedaStatiImmobili['valori']['valore'];
+        for ($i = 0; $i < count($stati_immobili_valori); $i++) {
+            $value = $stati_immobili_valori[$i];
+            $stati_immobili['valori'][$value] = [
+                'it' => $schedaStatiImmobili['valori']['valore'][$i],
+                'en' => $schedaStatiImmobili['valori_en']['valore'][$i],
+                'de' => $schedaStatiImmobili['valori_de']['valore'][$i]
+            ];
+        }
+        $this->stati_immobili = $stati_immobili;
+    }
 
     private function getFotosFromAnnuncio(array $annuncio): ?string
     {
@@ -139,9 +224,11 @@ class Syncer
         return $id;
     }
 
-    private function insertTranslationBinding(array $ids_mapped_by_lang): void
+    private function insertTranslationBinding(array $ids_mapped_by_lang, string $element_type): void
     {
         global $wpdb;
+
+        //tax_property_status / type
 
         $next_translation_id = 1 + $wpdb->get_var("SELECT MAX(trid) FROM $this->icl_translations_table");
         foreach ($this->langs as $lang) {
@@ -150,8 +237,8 @@ class Syncer
                 [
                     'trid' => $next_translation_id,
                     'language_code' => $lang,
-                    'source_language_code' => 'it',
-                    'element_type' => 'post_property',
+                    'source_language_code' => $lang == 'it' ? null : 'it',
+                    'element_type' => $element_type,
                     'element_id' => $ids_mapped_by_lang[$lang]
                 ]
             );
@@ -162,8 +249,8 @@ class Syncer
                     [
                         'trid' => $next_translation_id,
                         'language_code' => $lang,
-                        'source_language_code' => 'it',
-                        'element_type' => 'post_property'
+                        'source_language_code' => $lang == 'it' ? null : 'it',
+                        'element_type' => $element_type
                     ],
                     [
                         'element_id' => $ids_mapped_by_lang[$lang]
@@ -173,48 +260,54 @@ class Syncer
         }
     }
 
-    private function insertRelationships(array $annuncio, array $record_ids): void
+    private function insertRelationshipsBetweenAnnunciAndTerms(array $annuncio, array $record_ids): void
     {
         global $wpdb;
 
-        /* 
-            This ugly and absolutely dumb code of the old programmer works like this:
-            First of all, he inserted randomly all the terms from the miogest category xml (the one that fills $categorie in this code). They are all connected to the taxonomy "property_type".
-            Then it inserts them in the term-taxonomy table. All of this is done manually instead of being done in the plugin activation.
-            Then he creates a "map" with the wanted categories by using the below array: the value of an element of the array is the id of the category in miogest, while the
-        */
-        $arr_cat_miogest = [17, 18, 25, 26, 28, 119, 50, 30, 32, 87, 44, 46, 91, 127, 117, 48, 84, 34, 105, 123, 125, 83, 95, 33, 93, 97, 40, 41, 42, 85, 99, 36, 82, 81, 86, 1];
-
-
-        $map_status_term_id = [
-            "V" => 11, // in vendita
-            "A" => 140 // in affitto
-        ];
-
-        $keys = [$map_status_term_id[$annuncio['Tipologia']]];
+        $property_status = $annuncio['Tipologia'];
+        $property_status_lower = strtolower($property_status);
+        foreach ($this->langs as $lang) {
+            $property_status_term_id = $wpdb->get_row("
+                SELECT term_id
+                FROM $this->terms_table
+                WHERE slug = 'property-status-{$property_status_lower}-{$lang}'
+            ")->term_id;
+            $wpdb->insert(
+                $this->term_relationships_table,
+                [
+                    'object_id' => $record_ids[$lang],
+                    'term_taxonomy_id' => $property_status_term_id,
+                    'term_order' => 0
+                ]
+            );
+        }
 
         if (array_key_exists('Categoria', $annuncio)) {
             $categorie = $annuncio['Categoria'];
             if (!is_array($categorie)) {
                 $categorie = [$categorie];
             }
+            $categorie = array_map(function ($categoria) use ($property_status) {
+                $cid = intval($categoria);
+                return $property_status == 'V' ? $cid : $this->map_affitto_property_types_to_in_vendita_ones[$cid];
+            }, $categorie);
 
             foreach ($categorie as $categoria) {
-                $key = 21 + intval(array_search($categoria, $arr_cat_miogest));
-                array_push($keys, $key);
-            }
-        }
-
-        foreach ($keys as $key) {
-            foreach ($record_ids as $record_id) {
-                $wpdb->insert(
-                    $this->term_relationships_table,
-                    [
-                        'object_id' => $record_id,
-                        'term_taxonomy_id' => $key,
-                        'term_order' => 0
-                    ]
-                );
+                foreach ($this->langs as $lang) {
+                    $property_type_term_id = $wpdb->get_row("
+                        SELECT term_id
+                        FROM $this->terms_table
+                        WHERE slug = 'property-type-{$categoria}-{$lang}'
+                    ")->term_id;
+                    $wpdb->insert(
+                        $this->term_relationships_table,
+                        [
+                            'object_id' => $record_ids[$lang],
+                            'term_taxonomy_id' => $property_type_term_id,
+                            'term_order' => 0
+                        ]
+                    );
+                }
             }
         }
     }
@@ -250,10 +343,41 @@ class Syncer
             'en' => ['Ground Floor', 'First Floor', 'Second Floor', 'Third Floor', 'Fourth Floor', 'Fifth Floor'],
             'de' => ['Erdgeschoss', 'Erster Stock', 'Zweiter Stock', 'Dritter Stock', 'Vierter Stock', 'Fünfter Stock']
         ];
+        // Note that Tipologia in the xml is mapped to property status
+        $this->property_statuses_map = [
+            "V" => [
+                "it" => "In vendita",
+                "en" => "For sale",
+                "de" => "Zum Verkauf"
+            ],
+            "A" => [
+                "it" => "In affitto",
+                "en" => "For rent",
+                "de" => "Zum Mieten"
+            ]
+        ];
+        // This is because we don't want all the property types to appear, they would be too many. If the it names change, 
+        // this array will have to be updated, or the ids could be used instead.
+        $this->considered_property_types = [
+            "1 locale",
+            "2 locali",
+            "3 locali",
+            "4 o più locali",
+            "Attico",
+            "Rustico/Casale",
+            "Terreno Edificabile",
+            "Villa",
+            "Villa Bifamiliare",
+            "Villetta schiera"
+        ];
+        // This is because there can be only one term for property type, so the affito ones are mapped to the vendita ones
+        $this->map_affitto_property_types_to_in_vendita_ones = [];
 
         $this->annunci_table = $table_prefix . Syncer::$static_annunci_table;
         $this->posts_table = $table_prefix . 'posts';
         $this->postmeta_table = $table_prefix . 'postmeta';
+        $this->terms_table = $table_prefix . 'terms';
+        $this->term_taxonomy_table = $table_prefix . 'term_taxonomy';
         $this->term_relationships_table = $table_prefix . 'term_relationships';
         $this->icl_translations_table = $table_prefix . 'icl_translations';
 
@@ -289,48 +413,9 @@ class Syncer
 
     public function fetchRemoteData(): void
     {
-        Logger::$logger->debug('Fetching annunci');
-        $urlAnnunci = "http://partner.miogest.com/agenzie/gardahomeproject.xml";
-        $xmlAnnunci = simplexml_load_file($urlAnnunci);
-        $jsonAnnunci = json_encode($xmlAnnunci);
-        $annunci = json_decode($jsonAnnunci, true);
-        $this->annunci = $annunci['Annuncio'];
-
-        Logger::$logger->debug('Fetching categorie');
-        $urlCategorie = "http://www.miogest.com/apps/revo.aspx?tipo=categorie";
-        $xmlCategorie = simplexml_load_file($urlCategorie);
-        $jsonCategorie = json_encode($xmlCategorie);
-        $categorie = json_decode($jsonCategorie, true);
-        $this->categorie = $categorie['cat'];
-
-        Logger::$logger->debug('Fetching stati immobili');
-        $urlSchedeImmobili = "http://www.miogest.com/apps/revo.aspx?tipo=schede";
-        $xmlSchedeImmobili = simplexml_load_file($urlSchedeImmobili);
-        $jsonSchedeImmobili = json_encode($xmlSchedeImmobili);
-        $schedeImmobili = json_decode($jsonSchedeImmobili, true)['scheda'];
-        $schedaStatiImmobili = array_values(
-            array_filter($schedeImmobili, function ($scheda) {
-                return $scheda['id'] == '57';
-            })
-        )[0];
-        $stati_immobili = [
-            'nomi' => [
-                'it' => $schedaStatiImmobili['nome'],
-                'en' => $schedaStatiImmobili['nome_en'],
-                'de' => $schedaStatiImmobili['nome_de']
-            ],
-            'valori' => []
-        ];
-        $stati_immobili_valori = $schedaStatiImmobili['valori']['valore'];
-        for ($i = 0; $i < count($stati_immobili_valori); $i++) {
-            $value = $stati_immobili_valori[$i];
-            $stati_immobili['valori'][$value] = [
-                'it' => $schedaStatiImmobili['valori']['valore'][$i],
-                'en' => $schedaStatiImmobili['valori_en']['valore'][$i],
-                'de' => $schedaStatiImmobili['valori_de']['valore'][$i]
-            ];
-        }
-        $this->stati_immobili = $stati_immobili;
+        $this->fetchAnnunci();
+        $this->fetchCategorie();
+        $this->fetchStatiImmobili();
     }
 
     public function getAnnunciIds(): void
@@ -348,7 +433,37 @@ class Syncer
         }, $result);
     }
 
-    public function deleteOldAnnunci(): void
+    public function resetOldTermsAndTaxonomies(): void
+    {
+        global $wpdb;
+
+        $wpdb->query(
+            "
+            DELETE FROM $this->terms_table 
+            WHERE term_id IN (
+                SELECT t.term_id
+                FROM $this->term_taxonomy_table t
+                WHERE (
+                    t.taxonomy = 'property_type' 
+                    OR t.taxonomy = 'property_status'
+                )
+            )"
+        );
+        $wpdb->query(
+            "
+            DELETE FROM $this->term_taxonomy_table 
+            WHERE taxonomy = 'property_type' 
+            OR taxonomy = 'property_status'"
+        );
+        $wpdb->query(
+            "
+            DELETE FROM $this->icl_translations_table 
+            WHERE element_type = 'tax_property_type' OR element_type = 'tax_property_status' 
+            "
+        );
+    }
+
+    public function resetOldAnnunci(): void
     {
         global $wpdb;
 
@@ -384,11 +499,41 @@ class Syncer
         }
     }
 
-    public function deleteOldAnnunciThumbs(): void
+    public function resetOldAnnunciThumbs(): void
     {
         $path = Path::join($this->upload_dir_path, '..', '..');
         $eraser = new EraseThumbnails($path, $this->thumbnails_prefix);
         $eraser->erase();
+    }
+
+    public function insertNewTermsAndTaxonomies(): void
+    {
+        global $wpdb;
+
+        foreach ($this->categorie as $id => $names) {
+            $it_ids = wp_insert_term($names['it'], 'property_type', ['slug' => "property-type-{$id}-it"]);
+            $en_ids = wp_insert_term($names['en'], 'property_type', ['slug' => "property-type-{$id}-en"]);
+            $de_ids = wp_insert_term($names['de'], 'property_type', ['slug' => "property-type-{$id}-de"]);
+
+            $this->insertTranslationBinding([
+                'it' => $it_ids['term_id'],
+                'en' => $en_ids['term_id'],
+                'de' => $de_ids['term_id']
+            ], 'tax_property_type');
+        }
+
+        foreach ($this->property_statuses_map as $type => $names) {
+            $lowerType = strtolower($type);
+            $it_ids = wp_insert_term($names['it'], 'property_status', ['slug' => "property-status-{$lowerType}-it"]);
+            $en_ids = wp_insert_term($names['en'], 'property_status', ['slug' => "property-status-{$lowerType}-en"]);
+            $de_ids = wp_insert_term($names['de'], 'property_status', ['slug' => "property-status-{$lowerType}-de"]);
+
+            $this->insertTranslationBinding([
+                'it' => $it_ids['term_id'],
+                'en' => $en_ids['term_id'],
+                'de' => $de_ids['term_id']
+            ], 'tax_property_status');
+        }
     }
 
     public function insertNewAnnunci(): void
@@ -448,11 +593,11 @@ class Syncer
 
             // Insert relationships
             Logger::$logger->debug('Inserting relationships with taxonomy');
-            $this->insertRelationships($annuncio, [$post_id_it, $post_id_en, $post_id_de]);
+            $this->insertRelationshipsBetweenAnnunciAndTerms($annuncio, ['it' => $post_id_it, 'en' => $post_id_en, 'de' => $post_id_de]);
 
             // Connect translations 
             Logger::$logger->debug('Inserting translation bindings');
-            $this->insertTranslationBinding(['it' => $post_id_it, 'en' => $post_id_en, 'de' => $post_id_de]);
+            $this->insertTranslationBinding(['it' => $post_id_it, 'en' => $post_id_en, 'de' => $post_id_de], 'post_property');
 
             // Add thumbnail
             Logger::$logger->debug('Adding thumbnails');
