@@ -392,7 +392,7 @@ class Syncer
     {
         global $wpdb;
 
-        if ($wpdb->get_var("SHOW TABLS LIKE '$this->annunci_table'") != $this->annunci_table) {
+        if ($wpdb->get_var("SHOW TABLES LIKE '$this->annunci_table'") != $this->annunci_table) {
 
             $sql = "CREATE TABLE $this->annunci_table ( 
               `post_id` int(11) NOT NULL, 
