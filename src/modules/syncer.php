@@ -516,7 +516,7 @@ class Syncer
             $en_ids = wp_insert_term($names['en'], 'property_type', ['slug' => "property-type-{$id}-en"]);
             $de_ids = wp_insert_term($names['de'], 'property_type', ['slug' => "property-type-{$id}-de"]);
 
-            $this->sleepMilliseconds(50 * 1000);
+            $this->sleepMilliseconds();
 
             $this->insertTranslationBinding([
                 'it' => $it_ids['term_id'],
@@ -531,7 +531,7 @@ class Syncer
             $en_ids = wp_insert_term($names['en'], 'property_status', ['slug' => "property-status-{$lowerType}-en"]);
             $de_ids = wp_insert_term($names['de'], 'property_status', ['slug' => "property-status-{$lowerType}-de"]);
 
-            $this->sleepMilliseconds(50 * 1000);
+            $this->sleepMilliseconds();
 
             $this->insertTranslationBinding([
                 'it' => $it_ids['term_id'],
