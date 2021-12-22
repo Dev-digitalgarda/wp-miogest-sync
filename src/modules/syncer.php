@@ -115,7 +115,7 @@ class Syncer
         $this->stati_immobili = $stati_immobili;
     }
 
-    private function sleepMilliseconds(int $milliseconds = 10): void
+    private function sleepMilliseconds(int $milliseconds = 100): void
     {
         usleep($milliseconds * 1000);
     }
@@ -516,6 +516,7 @@ class Syncer
             $en_ids = wp_insert_term($names['en'], 'property_type', ['slug' => "property-type-{$id}-en"]);
             $de_ids = wp_insert_term($names['de'], 'property_type', ['slug' => "property-type-{$id}-de"]);
 
+            // This is used because I think that wpml adds with a sort of hook a tuple for the terms, so if this thing is done after by db query about the translation bindings, wpml overwrites it and sets eveything to Italian (default language).
             $this->sleepMilliseconds();
 
             $this->insertTranslationBinding([
@@ -531,6 +532,7 @@ class Syncer
             $en_ids = wp_insert_term($names['en'], 'property_status', ['slug' => "property-status-{$lowerType}-en"]);
             $de_ids = wp_insert_term($names['de'], 'property_status', ['slug' => "property-status-{$lowerType}-de"]);
 
+            // This is used because I think that wpml adds with a sort of hook a tuple for the terms, so if this thing is done after by db query about the translation bindings, wpml overwrites it and sets eveything to Italian (default language).
             $this->sleepMilliseconds();
 
             $this->insertTranslationBinding([
