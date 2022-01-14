@@ -18,13 +18,15 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: '7.4'
+          command: install
+          args: --no-dev
 
       # Not working because wordpress is outside of the repo code
       # - name: Downgrade code
       #   run: composer run rector
 
-      - name: Uninstall dev deps
-        run: sudo composer update --no-dev
+      # - name: Uninstall dev deps
+      #   run: sudo composer update --no-dev
 
       - name: Compress plugin source
         uses: master-atul/tar-action@v1.0.2
