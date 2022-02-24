@@ -126,7 +126,7 @@ class Syncer
 
         if (array_key_exists('Foto', $annuncio) && is_array($annuncio['Foto'])) {
             $fotos = array_map(function ($foto) {
-                return end(explode('/', $foto));
+                return str_replace('https://img.miogest.com/', '',$foto);
             }, $annuncio['Foto']);
             $fotos_str = implode(',', $fotos);
         }
