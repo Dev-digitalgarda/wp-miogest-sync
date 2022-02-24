@@ -199,7 +199,7 @@ $general_settings = get_option('resideo_general_settings'); ?>
                                             <?php if ($photos[0] != '') {
                                                 for ($i = 0; $i < count($photos); $i++) {
                                                     //$p_photo = wp_get_attachment_image_src($photos[$i], 'pxp-gallery'); ?>
-                                                    <div class="carousel-item <?php if ($i == 0) echo 'active'; ?>" style="background-image: url( https://img.miogest.com/24229/<?php echo $photos[$i]; ?>);"></div>
+                                                    <div class="carousel-item <?php if ($i == 0) echo 'active'; ?>" style="background-image: url( https://img.miogest.com/<?php echo $photos[$i]; ?>);"></div>
                                                 <?php }
                                             } else {
                                                 $p_photo = 'https://gardahomeproject.it/wp-content/uploads/2021/07/placeholder500.jpg'; ?>

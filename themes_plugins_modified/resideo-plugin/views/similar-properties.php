@@ -103,7 +103,7 @@ if (!function_exists('resideo_get_similar_properties')) :
 
                             <div>
                                 <a href="<?php echo esc_url($p_link); ?>" class="pxp-prop-card-1 rounded-lg">
-                                    <div class="pxp-prop-card-1-fig pxp-cover" style="background-image: url( https://img.miogest.com/24229/<?php echo $p_photo; ?>);"></div>
+                                    <div class="pxp-prop-card-1-fig pxp-cover" style="background-image: url( https://img.miogest.com/<?php echo $p_photo; ?>);"></div>
                                     <div class="pxp-prop-card-1-gradient pxp-animate"></div>
                                     <div class="pxp-prop-card-1-details">
                                         <div class="pxp-prop-card-1-details-title"><?php echo esc_html($p_title); ?></div>
