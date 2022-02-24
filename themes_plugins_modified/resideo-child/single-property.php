@@ -7,7 +7,7 @@
 
 global $post;
 get_header();
-$base_url_img == "https://img.miogest.com/24229/";
+$base_url_img == "https://img.miogest.com/";
 
 while (have_posts()) : the_post();
     $prop_id = get_the_ID();
@@ -290,7 +290,7 @@ while (have_posts()) : the_post();
 
                         <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="<?php if ($i == 0) echo esc_attr($first_fig_class);
                                                                                                                         else echo esc_attr($fig_class); ?> <?php echo esc_attr($d_none); ?>">
-                            <a href="<?php echo "https://img.miogest.com/24229/" . $photos[$i]; ?>" itemprop="contentUrl" data-size="<?php echo "1280x700"; /*echo esc_attr($p_photo_full[1]); */ ?>x<?php echo esc_attr($p_photo_full[2]); ?>" class="pxp-cover" style="background-image: url(<?php echo "https://img.miogest.com/24229/" . $photos[$i]; ?>);"></a>
+                            <a href="<?php echo "https://img.miogest.com/" . $photos[$i]; ?>" itemprop="contentUrl" data-size="<?php echo "1280x700"; /*echo esc_attr($p_photo_full[1]); */ ?>x<?php echo esc_attr($p_photo_full[2]); ?>" class="pxp-cover" style="background-image: url(<?php echo "https://img.miogest.com/" . $photos[$i]; ?>);"></a>
                             <figcaption itemprop="caption description"><?php echo esc_html($p_photo_info['caption']); ?></figcaption>
                         </figure>
                     <?php } ?>

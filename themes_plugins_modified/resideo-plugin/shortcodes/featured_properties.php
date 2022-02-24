@@ -206,7 +206,7 @@ if (!function_exists('resideo_featured_properties_shortcode')) :
             $first_photo = wp_get_attachment_image_src($photos[0], 'pxp-gallery');
 
             if ($first_gallery != '') {
-                $p_photo = 'https://img.miogest.com/24229/' . $first_gallery;
+                $p_photo = 'https://img.miogest.com/' . $first_gallery;
             } else {
                 $p_photo = 'https://gardahomeproject.it/wp-content/uploads/2021/07/placeholdervertical.png';
             }
