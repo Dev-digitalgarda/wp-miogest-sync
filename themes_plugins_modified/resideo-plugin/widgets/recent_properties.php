@@ -211,6 +211,8 @@ class Resideo_Recent_Properties_Widget extends WP_Widget {
             $p_price       = get_post_meta($post->ID, 'property_price', true);
             $p_price_label = get_post_meta($post->ID, 'property_price_label', true);
 
+            $currency_str = $currency;
+
             if (is_numeric($p_price)) {
                 if ($decimals == '1') {
                     $p_price = money_format('%!i', $p_price);
@@ -219,7 +221,7 @@ class Resideo_Recent_Properties_Widget extends WP_Widget {
                 }
             } else {
                 $p_price_label = '';
-                $currency = '';
+                $currency_str = '';
             }
 
             $p_beds  = get_post_meta($post->ID, 'property_beds', true);
@@ -233,10 +235,10 @@ class Resideo_Recent_Properties_Widget extends WP_Widget {
                         <h5>' . esc_html($p_title) . '</h5>';
             if ($currency_pos == 'before') {
                 $display .= '
-                        <div class="pxp-property-side-price">' . esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span></div>';
+                        <div class="pxp-property-side-price">' . esc_html($currency_str) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span></div>';
             } else {
                 $display .= '
-                        <div class="pxp-property-side-price">' . esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span></div>';
+                        <div class="pxp-property-side-price">' . esc_html($p_price) . esc_html($currency_str) . ' <span>' . esc_html($p_price_label) . '</span></div>';
             }
             $display .= '
                         <div class="pxp-property-side-features">
@@ -253,7 +255,7 @@ class Resideo_Recent_Properties_Widget extends WP_Widget {
             $display .= '
                             </span>
                         </div>
-                        <div class="pxp-property-side-cta text-uppercase">More Details</div>
+                        <div class="pxp-property-side-cta text-uppercase">' . __('More Details', 'resideo') . '</div>
                     </div>
                 </a>';
         endforeach;

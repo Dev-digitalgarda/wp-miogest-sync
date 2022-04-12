@@ -83,7 +83,7 @@ class Elementor_Resideo_Featured_Properties_Widget extends \Elementor\Widget_Bas
             [
                 'label' => __('Subtitle', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'input_type' => 'string',
                 'placeholder' => __('Enter subtitle', 'resideo'),
             ]
@@ -126,8 +126,8 @@ class Elementor_Resideo_Featured_Properties_Widget extends \Elementor\Widget_Bas
                 'label' => __('CTA Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -308,7 +308,7 @@ class Elementor_Resideo_Featured_Properties_Widget extends \Elementor\Widget_Bas
                 }
                 if ($settings['subtitle'] != '') {
                     $widget_html .= '
-                        <p class="pxp-text-light">' . esc_html($settings['subtitle']) . '</p>';
+                        <div class="pxp-text-light">' . $settings['subtitle'] . '</div>';
                 }
 
                 $widget_html .= '
@@ -334,7 +334,7 @@ class Elementor_Resideo_Featured_Properties_Widget extends \Elementor\Widget_Bas
                 }
                 if ($settings['subtitle'] != '') {
                     $widget_html .= '
-                            <p class="pxp-text-light">' . esc_html($settings['subtitle']) . '</p>';
+                            <div class="pxp-text-light">' . $settings['subtitle'] . '</div>';
                 }
                 if ($settings['cta_link']['url'] != '') {
                     $target = $settings['cta_link']['is_external'] ? ' target="_blank"' : '';
@@ -358,7 +358,7 @@ class Elementor_Resideo_Featured_Properties_Widget extends \Elementor\Widget_Bas
                 }
                 if ($settings['subtitle'] != '') {
                     $widget_html .= '
-                        <p class="pxp-text-light">' . esc_html($settings['subtitle']) . '</p>';
+                        <div class="pxp-text-light">' . $settings['subtitle'] . '</div>';
                 }
                 $widget_html .= '
                         <div class="row mt-4 mt-md-5">';
@@ -416,6 +416,8 @@ class Elementor_Resideo_Featured_Properties_Widget extends \Elementor\Widget_Bas
                 $p_photo = RESIDEO_PLUGIN_PATH . 'images/property-tile.png';
             }
 
+            $currency_str = $currency;
+
             $p_price       = get_post_meta($post['ID'], 'property_price', true);
             $p_price_label = get_post_meta($post['ID'], 'property_price_label', true);
 
@@ -427,7 +429,7 @@ class Elementor_Resideo_Featured_Properties_Widget extends \Elementor\Widget_Bas
                 }
             } else {
                 $p_price_label = '';
-                $currency = '';
+                $currency_str = '';
             }
 
             $p_beds  = get_post_meta($post['ID'], 'property_beds', true);
@@ -443,9 +445,9 @@ class Elementor_Resideo_Featured_Properties_Widget extends \Elementor\Widget_Bas
                             <div class="pxp-prop-card-1-details-title">' . esc_html($p_title) . '</div>
                             <div class="pxp-prop-card-1-details-price">';
             if ($currency_pos == 'before') {
-                $widget_html .= esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
+                $widget_html .= esc_html($currency_str) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
             } else {
-                $widget_html .= esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
+                $widget_html .= esc_html($p_price) . esc_html($currency_str) . ' <span>' . esc_html($p_price_label) . '</span>';
             }
             $widget_html .= '
                             </div>

@@ -111,7 +111,10 @@ if (!function_exists('resideo_add_amenities')):
         $var_name = str_replace(' ', '_', trim($name));
         $var_name = sanitize_key($var_name);
 
-        $resideo_amenities_settings                        = get_option('resideo_amenities_settings');
+        $resideo_amenities_settings = get_option('resideo_amenities_settings');
+        if (!is_array($resideo_amenities_settings)) {
+            $resideo_amenities_settings = array();
+        }
         $resideo_amenities_settings[$var_name]['name']     = $name;
         $resideo_amenities_settings[$var_name]['label']    = $label;
         $resideo_amenities_settings[$var_name]['icon']     = $icon;

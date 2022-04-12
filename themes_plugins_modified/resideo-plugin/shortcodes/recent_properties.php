@@ -209,6 +209,8 @@ if (!function_exists('resideo_recent_properties_shortcode')):
             $p_price       = get_post_meta($post['ID'], 'property_price', true);
             $p_price_label = get_post_meta($post['ID'], 'property_price_label', true);
 
+            $currency_str = $currency;
+
             if (is_numeric($p_price)) {
                 if ($decimals == '1') {
                     $p_price = money_format('%!i', $p_price);
@@ -217,7 +219,7 @@ if (!function_exists('resideo_recent_properties_shortcode')):
                 }
             } else {
                 $p_price_label = '';
-                $currency = '';
+                $currency_str = '';
             }
 
             $p_beds  = get_post_meta($post['ID'], 'property_beds', true);
@@ -233,9 +235,9 @@ if (!function_exists('resideo_recent_properties_shortcode')):
                             <div class="pxp-prop-card-1-details-title">' . esc_html($p_title) . '</div>
                             <div class="pxp-prop-card-1-details-price">';
             if ($currency_pos == 'before') {
-                $return_string .= esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
+                $return_string .= esc_html($currency_str) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
             } else {
-                $return_string .= esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
+                $return_string .= esc_html($p_price) . esc_html($currency_str) . ' <span>' . esc_html($p_price_label) . '</span>';
             }
             $return_string .= '
                             </div>

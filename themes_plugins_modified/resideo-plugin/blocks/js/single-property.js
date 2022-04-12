@@ -1,7 +1,10 @@
 (function(wp) {
     var registerBlockType = wp.blocks.registerBlockType;
 
+    var TextControl   = wp.components.TextControl;
     var SelectControl = wp.components.SelectControl;
+    var Button        = wp.components.Button;
+    var Modal         = wp.components.Modal;
     var ColorPalette  = wp.components.ColorPalette;
 
     var el = wp.element.createElement;
@@ -32,8 +35,10 @@
         var attributes    = props.attributes;
         var setAttributes = props.setAttributes;
         var setState      = props.setState;
+        var isOpen        = props.isOpen;
         var className     = props.className;
         var isSelected    = props.isSelected;
+        var propsList     = props.propsList;
 
         var data_content = attributes.data_content;
         var data         = window.decodeURIComponent(data_content);
@@ -45,36 +50,116 @@
         var margin    = getObjectProperty(data_json, 'margin');
         var cta_color = getObjectProperty(data_json, 'cta_color');
 
-        var properties_list = sh_vars.single_property_list.replace(/\+/g, '%20');
-        properties_list = properties_list != '' ? jQuery.parseJSON(decodeURIComponent(properties_list)) : [];
+        var getPropertiesList = function(term) {
+            var properties = [];
 
-        var renderPropertyField = function() {
-            var propertiesList = [
-                { label: __('Select a property', 'resideo'), value: '' }
-            ];
-
-            jQuery.each(properties_list, function(index, value) {
-                propertiesList.push({
-                    label: value.title,
-                    value: value.id
-                });
-            });
-
-            return el(SelectControl, 
-                {
-                    label: __('Property', 'resideo'),
-                    value: id,
-                    options: propertiesList,
-                    onChange: function(value) {
-                        const foundName = propertiesList.filter(item => item.value == value);
-
-                        data_json.name = foundName[0].label;
-                        data_json.id = value;
-                        setAttributes({ data_content: encodeURIComponent(JSON.stringify(data_json)) });
+            jQuery.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: sh_vars.ajaxurl,
+                data: {
+                    'action': 'resideo_get_autocomplete_properties',
+                    'keyword': term
+                },
+                success: function(data) {
+                    properties = [];
+                    if (data.getprops === true) {
+                        for (var i = 0; i < data.props.length; i++) {
+                            properties.push({
+                                'label': data.props[i].title,
+                                'value': data.props[i].id
+                            });
+                        }
+                    } else {
+                        properties.push({
+                            'label': sh_vars.modal_no_properties,
+                            'value': ''
+                        });
                     }
-                }
-            );
+                    setState({ propsList: properties });
+                },
+                error: function(errorThrown) {}
+            });
         };
+
+        var onPropertyClick = function(event) {
+            var target = jQuery(event.target);
+
+            data_json.name = target.text().trim();
+            data_json.id = target.attr('data-id');
+            setAttributes({ data_content: encodeURIComponent(JSON.stringify(data_json)) });
+
+            setState({
+                isOpen: false,
+                propsList: null
+            });
+        };
+
+        var renderPropertiesList = function(ps) {
+            var list = [];
+
+            if (ps) {
+                for (var i = 0; i < ps.length; i++) {
+                    list.push(el('div', 
+                        {
+                            className: 'is-property'
+                        },
+                        el('div', 
+                            {
+                                className: 'pxp-properties-item',
+                                'data-id': ps[i].value,
+                                onClick: (event) => {
+                                    onPropertyClick(event);
+                                }
+                            },
+                            ps[i].label
+                        )
+                    ));
+                }
+            }
+
+            return list;
+        };
+
+        var renderPropertiesModal = isOpen ? el(Modal, 
+            {
+                title: __('Properties', 'resideo'),
+                className: 'pxp-single-property-list-modal',
+                onRequestClose: function() {
+                    setState({
+                        isOpen: false, 
+                        propsList: null 
+                    });
+                }
+            },
+            el('div', 
+                {
+                    className: 'pxp-properties-modal-search'
+                },
+                el('div', 
+                    {
+                        className: 'pxp-properties-search-field'
+                    },
+                    el('span', 
+                        {
+                            className: 'fa fa-search'
+                        }
+                    ),
+                    el(TextControl, 
+                        {
+                            placeholder: __('Search properties...', 'resideo'),
+                            onChange: function(value) {
+                                getPropertiesList(value);
+                            }
+                        }
+                    )
+                )
+            ),
+            el('div', 
+                {},
+                renderPropertiesList(propsList)
+            )
+        ) : null;
 
         var renderCTAColorSelector = el('div',
             {
@@ -126,7 +211,18 @@
         );
 
         var singlePropertyOptions = [
-            renderPropertyField(),
+            el(Button,
+                {
+                    className: 'pxp-add-single-property-btn',
+                    isSecondary: true,
+                    isSmall: true,
+                    onClick: function() {
+                        setState({ isOpen: true });
+                    }
+                },
+                __('Add Property', 'resideo')
+            ),
+            renderPropertiesModal,
             el('div',
                 {
                     className: 'row'

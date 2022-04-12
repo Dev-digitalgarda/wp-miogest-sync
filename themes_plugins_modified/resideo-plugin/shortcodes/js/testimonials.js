@@ -133,7 +133,7 @@
                                                     '</div>'+ 
                                                 '</div>'+ 
                                             '</div>' + 
-                                            '<div class="col-xs-12 col-md-6 rtl-pull-right">' + 
+                                            '<div class="col-xs-12 col-md-3 rtl-pull-right">' + 
                                                 '<div class="form-group">' + 
                                                     '<label for="sh-testimonials-margin">' + sh_vars.margin_label + '</label>';
             var margin_is_no = '';
@@ -158,7 +158,17 @@
                                                     '<label for="sh-testimonials-cta-link">' + sh_vars.cta_link_label + '</label>' + 
                                                     '<input type="text" id="sh-testimonials-cta-link" class="form-control" value="' + getObjectProperty(short, "cta_link") + '" placeholder="' + sh_vars.cta_link_placeholder + '">' + 
                                                 '</div>'+ 
+                                                '<div class="form-group is-testim-custom" style="' + cta_style + '">' + 
+                                                    '<label for="sh-testimonials-cta-color" style="display:block;margin-bottom:2px;">' + sh_vars.cta_color_label + '</label>' + 
+                                                    '<input type="text" id="sh-testimonials-cta-color" class="color-field" value="' + getObjectProperty(short, "cta_color") + '">' + 
+                                                '</div>'+ 
                                             '</div>' + 
+                                            '<div class="col-xs-12 col-md-3 rtl-pull-right">' + 
+                                                '<div class="form-group">' + 
+                                                    '<label for="sh-testimonials-text-color" style="display:block;margin-bottom:2px;">' + sh_vars.text_color_label + '</label>' + 
+                                                    '<input type="text" id="sh-testimonials-text-color" class="color-field" value="' + getObjectProperty(short, "text_color") + '">' + 
+                                                '</div>'+ 
+                                            '</div>'+ 
                                         '</div>' + 
 
                                         '<div class="row">' + 
@@ -233,14 +243,16 @@
 
             $('#shortcode-modal #insert-button').on('click', function(e) {
                 var shortVal = {
-                    'title'    : $('#sh-testimonials-title').val(),
-                    'subtitle' : $('#sh-testimonials-subtitle').val(),
-                    'cta_text' : $('#sh-testimonials-cta-text').val(),
-                    'cta_link' : $('#sh-testimonials-cta-link').val(),
-                    'image'    : $('#sh-testimonials-image').val(),
-                    'image_src': $('#sh-testimonials-image').attr('data-src'),
-                    'margin'   : $('#sh-testimonials-margin').val(),
-                    'layout'   : $('#sh-testimonials-layout .layout-active > input').val(),
+                    'title'     : $('#sh-testimonials-title').val(),
+                    'subtitle'  : $('#sh-testimonials-subtitle').val(),
+                    'cta_text'  : $('#sh-testimonials-cta-text').val(),
+                    'cta_link'  : $('#sh-testimonials-cta-link').val(),
+                    'cta_color' : $('#sh-testimonials-cta-color').val(),
+                    'image'     : $('#sh-testimonials-image').val(),
+                    'image_src' : $('#sh-testimonials-image').attr('data-src'),
+                    'margin'    : $('#sh-testimonials-margin').val(),
+                    'text_color': $('#sh-testimonials-text-color').val(),
+                    'layout'    : $('#sh-testimonials-layout .layout-active > input').val(),
                 }
                 var shortcodeStr = '[' + shortcodeTag + ' data_content="' + encodeURIComponent(JSON.stringify(shortVal)) + '"' + '][/' + shortcodeTag + ']';
 
@@ -294,7 +306,9 @@
                 $('.sh-testimonials-image-placeholder-container').removeClass('has-image');
             });
 
-            $('#sh-testimonials-color').wpColorPicker();
+            $('.color-field').wpColorPicker({
+                defaultColor: '#333333',
+            });
         }
 
         // Open modal
@@ -322,7 +336,7 @@
             tooltip: sh_vars.testimonials_title,
             onclick: function() {
                 editor.execCommand('res_testimonials_panel_popup', '', {
-                    data_content : '{ "title": "", "subtitle": "", "cta_text": "", "cta_link": "", "image": "", "image_src": "", "margin": "no", "layout": "1" }',
+                    data_content : '{ "title": "", "subtitle": "", "cta_text": "", "cta_link": "", "cta_color": "", "image": "", "image_src": "", "margin": "no", "text_color": "", "layout": "1" }',
                 });
             }
         });

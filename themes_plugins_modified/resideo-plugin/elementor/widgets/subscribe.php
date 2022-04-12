@@ -46,9 +46,24 @@ class Elementor_Resideo_Subscribe_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Subtitle', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'input_type' => 'string',
                 'placeholder' => __('Enter subtitle', 'resideo'),
+            ]
+        );
+
+        $this->add_control(
+            'text_color',
+            [
+                'label' => __('Text Color', 'resideo'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'scheme' => [
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .title' => 'color: {{VALUE}}',
+                ],
             ]
         );
 
@@ -109,19 +124,25 @@ class Elementor_Resideo_Subscribe_Widget extends \Elementor\Widget_Base {
                 $bg_image_src = $bg_image[0];
             }
         }
-        $margin_class = $settings['margin'] == 'yes' ? 'mt-100' : ''; ?>
+        $margin_class = $settings['margin'] == 'yes' ? 'mt-100' : ''; 
+
+        $text_color = isset($settings['text_color']) ? 'color: ' . $settings['text_color'] : '';
+        $cta_color = isset($settings['text_color']) ? $settings['text_color'] : ''; ?>
 
         <div class="pxp-subscribe-section pxp-full pxp-cover pt-100 pb-100 <?php echo esc_attr($margin_class); ?>" style="background-image: url(<?php echo esc_url($bg_image_src); ?>);">
             <div class="container">
-                <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
-                <p class="pxp-text-light"><?php echo esc_html($settings['subtitle']); ?></p>
+                <h2 class="pxp-section-h2" style="<?php echo esc_attr($text_color); ?>"><?php echo esc_html($settings['title']); ?></h2>
+                <div class="pxp-text-light" style="<?php echo esc_attr($text_color); ?>"><?php echo $settings['subtitle']; ?></div>
                 <div class="row mt-4 mt-md-5">
                     <div class="col-sm-12 col-md-6">
                         <div class="pxp-subscribe-1-form" id="pxp-subscribe-form">
                             <?php wp_nonce_field('subscribe_ajax_nonce', 'security-subscribe', true, true); ?>
                             <div class="pxp-subscribe-form-response"></div>
                             <input type="text" id="pxp-subscribe-email" name="pxp-subscribe-email" class="form-control" placeholder="<?php esc_html_e('Enter your email...', 'resideo'); ?>">
-                            <a href="javascript:void(0);" id="pxp-subscribe-form-btn" class="pxp-primary-cta text-uppercase pxp-animate mt-3 mt-md-4"><img src="<?php echo esc_url(RESIDEO_PLUGIN_PATH . 'images/loader-dark.svg'); ?>" class="pxp-loader pxp-is-btn" alt="..."> <?php esc_html_e('Subscribe', 'resideo'); ?></a>
+                            <a href="javascript:void(0);" id="pxp-subscribe-form-btn" class="pxp-primary-cta text-uppercase pxp-animate mt-3 mt-md-4" style="color: <?php echo esc_attr($cta_color); ?>"><img src="<?php echo esc_url(RESIDEO_PLUGIN_PATH . 'images/loader-dark.svg'); ?>" class="pxp-loader pxp-is-btn" alt="..."> <?php esc_html_e('Subscribe', 'resideo'); ?></a>
+                            <?php if ($cta_color != '') { ?>
+                                <style>.pxp-primary-cta#pxp-subscribe-form-btn:after { border-top: 2px solid <?php echo esc_html($cta_color); ?> }</style>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>

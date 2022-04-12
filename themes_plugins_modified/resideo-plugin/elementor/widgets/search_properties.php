@@ -46,9 +46,29 @@ class Elementor_Resideo_Search_Properties_Widget extends \Elementor\Widget_Base 
             [
                 'label' => __('Subtitle', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'input_type' => 'string',
                 'placeholder' => __('Enter subtitle', 'resideo'),
+            ]
+        );
+
+        $this->add_control(
+            'align',
+            [
+                'label' => __('Align', 'resideo'),
+                'type' => \Elementor\Controls_Manager::CHOOSE,
+                'options' => [
+                    'left' => [
+                        'title' => __('Left', 'resideo'),
+                        'icon' => 'fa fa-align-left',
+                    ],
+                    'center' => [
+                        'title' => __('Center', 'resideo'),
+                        'icon' => 'fa fa-align-center',
+                    ]
+                ],
+                'default' => 'left',
+                'toggle' => false,
             ]
         );
 
@@ -250,7 +270,8 @@ class Elementor_Resideo_Search_Properties_Widget extends \Elementor\Widget_Base 
                 'label' => __('Fields in Main Area', 'resideo'),
                 'label_block' => true,
                 'type' => \Elementor\Controls_Manager::TEXT,
-                'input_type' => 'string'
+                'input_type' => 'string',
+                'default' => '2'
             ]
         );
 
@@ -274,6 +295,12 @@ class Elementor_Resideo_Search_Properties_Widget extends \Elementor\Widget_Base 
         $fields_settings = get_option('resideo_prop_fields_settings');
         $address_type = isset($fields_settings['resideo_p_address_t_field']) ? $fields_settings['resideo_p_address_t_field'] : '';
 
+        $align = isset($settings['align']) ? $settings['align'] : 'left';
+        $align_class = '';
+        if ($align == 'center') {
+            $align_class = 'text-center';
+        }
+
         /**
          * Status field
          */
@@ -291,7 +318,7 @@ class Elementor_Resideo_Search_Properties_Widget extends \Elementor\Widget_Base 
             $status_field = 
                 '<div class="col-sm-5 col-md-4 col-lg-3 pxp-search-properties-col">
                     <div class="form-group">
-                        <label for="search_status">Status</label>
+                        <label for="search_status">' . __('Status', 'resideo') . '</label>
                         <select class="custom-select" id="search_status" name="search_status">
                             <option value="0">' . __('All', 'resideo') . '</option>';
             foreach ($status_terms as $status_term) {
@@ -319,11 +346,10 @@ class Elementor_Resideo_Search_Properties_Widget extends \Elementor\Widget_Base 
             $address_field = 
                 '<div class="col-sm-7 col-md-8 col-lg-9 pxp-search-properties-col">
                     <div class="form-group">
-                        <label for="search_address">Address</label>';
+                        <label for="search_address">' . __('Address', 'resideo') . '</label>';
             if ($address_type == 'auto') {
                 $address_field .= 
-                        '<input type="text" class="form-control pxp-is-address" id="filter-address-auto" name="search_address" placeholder="' . __('Cerca per città', 'resideo') . '" autocomplete="off">
-						
+                        '<input type="text" class="form-control pxp-is-address" id="filter-address-auto" name="search_address" placeholder="' . __('Search by City, Neighborhood, or Address', 'resideo') . '" autocomplete="off">
                         <input type="hidden" id="filter_street_no_field" name="search_street_no" autocomplete="off">
                         <input type="hidden" id="filter_street_field" name="search_street" autocomplete="off">
                         <input type="hidden" id="filter_neighborhood_field" name="search_neighborhood" autocomplete="off">
@@ -708,7 +734,7 @@ class Elementor_Resideo_Search_Properties_Widget extends \Elementor\Widget_Base 
             uasort($custom_fields_settings, "resideo_compare_position");
 
             foreach ($custom_fields_settings as $key => $value) {
-                if ($settings[$key] == '1') {
+                if (isset($settings[$key]) && $settings[$key] == '1') {
                     if ($value['type'] == 'date_field') {
                         $custom_field = 
                             '<div class="col-sm-6 col-md-3 pxp-content-side-search-form-col">';
@@ -838,11 +864,11 @@ class Elementor_Resideo_Search_Properties_Widget extends \Elementor\Widget_Base 
             '<div class="container mt-100">';
         if ($settings['title'] != '') {
             $return_string .= 
-                '<h2 class="pxp-section-h2">' . esc_html($settings['title']) . '</h2>';
+                '<h2 class="pxp-section-h2 ' . esc_attr($align_class) . '">' . esc_html($settings['title']) . '</h2>';
         }
         if ($settings['subtitle'] != '') {
             $return_string .= 
-                '<p class="pxp-text-light">' . esc_html($settings['subtitle']) . '</p>';
+                '<div class="pxp-text-light ' . esc_attr($align_class) . '">' . $settings['subtitle'] . '</div>';
         }
         $return_string .= 
                 '<div class="pxp-search-properties-container mt-4 mt-md-5 rounded-lg">

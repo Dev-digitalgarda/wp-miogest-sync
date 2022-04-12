@@ -85,6 +85,8 @@ $total_p       = $my_posts ? $my_posts->found_posts : 0;
                         $price       = get_post_meta($prop_id, 'property_price', true);
                         $price_label = get_post_meta($prop_id, 'property_price_label', true);
 
+                        $currency_str = $currency;
+
                         if (is_numeric($price)) {
                             if ($decimals == '1') {
                                 $price = money_format('%!i', $price);
@@ -93,7 +95,7 @@ $total_p       = $my_posts ? $my_posts->found_posts : 0;
                             }
                         } else {
                             $price_label = '';
-                            $currency = '';
+                            $currency_str = '';
                         }
 
                         $beds  = get_post_meta($prop_id, 'property_beds', true);
@@ -129,9 +131,9 @@ $total_p       = $my_posts ? $my_posts->found_posts : 0;
                                                 <div class="col-lg-2">
                                                     <div class="pxp-my-properties-item-price">
                                                         <?php if ($currency_pos == 'before') {
-                                                            echo esc_html($currency); ?><?php echo esc_html($price); ?> <span><?php echo esc_html($price_label); ?></span>
+                                                            echo esc_html($currency_str); ?><?php echo esc_html($price); ?> <span><?php echo esc_html($price_label); ?></span>
                                                         <?php } else {
-                                                            echo esc_html($price); ?><?php echo esc_html($currency); ?> <span><?php echo esc_html($price_label); ?></span>
+                                                            echo esc_html($price); ?><?php echo esc_html($currency_str); ?> <span><?php echo esc_html($price_label); ?></span>
                                                         <?php } ?>
                                                     </div>
                                                 </div>

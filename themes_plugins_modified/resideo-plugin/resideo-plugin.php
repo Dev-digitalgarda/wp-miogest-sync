@@ -4,7 +4,7 @@
 * Description: Core functionality for Resideo WP WordPress Theme.
 * Text Domain: resideo
 * Domain Path: /languages
-* Version: 2.0
+* Version: 2.5.2
 * Author: Pixel Prime
 * Author URI: http://pixelprime.co
 */
@@ -74,9 +74,11 @@ require_once 'views/social-meta.php';
 require_once 'views/user-modal.php';
 require_once 'views/dashboard-nav.php';
 require_once 'views/filter-properties-form.php';
+require_once 'views/filter-properties-form-sidebar.php';
 require_once 'views/modal-calculator.php';
 require_once 'views/similar-properties.php';
 require_once 'views/contact-agent-modal.php';
+require_once 'views/contact-agent-hero.php';
 require_once 'views/work-with-agent-modal.php';
 require_once 'views/report-property-modal.php';
 require_once 'views/page-header.php';

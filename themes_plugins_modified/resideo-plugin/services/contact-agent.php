@@ -27,14 +27,14 @@ if (!function_exists('resideo_contact_agent')):
         $body = '';
 
         if ($title != '' && $link != '') {
-            $body .= __('Ricevi questo messaggio da ', 'resideo') . $firstname . ' ' . $lastname .
-                    ' [' . __('Numero di telefono', 'resideo') . ': ' . $phone . ']' . 
-                    ' ' . __('riguardo il segeuete immobile: ', 'resideo') . '<br />' . 
+            $body .= __('You received the following message from ', 'resideo') . $firstname . ' ' . $lastname .
+                    ' [' . __('Phone number', 'resideo') . ': ' . $phone . ']' . 
+                    ' ' . __('regarding a property you listed: ', 'resideo') . '<br />' . 
                     $title . ' [ ' . $link . ' ]' . '<br /><br />
                     <i>' . $message . '</i>';
         } else {
-            $body .= __('Ricevi questo messaggio da ', 'resideo') . 
-                    $firstname . ' ' . $lastname . ' [' . __('Numero di telefono', 'resideo') . ': ' . $phone . ']' . '<br /><br />
+            $body .= __('You received the following message from ', 'resideo') . 
+                    $firstname . ' ' . $lastname . ' [' . __('Phone number', 'resideo') . ': ' . $phone . ']' . '<br /><br />
                     <i>' . $message . '</i>';
         }
 
@@ -153,16 +153,17 @@ if (!function_exists('resideo_work_with_agent')):
         $phone       = isset($_POST['phone']) ? sanitize_text_field($_POST['phone']) : '';
         $email       = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
         $interest    = isset($_POST['interest']) ? sanitize_text_field($_POST['interest']) : '';
+        $message     = isset($_POST['message']) ? sanitize_text_field($_POST['message']) : '';
 
         if (empty($firstname) || empty($lastname) || empty($email)) {
             echo json_encode(array('sent'=>false, 'message'=>__('Your message failed to be sent. Please check your fields.', 'resideo')));
             exit();
         }
 
-        $message =  __('I am interested in: ', 'resideo')  . $interest;
+        $message_body =  __('I am interested in: ', 'resideo')  . $interest . '<br /><br />' . $message;
         $body = __('You received the following message from ', 'resideo') . 
                 $firstname . ' ' . $lastname . ' [' . __('Phone number', 'resideo') . ': ' . $phone . ']' . '<br /><br />
-                <i>' . $message . '</i>';
+                <i>' . $message_body . '</i>';
 
         $headers = array(
             'Content-Type: text/html; charset=UTF-8',

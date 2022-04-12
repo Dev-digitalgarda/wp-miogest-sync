@@ -923,7 +923,8 @@
 #shortcode-modal .sh-new-area-img-container,
 #shortcode-modal .sh-new-gallery-carousel-photo-img-container,
 #shortcode-modal .sh-new-award-img-container,
-#shortcode-modal .sh-new-promo-slide-img-container {
+#shortcode-modal .sh-new-promo-slide-img-container,
+#shortcode-modal .sh-promo-caption-img-container {
     width: 100%;
     height: 111px;
     background-color: #f5f5f5;
@@ -932,11 +933,15 @@
     border-radius: 5px;
     overflow: hidden;
 }
+#shortcode-modal .sh-promo-caption-img-container {
+    height: 140px;
+}
 #shortcode-modal .sh-new-service-img-placeholder,
 #shortcode-modal .sh-new-area-img-placeholder,
 #shortcode-modal .sh-new-gallery-carousel-photo-img-placeholder,
 #shortcode-modal .sh-new-award-img-placeholder,
-#shortcode-modal .sh-new-promo-slide-img-placeholder {
+#shortcode-modal .sh-new-promo-slide-img-placeholder,
+#shortcode-modal .sh-promo-caption-img-placeholder {
     top: 10px;
     right: 10px;
     bottom: 20px;
@@ -951,11 +956,13 @@
 #shortcode-modal .sh-new-area-img-placeholder.has-image,
 #shortcode-modal .sh-new-gallery-carousel-photo-img-placeholder.has-image,
 #shortcode-modal .sh-new-award-img-placeholder.has-image,
-#shortcode-modal .sh-new-promo-slide-img-placeholder.has-image {
+#shortcode-modal .sh-new-promo-slide-img-placeholder.has-image,
+#shortcode-modal .sh-promo-caption-img-placeholder.has-image {
     background-size: 40%;
     top: 0;
 }
-#shortcode-modal .sh-new-service-img-placeholder span {
+#shortcode-modal .sh-new-service-img-placeholder span,
+#shortcode-modal .sh-promo-caption-img-placeholder span {
     font-size: 60px;
     line-height: 60px;
 }
@@ -964,7 +971,8 @@
 #shortcode-modal .sh-new-gallery-carousel-photo-add-btns,
 #shortcode-modal .sh-new-number-add-btns,
 #shortcode-modal .sh-new-award-add-btns,
-#shortcode-modal .sh-new-promo-slide-add-btns {
+#shortcode-modal .sh-new-promo-slide-add-btns,
+#shortcode-modal .sh-promo-caption-add-btns {
     position: absolute;
     text-align: center;
     bottom: 10px;
@@ -976,7 +984,9 @@
 #shortcode-modal .sh-new-area-add-img,
 #shortcode-modal .sh-new-gallery-carousel-photo-add-img,
 #shortcode-modal .sh-new-award-add-img,
-#shortcode-modal .sh-new-promo-slide-add-img {
+#shortcode-modal .sh-new-promo-slide-add-img,
+#shortcode-modal .sh-promo-caption-add-img, 
+#shortcode-modal .sh-promo-caption-add-icon {
     font-size: 11px;
     color: #0073aa;
     display: inline;
@@ -988,7 +998,9 @@
 #shortcode-modal .sh-new-area-add-img:hover,
 #shortcode-modal .sh-new-gallery-carousel-photo-add-img:hover,
 #shortcode-modal .sh-new-award-add-img:hover,
-#shortcode-modal .sh-new-promo-slide-add-img:hover {
+#shortcode-modal .sh-new-promo-slide-add-img:hover,
+#shortcode-modal .sh-promo-caption-add-img:hover, 
+#shortcode-modal .sh-promo-caption-add-icon:hover {
     color: #00a0d2;
 }
 #shortcode-modal .list-group .list-group-item {
@@ -1054,6 +1066,12 @@
 #shortcode-modal .layout-radio.layout-radio-services-5 label > span {
     background-image: url(../images/services-layout-5-icon.png);
 }
+#shortcode-modal .layout-radio.layout-radio-services-6 label > span {
+    background-image: url(../images/services-layout-6-icon.png);
+}
+#shortcode-modal .layout-radio.layout-radio-services-7 label > span {
+    background-image: url(../images/services-layout-7-icon.png);
+}
 #shortcode-modal .layout-radio.layout-radio-properties-1 label > span {
     background-image: url(../images/properties-layout-1-icon.png);
 }
@@ -1068,6 +1086,24 @@
 }
 #shortcode-modal .layout-radio.layout-radio-testimonials-2 label > span {
     background-image: url(../images/testimonials-layout-2-icon.png);
+}
+#shortcode-modal .layout-radio.layout-radio-promo-1 label > span {
+    background-image: url(../images/promo-layout-1-icon.png);
+}
+#shortcode-modal .layout-radio.layout-radio-promo-2 label > span {
+    background-image: url(../images/promo-layout-2-icon.png);
+}
+#shortcode-modal .layout-radio.layout-radio-promo-3 label > span {
+    background-image: url(../images/promo-layout-3-icon.png);
+}
+#shortcode-modal .layout-radio.layout-radio-promo-4 label > span {
+    background-image: url(../images/promo-layout-4-icon.png);
+}
+#shortcode-modal .layout-radio.layout-radio-areas-1 label > span {
+    background-image: url(../images/areas-layout-1-icon.png);
+}
+#shortcode-modal .layout-radio.layout-radio-areas-2 label > span {
+    background-image: url(../images/areas-layout-2-icon.png);
 }
 #shortcode-modal .layout-radio label.display-active input+span {
     border: 2px solid #0073aa;
@@ -1084,8 +1120,12 @@
 .sh-info-image-placeholder-container,
 .sh-testimonials-image-placeholder-container, 
 .sh-subscribe-image-placeholder-container, 
+.sh-video-image-placeholder-container, 
 .sh-promo-image-placeholder-container,
+.sh-contact-image-placeholder-container,
 .sh-services-image-placeholder-container, 
+.sh-new-service-bg-image-placeholder-container, 
+.sh-edit-service-bg-image-placeholder-container, 
 .sh-numbers-image-placeholder-container {
     width: 140px;
     height: 140px;
@@ -1098,8 +1138,12 @@
 #sh-info-image-placeholder,
 #sh-testimonials-image-placeholder, 
 #sh-subscribe-image-placeholder, 
+#sh-video-image-placeholder, 
 #sh-promo-image-placeholder,
+#sh-contact-image-placeholder,
 #sh-services-image-placeholder, 
+#sh-new-service-bg-image-placeholder, 
+#sh-edit-service-bg-image-placeholder, 
 #sh-numbers-image-placeholder {
     top: 10px;
     right: 10px;
@@ -1114,8 +1158,12 @@
 #delete-info-image,
 #delete-testimonials-image, 
 #delete-subscribe-image, 
+#delete-video-image, 
 #delete-promo-image,
+#delete-contact-image,
 #delete-services-image, 
+#delete-new-service-bg-image, 
+#delete-edit-service-bg-image, 
 #delete-numbers-image {
     background-color: #e4393a;
     position: absolute;
@@ -1139,16 +1187,24 @@
 #delete-info-image:hover
 #delete-testimonials-image:hover, 
 #delete-subscribe-image:hover, 
+#delete-video-image:hover, 
 #delete-promo-image:hover,
+#delete-contact-image:hover,
 #delete-services-image:hover, 
+#delete-new-service-bg-image:hover, 
+#delete-edit-service-bg-image:hover, 
 #delete-numbers-image:hover {
     background-color: #d13032;
 }
 .sh-info-image-placeholder-container.has-image:hover #delete-info-image, 
 .sh-testimonials-image-placeholder-container.has-image:hover #delete-testimonials-image, 
 .sh-subscribe-image-placeholder-container.has-image:hover #delete-subscribe-image, 
+.sh-video-image-placeholder-container.has-image:hover #delete-video-image, 
 .sh-promo-image-placeholder-container.has-image:hover #delete-promo-image,
+.sh-contact-image-placeholder-container.has-image:hover #delete-contact-image,
 .sh-services-image-placeholder-container.has-image:hover #delete-services-image, 
+.sh-new-service-bg-image-placeholder-container.has-image:hover #delete-new-service-bg-image, 
+.sh-edit-service-bg-image-placeholder-container.has-image:hover #delete-edit-service-bg-image, 
 .sh-numbers-image-placeholder-container.has-image:hover #delete-numbers-image {
     display: block;
     bottom: 10px;

@@ -69,6 +69,7 @@ if (!function_exists('resideo_save_property')):
         $hoa          = (isset($_POST['hoa']) && $_POST['hoa'] != '') ? sanitize_text_field($_POST['hoa']) : '0';
         $gallery      = isset($_POST['gallery']) ? sanitize_text_field($_POST['gallery']) : '';
         $video        = isset($_POST['video']) ? sanitize_text_field($_POST['video']) : '';
+        $featured     = isset($_POST['featured']) ? sanitize_text_field($_POST['featured']) : '';
 
         $virtual_tour_allowed_html = array(
             'iframe' => array(
@@ -217,6 +218,7 @@ if (!function_exists('resideo_save_property')):
         update_post_meta($prop_id, 'property_agent', $agent_id);
         update_post_meta($prop_id, 'property_gallery', $gallery);
         update_post_meta($prop_id, 'property_calc', $calculator);
+        update_post_meta($prop_id, 'property_featured', $featured);
         update_post_meta($prop_id, 'property_taxes', $taxes);
         update_post_meta($prop_id, 'property_hoa_dues', $hoa);
         update_post_meta($prop_id, 'property_video', $video);

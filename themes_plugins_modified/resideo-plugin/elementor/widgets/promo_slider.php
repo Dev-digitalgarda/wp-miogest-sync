@@ -36,8 +36,8 @@ class Elementor_Resideo_Promo_Slider_Widget extends \Elementor\Widget_Base {
                 'label' => __('CTAs Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -105,7 +105,7 @@ class Elementor_Resideo_Promo_Slider_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Text', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXTAREA,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'placeholder' => __('Enter slide text', 'resideo'),
             ]
         );
@@ -270,7 +270,7 @@ class Elementor_Resideo_Promo_Slider_Widget extends \Elementor\Widget_Base {
                                 } ?>
                                 <div class="pxp-promo-slider-caption-item <?php echo esc_attr($active_caption); ?>" data-index="<?php echo esc_attr($count_captions); ?>">
                                     <h2 class="pxp-section-h2"><?php echo esc_html($caption['slide_title']); ?></h2>
-                                    <p class="pxp-text-light"><?php echo esc_html($caption['slide_text']); ?></p>
+                                    <div class="pxp-text-light"><?php echo $caption['slide_text']; ?></div>
                                     <?php if ($caption['slide_cta_link']['url'] != '') {
                                         $target = $caption['slide_cta_link']['is_external'] ? ' target="_blank"' : '';
                                         $nofollow = $caption['slide_cta_link']['nofollow'] ? ' rel="nofollow"' : ''; ?>

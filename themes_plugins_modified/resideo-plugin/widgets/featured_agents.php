@@ -121,7 +121,7 @@ class Resideo_Featured_Agents_Widget extends WP_Widget {
                         <div class="pxp-agent-side-phone"><span class="fa fa-phone"></span> ' . esc_html($a_phone) . '</div>';
             }
             $display .= '
-                        <div class="pxp-agent-side-cta text-uppercase">More Details</div>
+                        <div class="pxp-agent-side-cta text-uppercase">' . __('More Details', 'resideo') . '</div>
                     </div>
                 </a>';
         endforeach;

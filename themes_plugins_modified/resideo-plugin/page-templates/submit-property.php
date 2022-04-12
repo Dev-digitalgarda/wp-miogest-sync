@@ -32,25 +32,26 @@ get_header();
 $general_settings = get_option('resideo_general_settings');
 $fields_settings  = get_option('resideo_prop_fields_settings');
 
-$p_overview     = isset($fields_settings['resideo_p_overview_field']) ? $fields_settings['resideo_p_overview_field'] : '';
-$p_address      = isset($fields_settings['resideo_p_address_field']) ? $fields_settings['resideo_p_address_field'] : '';
-$p_coordinates  = isset($fields_settings['resideo_p_coordinates_field']) ? $fields_settings['resideo_p_coordinates_field'] : '';
-$p_streetno     = isset($fields_settings['resideo_p_streetno_field']) ? $fields_settings['resideo_p_streetno_field'] : '';
-$p_street       = isset($fields_settings['resideo_p_street_field']) ? $fields_settings['resideo_p_street_field'] : '';
-$p_neighborhood = isset($fields_settings['resideo_p_neighborhood_field']) ? $fields_settings['resideo_p_neighborhood_field'] : '';
-$p_city         = isset($fields_settings['resideo_p_city_field']) ? $fields_settings['resideo_p_city_field'] : '';
-$p_state        = isset($fields_settings['resideo_p_state_field']) ? $fields_settings['resideo_p_state_field'] : '';
-$p_zip          = isset($fields_settings['resideo_p_zip_field']) ? $fields_settings['resideo_p_zip_field'] : '';
-$p_price        = isset($fields_settings['resideo_p_price_field']) ? $fields_settings['resideo_p_price_field'] : '';
-$p_size         = isset($fields_settings['resideo_p_size_field']) ? $fields_settings['resideo_p_size_field'] : '';
-$p_beds         = isset($fields_settings['resideo_p_beds_field']) ? $fields_settings['resideo_p_beds_field'] : '';
-$p_baths        = isset($fields_settings['resideo_p_baths_field']) ? $fields_settings['resideo_p_baths_field'] : '';
-$p_type         = isset($fields_settings['resideo_p_type_field']) ? $fields_settings['resideo_p_type_field'] : '';
-$p_status       = isset($fields_settings['resideo_p_status_field']) ? $fields_settings['resideo_p_status_field'] : '';
-$p_calculator   = isset($fields_settings['resideo_p_calculator_field']) ? $fields_settings['resideo_p_calculator_field'] : '';
-$p_taxes        = isset($fields_settings['resideo_p_taxes_field']) ? $fields_settings['resideo_p_taxes_field'] : '';
-$p_hoa          = isset($fields_settings['resideo_p_hoa_field']) ? $fields_settings['resideo_p_hoa_field'] : '';
-$max_files      = (isset($general_settings['resideo_max_files_field']) && $general_settings['resideo_max_files_field'] != '') ? $general_settings['resideo_max_files_field'] : 10;
+$p_overview      = isset($fields_settings['resideo_p_overview_field']) ? $fields_settings['resideo_p_overview_field'] : '';
+$p_address       = isset($fields_settings['resideo_p_address_field']) ? $fields_settings['resideo_p_address_field'] : '';
+$p_coordinates   = isset($fields_settings['resideo_p_coordinates_field']) ? $fields_settings['resideo_p_coordinates_field'] : '';
+$p_streetno      = isset($fields_settings['resideo_p_streetno_field']) ? $fields_settings['resideo_p_streetno_field'] : '';
+$p_street        = isset($fields_settings['resideo_p_street_field']) ? $fields_settings['resideo_p_street_field'] : '';
+$p_neighborhood  = isset($fields_settings['resideo_p_neighborhood_field']) ? $fields_settings['resideo_p_neighborhood_field'] : '';
+$p_city          = isset($fields_settings['resideo_p_city_field']) ? $fields_settings['resideo_p_city_field'] : '';
+$p_state         = isset($fields_settings['resideo_p_state_field']) ? $fields_settings['resideo_p_state_field'] : '';
+$p_zip           = isset($fields_settings['resideo_p_zip_field']) ? $fields_settings['resideo_p_zip_field'] : '';
+$p_price         = isset($fields_settings['resideo_p_price_field']) ? $fields_settings['resideo_p_price_field'] : '';
+$p_size          = isset($fields_settings['resideo_p_size_field']) ? $fields_settings['resideo_p_size_field'] : '';
+$p_beds          = isset($fields_settings['resideo_p_beds_field']) ? $fields_settings['resideo_p_beds_field'] : '';
+$p_baths         = isset($fields_settings['resideo_p_baths_field']) ? $fields_settings['resideo_p_baths_field'] : '';
+$p_type          = isset($fields_settings['resideo_p_type_field']) ? $fields_settings['resideo_p_type_field'] : '';
+$p_status        = isset($fields_settings['resideo_p_status_field']) ? $fields_settings['resideo_p_status_field'] : '';
+$p_calculator    = isset($fields_settings['resideo_p_calculator_field']) ? $fields_settings['resideo_p_calculator_field'] : '';
+$p_taxes         = isset($fields_settings['resideo_p_taxes_field']) ? $fields_settings['resideo_p_taxes_field'] : '';
+$p_hoa           = isset($fields_settings['resideo_p_hoa_field']) ? $fields_settings['resideo_p_hoa_field'] : '';
+$max_files       = (isset($general_settings['resideo_max_files_field']) && $general_settings['resideo_max_files_field'] != '') ? $general_settings['resideo_max_files_field'] : 10;
+$featured_option = isset($general_settings['resideo_featured_property_field']) ? $general_settings['resideo_featured_property_field'] : '';
 
 $edit_id      = isset($_GET['edit_id']) ? sanitize_text_field($_GET['edit_id']) : '';
 $edit_link    = ($edit_id != '') ? get_permalink($edit_id) : '';
@@ -714,6 +715,17 @@ $currency = isset($general_settings['resideo_currency_symbol_field']) ? $general
                                             </b>
                                         </div>
                                     </div>
+
+                                    <?php if ($featured_option == '1') { 
+                                        $edit_featured  = ($edit_id != '') ? get_post_meta($edit_id, 'property_featured', true) : ''; ?>
+
+                                        <div class="form-group">
+                                            <div class="form-group form-check">
+                                                <input type="checkbox" class="form-check-input" id="new_featured" name="new_featured" value="1" <?php checked($edit_featured, '1'); ?>>
+                                                <label class="form-check-label" for="new_featured"><?php esc_html_e('Set as Featured', 'resideo'); ?></label>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
 
                                     <div>
                                         <a href="javascript:void(0);" class="btn pxp-submit-property-btn">

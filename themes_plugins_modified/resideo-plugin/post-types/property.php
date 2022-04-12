@@ -30,6 +30,7 @@ if (!function_exists('resideo_register_property_type')):
             'has_archive'           => true,
             'rewrite'               => array('slug' => _x('properties', 'URL SLUG', 'resideo')),
             'supports'              => array('title', 'editor', 'comments'),
+            'show_in_rest'          => false,
             'can_export'            => true,
             'register_meta_box_cb'  => 'resideo_add_property_metaboxes',
             'menu_icon'             => 'dashicons-location',

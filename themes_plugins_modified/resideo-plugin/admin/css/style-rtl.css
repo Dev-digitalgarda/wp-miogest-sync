@@ -806,11 +806,11 @@
     /*padding: 16px 20px;*/
 }
 .resideo-logo img {
-    height: 40px;
+    height: 30px;
     width: auto;
 }
 ul.resideo-tabs {
-    margin: 0;
+    margin: 10px 0 0 0;
     padding: 0;
 }
 ul.resideo-tabs li {
@@ -841,7 +841,7 @@ ul.resideo-tabs li a:hover {
     color: #333;
 } 
 ul.resideo-tabs li.resideo-tab-active a {
-    color: #e4393a;
+    color: #000;
 }
 ul.resideo-tabs li a span.resideo-tab-icon {
     position: relative;
@@ -1114,27 +1114,6 @@ input:checked + .sliderLabel {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-.wp-core-ui .resideo-content-body .button-primary {
-    background: #e4393a;
-    border-color: #e4393a #ad181a #ad181a;
-    -webkit-box-shadow: 0 1px 0 #ad181a;
-    box-shadow: 0 1px 0 #ad181a;
-    color: #fff;
-    text-decoration: none;
-    text-shadow: none;
-}
-.wp-core-ui .resideo-content-body .button-primary-disabled, 
-.wp-core-ui .resideo-content-body .button-primary.disabled, 
-.wp-core-ui .resideo-content-body .button-primary:disabled, 
-.wp-core-ui .resideo-content-body .button-primary[disabled] {
-    filter: alpha(opacity=65) !important;
-    opacity: .65 !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    background: #e4393a !important;
-    border-color: #e4393a #ad181a #ad181a !important;
-    color: #fec9ca !important;
-}
 .resideo-content-body .favicon-image-placeholder-container,
 .resideo-content-body .logo-image-placeholder-container {
     width: 140px;
@@ -1253,7 +1232,7 @@ input:checked + .sliderLabel {
 }
 #icons-modal .search-icons span {
     position: absolute;
-    top: 10px;
+    top: 15px;
     right: 24px;
 }
 #icons-modal #search-icons-input {
@@ -1316,6 +1295,10 @@ input:checked + .sliderLabel {
     height: 68px;
     float: right;
     margin-left: 10px;
+}
+#sh-services-layout .layout-radio {
+    margin-left: 9px;
+    margin-bottom: 9px;
 }
 .layout-radio input[type="radio"] {
     position: absolute;
@@ -1542,6 +1525,7 @@ tr.user-profile-picture {
 }
 .resideo-content-body .demo-loader {
     padding-bottom: 20px;
+    display: none;
 }
 .resideo-content-body img.loader {
     width: 20px;
@@ -1558,5 +1542,38 @@ tr.user-profile-picture {
 }
 .resideo-content-body .demo-response {
     padding-bottom: 20px;
+    display: none;
+}
+.theme-setup-btn {
+    display: none;
+}
+ul.theme-setup-msg {
+    list-style-type: none;
+    margin: 4px 0 0 0;
+    padding: 10px 0 1.5em 0;
+}
+ul.theme-setup-msg li {
+    display: none;
+}
+ul.theme-setup-msg li .fa-check {
+    display: none;
+    color: #5cb85c;
+}
+ul.theme-setup-msg li .msg-done {
+    display: none;
+    text-transform: uppercase;
+}
+p.theme-setup-done {
+    display: none;
+}
+.pxp-top-element-settings {
+    display: none;
+}
+.pxp-property-page-layout-preview {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+}
+.pxp-map-position-settings {
     display: none;
 }

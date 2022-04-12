@@ -20,6 +20,7 @@ if (!function_exists('resideo_admin_general_settings')):
         add_settings_field('resideo_max_files_field', __('Max Number of Uploaded Photos per Property', 'resideo'), 'resideo_max_files_field_render', 'resideo_general_settings', 'resideo_general_section' );
         add_settings_field('resideo_agents_rate_field', __('Enable Agent/Owner Reviews and Rating', 'resideo'), 'resideo_agents_rating_field_render', 'resideo_general_settings', 'resideo_general_section' );
         add_settings_field('resideo_no_review_field', __('Allow Property Publish Without Admin Approval', 'resideo'), 'resideo_no_review_field_render', 'resideo_general_settings', 'resideo_general_section' );
+        add_settings_field('resideo_featured_property_field', __('Allow Agents to Set Properties as Featured', 'resideo'), 'resideo_featured_property_field_render', 'resideo_general_settings', 'resideo_general_section' );
         add_settings_field('resideo_show_print_property_field', __('Show Print Property Option', 'resideo'), 'resideo_show_print_property_field_render', 'resideo_general_settings', 'resideo_general_section' );
         add_settings_field('resideo_show_report_property_field', __('Show Report Property Option', 'resideo'), 'resideo_show_report_property_field_render', 'resideo_general_settings', 'resideo_general_section' );
         add_settings_field('resideo_copyright_field', __('Footer Copyright Text', 'resideo'), 'resideo_copyright_field_render', 'resideo_general_settings', 'resideo_general_section' );
@@ -192,6 +193,14 @@ if (!function_exists('resideo_no_review_field_render')):
         $options = get_option('resideo_general_settings'); ?>
 
         <input type="checkbox" name="resideo_general_settings[resideo_no_review_field]" <?php if (isset($options['resideo_no_review_field'])) { checked( $options['resideo_no_review_field'], 1 ); } ?> value="1">
+    <?php }
+endif;
+
+if (!function_exists('resideo_featured_property_field_render')): 
+    function resideo_featured_property_field_render() {
+        $options = get_option('resideo_general_settings'); ?>
+
+        <input type="checkbox" name="resideo_general_settings[resideo_featured_property_field]" <?php if (isset($options['resideo_featured_property_field'])) { checked( $options['resideo_featured_property_field'], 1 ); } ?> value="1">
     <?php }
 endif;
 

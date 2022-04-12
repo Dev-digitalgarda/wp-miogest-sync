@@ -93,18 +93,35 @@
                                 '<div class="media-frame-content">' + 
                                     '<div style="padding: 20px;" id="sh-search-properties">' + 
                                         '<div class="row">' + 
-                                            '<div class="col-xs-12 col-md-6 rtl-pull-right">' + 
+                                            '<div class="col-xs-12 col-md-5 rtl-pull-right">' + 
                                                 '<div class="form-group">' + 
                                                     '<label for="sh-search-properties-title">' + sh_vars.title_label + '</label>' + 
                                                     '<input type="text" id="sh-search-properties-title" class="form-control" value="' + getObjectProperty(short, "title") + '" placeholder="' + sh_vars.title_placeholder + '">' + 
                                                 '</div>'+ 
                                             '</div>'+ 
-                                            '<div class="col-xs-12 col-md-6 rtl-pull-right">' + 
+                                            '<div class="col-xs-12 col-md-5 rtl-pull-right">' + 
                                                 '<div class="form-group">' + 
                                                     '<label for="sh-search-properties-subtitle">' + sh_vars.subtitle_label + '</label>' + 
                                                     '<input type="text" id="sh-search-properties-subtitle" class="form-control" value="' + getObjectProperty(short, "subtitle") + '" placeholder="' + sh_vars.subtitle_placeholder + '">' + 
                                                 '</div>'+ 
                                             '</div>'+ 
+                                            '<div class="col-xs-12 col-md-2 rtl-pull-right">' + 
+                                                '<div class="form-group">' + 
+                                                    '<label for="sh-search-properties-align">' + sh_vars.align_label + '</label>';
+                                                    var alignLeft   = '';
+                                                    var alignCenter = '';
+                                                    if (getObjectProperty(short, "align") == 'left') {
+                                                        alignLeft = ' selected="selected"';
+                                                    }
+                                                    if (getObjectProperty(short, "align") == 'center') {
+                                                        alignCenter = ' selected="selected"';
+                                                    }
+                                                    modalContent += '<select class="form-control" id="sh-search-properties-align">' + 
+                                                        '<option value="left"' + alignLeft + '>' + sh_vars.left_label + '</option>' + 
+                                                        '<option value="center"' + alignCenter + '>' + sh_vars.center_label + '</option>' + 
+                                                    '</select>' + 
+                                                '</div>' + 
+                                            '</div>' + 
                                         '</div>' +
                                         '<div class="sortcode-modal-subtitle" style="padding-bottom: 10px;">' + sh_vars.fields_list_label + '</div>' + 
                                         '<div class="row">' + 
@@ -332,6 +349,7 @@
                 var shortVal = {
                     'title'       : $('#sh-search-properties-title').val(),
                     'subtitle'    : $('#sh-search-properties-subtitle').val(),
+                    'align'       : $('#sh-search-properties-align').val(),
                     'id'          : $('#sh-search-properties-id').is(':checked') ? '1' : '0',
                     'address'     : $('#sh-search-properties-address').is(':checked') ? '1' : '0',
                     'city'        : $('#sh-search-properties-city').is(':checked') ? '1' : '0',
@@ -389,7 +407,7 @@
             tooltip: sh_vars.search_properties_title,
             onclick: function() {
                 editor.execCommand('res_search_properties_panel_popup', '', {
-                    data_content : '{ "title": "", "subtitle": "", "id": "", "address": "", "city": "", "neighborhood": "", "state": "", "price": "", "size": "", "beds": "", "baths": "", "type": "", "status": "", "keywords": "", "limit": "2", "amenities": "" }',
+                    data_content : '{ "title": "", "subtitle": "", "align": "left", "id": "", "address": "", "city": "", "neighborhood": "", "state": "", "price": "", "size": "", "beds": "", "baths": "", "type": "", "status": "", "keywords": "", "limit": "2", "amenities": "" }',
                 });
             }
         });

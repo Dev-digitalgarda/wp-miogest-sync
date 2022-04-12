@@ -623,4 +623,121 @@
             }
         });
     }
+
+    var propLayoutDesign = $('.pxp-property-page-layout select').val();
+    if (propLayoutDesign == 'd1' || propLayoutDesign == 'd3' || propLayoutDesign == 'd6' || propLayoutDesign == 'd7') {
+        $('.pxp-top-element-settings').show();
+    } else {
+        $('.pxp-top-element-settings').hide();
+    }
+    if (propLayoutDesign == 'd4') {
+        $('.pxp-map-position-settings').show();
+    } else {
+        $('.pxp-map-position-settings').hide();
+    }
+    $('.pxp-property-page-layout select').on('change', function() {
+        var propLayoutOption = $('.pxp-top-element-settings select').val();
+        var mapPositionSettings = $('.pxp-map-position-settings select').val();
+
+        $('.pxp-property-page-layout-preview').hide();
+
+        if ($(this).val() == 'd1') {
+            $('.pxp-top-element-settings').show();
+            $('.pxp-map-position-settings').hide();
+            if (propLayoutOption == 'title') {
+                $('.pxp-is-d1-title').show();
+            } else {
+                $('.pxp-is-d1-gallery').show();
+            }
+        }
+        if ($(this).val() == 'd2') {
+            $('.pxp-top-element-settings').hide();
+            $('.pxp-map-position-settings').hide();
+            $('.pxp-is-d2').show();
+        }
+        if ($(this).val() == 'd3') {
+            $('.pxp-top-element-settings').show();
+            $('.pxp-map-position-settings').hide();
+            if (propLayoutOption == 'title') {
+                $('.pxp-is-d3-title').show();
+            } else {
+                $('.pxp-is-d3-gallery').show();
+            }
+        }
+        if ($(this).val() == 'd4') {
+            $('.pxp-top-element-settings').hide();
+            $('.pxp-map-position-settings').show();
+            if (mapPositionSettings == 'left') {
+                $('.pxp-is-d4-left').show();
+            } else {
+                $('.pxp-is-d4-right').show();
+            }
+        }
+        if ($(this).val() == 'd5') {
+            $('.pxp-top-element-settings').hide();
+            $('.pxp-map-position-settings').hide();
+            $('.pxp-is-d5').show();
+        }
+        if ($(this).val() == 'd6') {
+            $('.pxp-top-element-settings').show();
+            $('.pxp-map-position-settings').hide();
+            if (propLayoutOption == 'title') {
+                $('.pxp-is-d6-title').show();
+            } else {
+                $('.pxp-is-d6-gallery').show();
+            }
+        }
+        if ($(this).val() == 'd7') {
+            $('.pxp-top-element-settings').show();
+            $('.pxp-map-position-settings').hide();
+            if (propLayoutOption == 'title') {
+                $('.pxp-is-d7-title').show();
+            } else {
+                $('.pxp-is-d7-gallery').show();
+            }
+        }
+    });
+    $('.pxp-top-element-settings select').on('change', function() {
+        var propLayoutDesignChange = $('.pxp-property-page-layout select').val();
+
+        $('.pxp-property-page-layout-preview').hide();
+
+        if ($(this).val() == 'title') {
+            if (propLayoutDesignChange == 'd1') {
+                $('.pxp-is-d1-title').show();
+            }
+            if (propLayoutDesignChange == 'd3') {
+                $('.pxp-is-d3-title').show();
+            }
+            if (propLayoutDesignChange == 'd6') {
+                $('.pxp-is-d6-title').show();
+            }
+            if (propLayoutDesignChange == 'd7') {
+                $('.pxp-is-d7-title').show();
+            }
+        }
+        if ($(this).val() == 'gallery') {
+            if (propLayoutDesignChange == 'd1') {
+                $('.pxp-is-d1-gallery').show();
+            }
+            if (propLayoutDesignChange == 'd3') {
+                $('.pxp-is-d3-gallery').show();
+            }
+            if (propLayoutDesignChange == 'd6') {
+                $('.pxp-is-d6-gallery').show();
+            }
+            if (propLayoutDesignChange == 'd7') {
+                $('.pxp-is-d7-gallery').show();
+            }
+        }
+    });
+    $('.pxp-map-position-settings select').on('change', function() {
+        $('.pxp-property-page-layout-preview').hide();
+
+        if ($(this).val() == 'left') {
+            $('.pxp-is-d4-left').show();
+        } else {
+            $('.pxp-is-d4-right').show();
+        }
+    });
 })(jQuery);

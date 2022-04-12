@@ -46,9 +46,24 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Subtitle', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'input_type' => 'string',
                 'placeholder' => __('Enter subtitle', 'resideo'),
+            ]
+        );
+
+        $this->add_control(
+            'text_color',
+            [
+                'label' => __('Text Color', 'resideo'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'scheme' => [
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .title' => 'color: {{VALUE}}',
+                ],
             ]
         );
 
@@ -59,6 +74,9 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Background Image', 'resideo'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+                'condition' => [
+                    'layout' => '1'
+                ]
             ]
         );
 
@@ -80,6 +98,9 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('CTA', 'resideo'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+                'condition' => [
+                    'layout' => '1'
+                ]
             ]
         );
 
@@ -101,6 +122,21 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::TEXT,
                 'input_type' => 'string',
                 'placeholder' => __('Enter CTA label', 'resideo'),
+            ]
+        );
+
+        $this->add_control(
+            'cta_color',
+            [
+                'label' => __('CTA Color', 'resideo'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'scheme' => [
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .title' => 'color: {{VALUE}}',
+                ],
             ]
         );
 
@@ -162,6 +198,10 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
         }
         $margin_class = $settings['margin'] == 'yes' ? 'mt-100' : '';
 
+        $text_color = isset($settings['text_color']) ? 'color: ' . $settings['text_color'] : '';
+        $cta_color = isset($settings['cta_color']) ? $settings['cta_color'] : '';
+        $cta_id = uniqid();
+
         $args = array(
             'numberposts'      => -1,
             'post_type'        => 'testimonial',
@@ -177,14 +217,17 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
             case '1': ?>
                 <div class="pxp-testim-1 pt-100 pb-100 <?php echo esc_attr($margin_class); ?> pxp-cover" style="background-image: url(<?php echo esc_url($bg_image_src); ?>);">
                     <div class="pxp-testim-1-intro">
-                        <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
-                        <p class="pxp-text-light"><?php echo esc_html($settings['subtitle']); ?></p>
+                        <h2 class="pxp-section-h2" style="<?php echo esc_attr($text_color); ?>"><?php echo esc_html($settings['title']); ?></h2>
+                        <div class="pxp-text-light" style="<?php echo esc_attr($text_color); ?>"><?php echo $settings['subtitle']; ?></div>
 
                         <?php if ($settings['cta_link']['url'] != '') { 
                             $target = $settings['cta_link']['is_external'] ? ' target="_blank"' : '';
                             $nofollow = $settings['cta_link']['nofollow'] ? ' rel="nofollow"' : ''; ?>
-                            <a href="<?php echo esc_url($settings['cta_link']['url']); ?>" class="pxp-primary-cta text-uppercase mt-2 mt-md-3 mt-lg-5 pxp-animate" <?php echo $target; ?> <?php echo $nofollow; ?>><?php echo esc_html($settings['cta_label']); ?></a>
-                        <?php } ?>
+                            <a href="<?php echo esc_url($settings['cta_link']['url']); ?>" class="pxp-primary-cta text-uppercase mt-2 mt-md-3 mt-lg-5 pxp-animate" id="cta-<?php echo esc_attr($cta_id); ?>" style="color: <?php echo esc_attr($cta_color); ?>" <?php echo $target; ?> <?php echo $nofollow; ?>><?php echo esc_html($settings['cta_label']); ?></a>
+                            <?php if ($cta_color != '') { ?>
+                                <style>.pxp-primary-cta#cta-<?php echo esc_attr($cta_id); ?>:after { border-top: 2px solid <?php echo esc_html($cta_color); ?> }</style>
+                            <?php }
+                        } ?>
                     </div>
                     <div class="pxp-testim-1-container mt-4 mt-md-5 mt-lg-0">
                         <div class="owl-carousel pxp-testim-1-stage">
@@ -205,7 +248,7 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
                                         <div class="pxp-testim-1-item-avatar pxp-cover" style="background-image: url(<?php echo esc_url($avatar_photo_src); ?>)"></div>
                                         <div class="pxp-testim-1-item-name"><?php echo esc_html($post['post_title']); ?></div>
                                         <div class="pxp-testim-1-item-location"><?php echo esc_html($location); ?></div>
-                                        <div class="pxp-testim-1-item-message"><?php echo esc_html($text); ?></div>
+                                        <div class="pxp-testim-1-item-message"><?php echo $text; ?></div>
                                     </div>
                                 </div>
                             <?php } ?>
@@ -218,8 +261,8 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
                     <div class="row no-gutters align-items-center">
                         <div class="col-md-6">
                             <div class="pxp-testim-2-caption pt-100 pb-100">
-                                <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
-                                <p class="pxp-text-light"><?php echo esc_html($settings['subtitle']); ?></p>
+                                <h2 class="pxp-section-h2" style="<?php echo esc_attr($text_color); ?>"><?php echo esc_html($settings['title']); ?></h2>
+                                <div class="pxp-text-light" style="<?php echo esc_attr($text_color); ?>"><?php echo $settings['subtitle']; ?></div>
                                 <div id="pxp-testim-2-caption-carousel" class="carousel slide pxp-testim-2-caption-carousel mt-4 mt-md-5" data-ride="carousel" data-pause="false" data-interval="7000">
                                     <div class="carousel-inner">
                                         <?php $counter_1 = 0;
@@ -231,31 +274,51 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
                                                 $slide_active_1 = 'active';
                                             } ?>
                                             <div class="carousel-item <?php echo esc_attr($slide_active_1); ?>" data-slide="<?php echo esc_attr($counter_1); ?>">
-                                                <div class="pxp-testim-2-item-message"><?php echo esc_html($text); ?></div>
-                                                <div class="pxp-testim-2-item-name"><?php echo esc_html($post['post_title']); ?></div>
-                                                <div class="pxp-testim-2-item-location"><?php echo esc_html($location); ?></div>
+                                                <div class="pxp-testim-2-item-message" style="<?php echo esc_attr($text_color); ?>"><?php echo $text; ?></div>
+                                                <div class="pxp-testim-2-item-name" style="<?php echo esc_attr($text_color); ?>"><?php echo esc_html($post['post_title']); ?></div>
+                                                <div class="pxp-testim-2-item-location" style="<?php echo esc_attr($text_color); ?>"><?php echo esc_html($location); ?></div>
                                             </div>
                                             <?php $counter_1++;
                                         } ?>
                                     </div>
                                     <div class="pxp-carousel-controls mt-4 mt-md-5">
                                         <a class="pxp-carousel-control-prev" role="button" data-slide="prev">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
-                                                <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
-                                                    <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
-                                                    <line id="Line_3" data-name="Line 3" x1="9" y2="9" transform="translate(1846.5 1587.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
-                                                    <line id="Line_4" data-name="Line 4" x1="9" y1="9" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
-                                                </g>
-                                            </svg>
+                                            <?php if (is_rtl()) { ?>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
+                                                    <g id="Symbol_1_1" data-name="Symbol 1 – 1" transform="translate(-1847.5 -1589.086)">
+                                                        <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_6" data-name="Line 3" x2="9" y2="9" transform="translate(1869.5 1590.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_7" data-name="Line 4" y1="9" x2="9" transform="translate(1869.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                    </g>
+                                                </svg>
+                                            <?php } else { ?>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
+                                                    <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
+                                                        <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_3" data-name="Line 3" x1="9" y2="9" transform="translate(1846.5 1587.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_4" data-name="Line 4" x1="9" y1="9" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                    </g>
+                                                </svg>
+                                            <?php } ?>
                                         </a>
                                         <a class="pxp-carousel-control-next" role="button" data-slide="next">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
-                                                <g id="Symbol_1_1" data-name="Symbol 1 – 1" transform="translate(-1847.5 -1589.086)">
-                                                    <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
-                                                    <line id="Line_6" data-name="Line 3" x2="9" y2="9" transform="translate(1869.5 1590.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
-                                                    <line id="Line_7" data-name="Line 4" y1="9" x2="9" transform="translate(1869.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
-                                                </g>
-                                            </svg>
+                                            <?php if (is_rtl()) { ?>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
+                                                    <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
+                                                        <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_3" data-name="Line 3" x1="9" y2="9" transform="translate(1846.5 1587.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_4" data-name="Line 4" x1="9" y1="9" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                    </g>
+                                                </svg>
+                                            <?php } else { ?>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
+                                                    <g id="Symbol_1_1" data-name="Symbol 1 – 1" transform="translate(-1847.5 -1589.086)">
+                                                        <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_6" data-name="Line 3" x2="9" y2="9" transform="translate(1869.5 1590.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_7" data-name="Line 4" y1="9" x2="9" transform="translate(1869.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                    </g>
+                                                </svg>
+                                            <?php } ?>
                                         </a>
                                     </div>
                                 </div>
@@ -293,7 +356,7 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
                 <div class="pxp-testim-1 pt-100 pb-100 <?php echo esc_attr($margin_class); ?> pxp-cover" style="background-image: url(<?php echo esc_url($bg_image_src); ?>);">
                     <div class="pxp-testim-1-intro">
                         <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
-                        <p class="pxp-text-light"><?php echo esc_html($settings['subtitle']); ?></p>
+                        <div class="pxp-text-light"><?php echo $settings['subtitle']; ?></div>
 
                         <?php if ($settings['cta_link']['url'] != '') { 
                             $target = $settings['cta_link']['is_external'] ? ' target="_blank"' : '';
@@ -320,7 +383,7 @@ class Elementor_Resideo_Testimonials_Widget extends \Elementor\Widget_Base {
                                         <div class="pxp-testim-1-item-avatar pxp-cover" style="background-image: url(<?php echo esc_url($avatar_photo_src); ?>)"></div>
                                         <div class="pxp-testim-1-item-name"><?php echo esc_html($post['post_title']); ?></div>
                                         <div class="pxp-testim-1-item-location"><?php echo esc_html($location); ?></div>
-                                        <div class="pxp-testim-1-item-message"><?php echo esc_html($text); ?></div>
+                                        <div class="pxp-testim-1-item-message"><?php echo $text; ?></div>
                                     </div>
                                 </div>
                             <?php } ?>

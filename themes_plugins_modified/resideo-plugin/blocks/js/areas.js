@@ -59,6 +59,7 @@
         var cta_link  = getObjectProperty(data_json, 'cta_link');
         var cta_color = getObjectProperty(data_json, 'cta_color');
         var margin    = getObjectProperty(data_json, 'margin');
+        var layout    = getObjectProperty(data_json, 'layout');
         var areas     = getObjectProperty(data_json, 'areas');
 
         if (!jQuery.isArray(areas)) {
@@ -420,6 +421,25 @@
                     },
                     el(SelectControl, 
                         {
+                            label: __('Layout', 'resideo'),
+                            value: layout,
+                            options: [
+                                { label: __('Layout 1', 'resideo'), value: '1' },
+                                { label: __('Layout 2', 'resideo'), value: '2' },
+                            ],
+                            onChange: function(value) {
+                                data_json.layout = value;
+                                setAttributes({ data_content: encodeURIComponent(JSON.stringify(data_json)) });
+                            }
+                        }
+                    )
+                ),
+                el('div',
+                    {
+                        className: 'col-xs-12 col-sm-6'
+                    },
+                    el(SelectControl, 
+                        {
                             label: __('Margin', 'resideo'),
                             value: margin,
                             options: [
@@ -630,7 +650,7 @@
         attributes: {
             data_content: {
                 type: 'string',
-                default: '%7B%22title%22%3A%22%22%2C%22subtitle%22%3A%22%22%2C%22cta_label%22%3A%22%22%2C%22cta_link%22%3A%22%22%2C%22cta_color%22%3A%22%23333333%22%2C%22margin%22%3A%22no%22%2C%22areas%22%3A%5B%5D%7D'
+                default: '%7B%22title%22%3A%22%22%2C%22subtitle%22%3A%22%22%2C%22cta_label%22%3A%22%22%2C%22cta_link%22%3A%22%22%2C%22cta_color%22%3A%22%23333333%22%2C%22margin%22%3A%22no%22%2C%22layout%22%3A%221%22%2C%22areas%22%3A%5B%5D%7D'
             }
         },
         edit: withState({

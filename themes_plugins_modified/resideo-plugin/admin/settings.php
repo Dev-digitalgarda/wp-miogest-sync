@@ -57,6 +57,7 @@ if (!function_exists('resideo_settings_init')):
         register_setting('resideo_appearance_settings', 'resideo_appearance_settings');
         register_setting('resideo_colors_settings', 'resideo_colors_settings');
         register_setting('resideo_gmaps_settings', 'resideo_gmaps_settings');
+        register_setting('resideo_property_layout_settings', 'resideo_property_layout_settings');
         register_setting('resideo_cities_settings', 'resideo_cities_settings');
         register_setting('resideo_neighborhoods_settings', 'resideo_neighborhoods_settings');
         register_setting('resideo_address_settings', 'resideo_address_settings');
@@ -86,6 +87,7 @@ require_once 'sections/general.php';
 require_once 'sections/appearance.php';
 require_once 'sections/colors.php';
 require_once 'sections/gmaps.php';
+require_once 'sections/property_layout.php';
 require_once 'sections/cities.php';
 require_once 'sections/neighborhoods.php';
 require_once 'sections/address.php';
@@ -127,6 +129,10 @@ if (!function_exists('resideo_settings_page')):
             case "gmaps":
                 resideo_admin_gmaps();
                 $tab = 'resideo_gmaps_settings';
+                break;
+            case "property_layout":
+                resideo_admin_property_layout();
+                $tab = 'resideo_property_layout_settings';
                 break;
             case "cities":
                 resideo_admin_cities();
@@ -202,6 +208,11 @@ if (!function_exists('resideo_settings_page')):
                     <li class="<?php echo ($active_tab == 'gmaps') ? 'resideo-tab-active' : '' ?>">
                         <a href="admin.php?page=admin/settings.php&tab=gmaps">
                             <span class="icon-map resideo-tab-icon"></span><span class="resideo-tab-link"><?php esc_html_e('Google Maps', 'resideo'); ?></span>
+                        </a>
+                    </li>
+                    <li class="<?php echo ($active_tab == 'property_layout') ? 'resideo-tab-active' : '' ?>">
+                        <a href="admin.php?page=admin/settings.php&tab=property_layout">
+                            <span class="icon-doc resideo-tab-icon"></span><span class="resideo-tab-link"><?php esc_html_e('Property Page Layout', 'resideo'); ?></span>
                         </a>
                     </li>
                     <li class="<?php echo ($active_tab == 'cities') ? 'resideo-tab-active' : '' ?>">

@@ -83,7 +83,7 @@ if (!function_exists('resideo_get_filter_properties_form')):
                         if ($address_f == 'yes') { ?>
                             <div class="col-sm-7 col-md-8 col-lg-9 pxp-content-side-search-form-col">
                                 <?php if($address_type == 'auto') { ?>
-								<input type="text" class="form-control pxp-is-address" id="filter-address-auto" name="search_address" placeholder="<?php esc_attr_e('Search by City, Neighborhood, or Address', 'resideo'); ?>" autocomplete="off" value="<?php echo esc_attr($search_address); ?>">
+                                    <input type="text" class="form-control pxp-is-address" id="filter-address-auto" name="search_address" placeholder="<?php esc_attr_e('Search by City, Neighborhood, or Address', 'resideo'); ?>" autocomplete="off" value="<?php echo esc_attr($search_address); ?>">
                                     <span class="fa fa-search"></span>
                                     <input type="hidden" id="filter_street_no_field" name="search_street_no" autocomplete="off" value="<?php echo esc_attr($search_street_no); ?>">
                                     <input type="hidden" id="filter_street_field" name="search_street" autocomplete="off" value="<?php echo esc_attr($search_street); ?>">
@@ -91,7 +91,6 @@ if (!function_exists('resideo_get_filter_properties_form')):
                                     <input type="hidden" id="filter_city_field" name="search_city" autocomplete="off" value="<?php echo esc_attr($search_city); ?>">
                                     <input type="hidden" id="filter_state_field" name="search_state" autocomplete="off" value="<?php echo esc_attr($search_state); ?>">
                                     <input type="hidden" id="filter_zip_field" name="search_zip" autocomplete="off" value="<?php echo esc_attr($search_zip); ?>">
-								
                                 <?php } else { ?>
                                     <input type="text" class="form-control pxp-is-address" id="search_address" name="search_address" placeholder="<?php esc_attr_e('Address', 'resideo'); ?>" value="<?php echo esc_attr($search_address); ?>">
                                     <span class="fa fa-search"></span>
@@ -265,8 +264,8 @@ if (!function_exists('resideo_get_filter_properties_form')):
                         $price_array = array($max_price);
 
                         if ($max_price != '') {
-                            while($i >= 150000) {
-                                $i = round($i / 1.2, -2);
+                            while($i >= 200) {
+                                $i = round($i / 2, -2);
                                 array_unshift($price_array, $i);
                             }
                         }

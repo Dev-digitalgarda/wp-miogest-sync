@@ -9,30 +9,80 @@
  */
 if (!function_exists('resideo_send_contact_shortcode_message')): 
     function resideo_send_contact_shortcode_message() {
-        check_ajax_referer('contact_form_shortcode_ajax_nonce', 'security');
+        check_ajax_referer('contact_section_form_ajax_nonce', 'security');
 
-        $receiver_email = isset($_POST['receiver_email']) ? sanitize_email($_POST['receiver_email']) : '';
-        $name           = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
-        $email          = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
-        $message        = isset($_POST['message']) ? sanitize_text_field($_POST['message']) : '';
+        $company_email = isset($_POST['company_email']) ? sanitize_email($_POST['company_email']) : '';
+        $client_email = isset($_POST['client_email']) ? sanitize_email($_POST['client_email']) : '';
 
-        if (empty($name) || empty($email) || empty($message)) {
-            echo json_encode(array('sent' => false, 'message' => __('Your message failed to be sent. Please check the fields and try again.', 'resideo')));
+        if (empty($client_email)) {
+            echo json_encode(array('sent' => false, 'message' => __('Email field is mandatory.', 'resideo')));
             exit();
         }
 
-        $receiver_email = explode(',', $receiver_email);
+        if (isset($_POST['cfields']) && is_array($_POST['cfields'])) {
+            array_walk_recursive($_POST['cfields'], 'resideo_sanitize_multi_array');
+            $custom_fields = $_POST['cfields'];
+        } else {
+            $custom_fields = '';
+        }
 
-        $headers = array(
-            'Content-Type: text/html; charset=UTF-8',
-            'From: '. $email,
-            'Reply-To: ' . $email
-        );
+        $body = '';
+
+        if ($custom_fields != '') {
+            $body .= __('The following details were sent via contact form:', 'resideo') . '<br /><br />';
+
+            foreach ($custom_fields as $key => $value) {
+                if (
+                    ($value['field_mandatory'] == 'yes' && $value['field_value'] == '' && $value['field_type'] == 'text_input_field') || 
+                    ($value['field_mandatory'] == 'yes' && $value['field_value'] == '' && $value['field_type'] == 'textarea_field') || 
+                    ($value['field_mandatory'] == 'yes' && $value['field_value'] == 'None' && $value['field_type'] == 'select_field') || 
+                    ($value['field_mandatory'] == 'yes' && $value['field_value'] == 'No' && $value['field_type'] == 'checkbox_field') || 
+                    ($value['field_mandatory'] == 'yes' && $value['field_value'] == '' && $value['field_type'] == 'date_field')
+                ) {
+                    echo json_encode(array('save' => false, 'message' => sprintf (__('%s field is mandatory.', 'resideo'), $value['field_label'])));
+                    exit();
+                }
+
+                $body .= $value['field_label'] . ': ' . $value['field_value'] . '<br />';
+            }
+
+            $headers = array(
+                'Content-Type: text/html; charset=UTF-8',
+                'From: '. $client_email,
+                'Reply-To: ' . $client_email
+            );
+        } else {
+            $name    = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+            $phone   = isset($_POST['phone']) ? sanitize_text_field($_POST['phone']) : '';
+            $message = isset($_POST['message']) ? sanitize_text_field($_POST['message']) : '';
+
+            if (empty($name)) {
+                echo json_encode(array('sent' => false, 'message' => __('Name field is mandatory.', 'resideo')));
+                exit();
+            }
+
+            if (empty($message)) {
+                echo json_encode(array('sent' => false, 'message' => __('Message field is mandatory.', 'resideo')));
+                exit();
+            }
+
+            $body = __('You received the following message from ', 'resideo');
+            $body .= $name . ' [' . __('Phone number', 'resideo') . ': ' . $phone . '] ' . __('regarding', 'resideo') . ' ' . $reg . '<br /><br />';
+            $body .= $message;
+
+            $headers = array(
+                'Content-Type: text/html; charset=UTF-8',
+                'From: '. $client_email,
+                'Reply-To: ' . $client_email
+            );
+        }
+
+        $company_email = explode(',', $company_email);
 
         $send = wp_mail(
-            $receiver_email,
+            $company_email,
             sprintf(__('%s | Message from client', 'resideo'), get_option('blogname')),
-            $message,
+            $body,
             $headers
         );
 
@@ -58,7 +108,7 @@ if (!function_exists('resideo_contact_company')):
         check_ajax_referer('contact_form_page_ajax_nonce', 'security');
 
         $company_email = isset($_POST['company_email']) ? sanitize_email($_POST['company_email']) : '';
-        $client_email   = isset($_POST['client_email']) ? sanitize_email($_POST['client_email']) : '';
+        $client_email = isset($_POST['client_email']) ? sanitize_email($_POST['client_email']) : '';
 
         if (empty($client_email)) {
             echo json_encode(array('sent' => false, 'message' => __('Email field is mandatory.', 'resideo')));

@@ -11,94 +11,166 @@ if (!function_exists('resideo_contact_shortcode')):
     function resideo_contact_shortcode($attrs, $content = null) {
         extract(shortcode_atts(array('data_content'), $attrs));
 
+        if (!isset($attrs['data_content'])) {
+            return null;
+        }
+
         $s_array = json_decode(urldecode($attrs['data_content']), true);
 
-        $title        = isset($s_array['title']) ? $s_array['title'] : '';
-        $subtitle     = isset($s_array['subtitle']) ? $s_array['subtitle'] : '';
-        $name         = isset($s_array['name']) ? $s_array['name'] : '';
-        $phone        = isset($s_array['phone']) ? $s_array['phone'] : '';
-        $address      = isset($s_array['address']) ? $s_array['address'] : '';
-        $lat          = isset($s_array['lat']) ? $s_array['lat'] : '';
-        $lng          = isset($s_array['lng']) ? $s_array['lng'] : '';
-        $marker       = isset($s_array['marker']) ? $s_array['marker'] : '';
-        $form         = isset($s_array['form']) ? $s_array['form'] : '';
-        $email        = isset($s_array['email']) ? $s_array['email'] : '';
-        $map_position = isset($s_array['map_position']) ? $s_array['map_position'] : '';
-        $width        = isset($s_array['width']) ? $s_array['width'] : '';
-        $margin       = isset($s_array['margin']) ? $s_array['margin'] : '';
+        $margin_class = $s_array['margin'] == 'yes' ? 'mt-100' : '';
 
-        if ($map_position == 'right') {
-            $position_class = 'isLeft';
+        $image  = isset($s_array['image']) ? $s_array['image'] : '';
+        if ($image != '') {
+            $photo = wp_get_attachment_image_src($image, 'pxp-full');
+            $photo_src = $photo[0];
         } else {
-            $position_class = 'isRight';
+            $photo_src = '';
         }
 
-        if ($width == 'wide') {
-            $wide_class = 'extendFull';
-        } else {
-            $wide_class = '';
+        $text_color    = isset($s_array['text_color']) ? 'color: ' . $s_array['text_color'] : '';
+        $form_title    = isset($s_array['form_title']) ? $s_array['form_title']: '';
+        $form_subtitle = isset($s_array['form_subtitle']) ? $s_array['form_subtitle']: '';
+        $form_email    = isset($s_array['form_email']) ? $s_array['form_email']: '';
+        $form_position = isset($s_array['position']) ? $s_array['position']: 'right';
+
+        $intro_column_class = 'order-1';
+        $form_column_class = 'order-3';
+        if ($form_position == 'left') {
+            $intro_column_class = 'order-3';
+            $form_column_class = 'order-1';
         }
 
-        $margin_class = '';
-        if ($margin == 'yes') {
-            $margin_class = 'mb-60';
-        }
+        $nonce_field = wp_nonce_field('contact_section_form_ajax_nonce', 'contact_section_security', true, false);
 
-        if ($marker != '') {
-            $marker_img = wp_get_attachment_image_src($marker, 'pxp-full');
-            $marker_src = $marker_img[0];
-        } else {
-            $marker_src = RESIDEO_PLUGIN_PATH . 'images/contact-marker-default.png';
-        }
+        $return_string = 
+            '<div class="pxp-contact-section pxp-cover pt-100 pb-100 ' . esc_attr($margin_class) . '" style="background-image: url(' . esc_url($photo_src) . ')">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-xl-4 align-left ' . esc_attr($intro_column_class) . '">
+                            <h2 class="pxp-section-h2" style="' . esc_attr($text_color) . '">' . esc_html($s_array['title']) . '</h2>
+                            <p class="pxp-text-light" style="' . esc_attr($text_color) . '">' . esc_html($s_array['subtitle']) . '</p>
+                        </div>
+                        <div class="col-lg-1 col-xl-3 order-2">
+                        </div>
+                        <div class="col-lg-5 align-left ' . esc_attr($form_column_class) . '">
+                            <div class="pxp-contact-section-form mt-5 mt-lg-0">
+                                <h2 class="pxp-section-h2">' . esc_html($form_title) . '</h2>
+                                <p>' . esc_html($form_subtitle) . '</p>
+                                <div class="pxp-contact-section-form-response mt-4"></div>
+                                <div class="mt-4">';
+        $contact_fields_settings = get_option('resideo_contact_fields_settings');
+        $has_fields = false;
+        if (is_array($contact_fields_settings)) {
+            if (count($contact_fields_settings)) {
+                $has_fields = true;
 
-        $return_string = '
-            <div class="contact-short ' . esc_attr($position_class) . ' ' . esc_attr($wide_class) . ' ' . esc_attr($margin_class) . '">
-                <div class="contact-short-details">
-                    <h2 class="centered playfair">' . esc_html($title) . '</h2>
-                    <h3 class="centered short-sub">' . esc_html($subtitle) . '</h3>
-                    <div class="contact-short-details-info">
-                        <div class="contact-short-details-company">' . esc_html($name) . '</div>
-                        <div class="contact-short-details-phone"><span class="fa fa-phone"></span> ' . esc_html($phone) . '</div>
-                        <div class="contact-short-details-address">' . esc_html($address) . '</div>';
-        if ($form == 'yes') {
-            $return_string .= '
-                        <div class="contact-short-details-cta">
-                            <a href="javascript:void(0);" class="btn btn-color btn-lg">' . __('Send Us a Message', 'resideo') . '</a>
-                        </div>';
+                $return_string .= 
+                                    '<div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="pxp-contact-section-form-email" placeholder="' . __('Your email...', 'resideo') . '">
+                                            </div>
+                                        </div>';
+                uasort($contact_fields_settings, "resideo_compare_position");
+                foreach ($contact_fields_settings as $key => $value) {
+                    $is_optional = $value['mandatory'] == 'no' ? '(' . __('optional', 'resideo') . ')' : '';
+
+                    switch ($value['type']) {
+                        case 'text_input_field':
+                            $return_string .= 
+                                        '<div class="col-sm-6">
+                                            <div class="form-group">
+                                                <input type="text" data-type="text_input_field" name="' . esc_attr($key) . '" id="' . esc_attr($key) . '" class="form-control pxp-js-contact-section-field" data-mandatory="' . esc_attr($value['mandatory']) . '" data-label="' . esc_attr($value['label']) . '" placeholder="' . esc_attr($value['label']) . ' ' . esc_attr($is_optional) . '" />
+                                            </div>
+                                        </div>';
+                        break;
+                        case 'textarea_field':
+                            $return_string .= 
+                                        '<div class="col-12">
+                                            <div class="form-group">
+                                                <textarea data-type="textarea_field" name="' . esc_attr($key) . '" id="' . esc_attr($key) . '" class="form-control pxp-js-contact-section-field" rows="4" data-mandatory="' . esc_attr($value['mandatory']) . '" data-label="' . esc_attr($value['label']) . '" placeholder="' . esc_attr($value['label']) . ' ' . esc_attr($is_optional) . '"></textarea>
+                                            </div>
+                                        </div>';
+                        break;
+                        case 'select_field':
+                            $list = explode(',', $value['list']);
+                            $return_string .= 
+                                        '<div class="col-sm-6">
+                                            <div class="form-group">
+                                                <select data-type="select_field" name="' . esc_attr($key) . '" id="' . esc_attr($key) . '" class="custom-select pxp-js-contact-section-field" data-mandatory="' . esc_attr($value['mandatory']) . '" data-label="' . esc_attr($value['label']) . '">
+                                                    <option value="' . __('None', 'resideo') . '">' . esc_html($value['label']) . ' ' . esc_attr($is_optional) . '</option>';
+                            for ($i = 0; $i < count($list); $i++) {
+                                $return_string .= 
+                                                        '<option value="' . esc_html($list[$i]) . '">' . esc_html($list[$i]) . '</option>';
+                            }
+                            $return_string .= 
+                                               '</select>
+                                            </div>
+                                        </div>';
+                        break;
+                        case 'checkbox_field': 
+                            $return_string .= 
+                                        '<div class="col-12">
+                                            <div class="form-group form-check">
+                                                <input data-type="checkbox_field" type="checkbox" class="form-check-input pxp-js-contact-section-field" name="' . esc_attr($key) . '" id="' . esc_attr($key) . '" data-mandatory="' . esc_attr($value['mandatory']) . '" data-label="' . esc_attr($value['label']) . '"> <label class="form-check-label" for="' . esc_attr($key) . '">' . esc_attr($value['label']) . ' ' . esc_attr($is_optional) . '</label>
+                                            </div>
+                                        </div>';
+                        break;
+                        case 'date_field':
+                            $return_string .= 
+                                        '<div class="col-sm-6">
+                                            <div class="form-group">
+                                                <input data-type="date_field" type="text" name="' . esc_attr($key) . '" id="' . esc_attr($key) . '" class="form-control pxp-js-contact-section-field date-picker" data-mandatory="' . esc_attr($value['mandatory']) . '" data-label="' . esc_attr($value['label']) . '" placeholder="' . esc_attr($value['label']) . ' ' . esc_attr($is_optional) . '" />
+                                            </div>
+                                        </div>';
+                        break;
+                        default:
+                            $return_string .= 
+                                        '<div class="col-sm-6">
+                                            <div class="form-group">
+                                                <input type="text" data-type="text_input_field" name=" ' . esc_attr($key) . '" id="' . esc_attr($key) . '" class="form-control pxp-js-contact-section-field" data-mandatory="' . esc_attr($value['mandatory']) . '" data-label="' . esc_attr($value['label']) . '" placeholder="' . esc_attr($value['label']) . ' ' . esc_attr($is_optional) . '" />
+                                            </div>
+                                        </div>';
+                        break;
+                    }
+                }
+                $return_string .= 
+                                    '</div>';
+            }
         }
-        $return_string .= '
-                    </div>';
-        if ($form == 'yes') {
-            $return_string .= '
-                    <div class="contact-short-details-form">
-                        <div class="contact-short-details-form-response"></div>
-                        <input type="hidden" id="contact_short_receiver_email" name="contact_short_receiver_email" value="' . esc_attr($email) . '">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-6">
-                                <div class="form-group">
-                                    <input class="form-control" type="text" name="contact_short_name" id="contact_short_name" placeholder="' . __('Name', 'resideo') . '">
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <div class="form-group">
-                                    <input class="form-control" type="text" name="contact_short_email" id="contact_short_email" placeholder="' . __('Email', 'resideo') . '">
-                                </div>
+        if ($has_fields === false) {
+            $return_string .= 
+                                    '<div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="pxp-contact-section-form-name" placeholder="' . __('Your name', 'resideo') . '">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="pxp-contact-section-form-phone" placeholder="' . __('Your number', 'resideo') . '">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="pxp-contact-section-form-email" placeholder="' . __('Your email', 'resideo') . '">
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control" id="pxp-contact-section-form-message" rows="6" placeholder="' . __('Type your message...', 'resideo') . '"></textarea>
+                                    </div>';
+        }
+        $return_string .= 
+                                    '<input type="hidden" id="pxp-contact-section-form-company-email" value="' . esc_attr($form_email) . '">
+                                    <a href="javascript:void(0);" class="btn pxp-contact-section-form-btn" data-custom="' . esc_attr($has_fields) . '">
+                                        <span class="pxp-contact-section-form-btn-text">' . __('Send Message', 'resideo') . '</span>
+                                        <span class="pxp-contact-section-form-btn-sending"><img src="' . esc_url(RESIDEO_PLUGIN_PATH . 'images/loader-light.svg') . '" class="pxp-loader pxp-is-btn" alt="..."> ' . __('Sending...', 'resideo') . '</span>
+                                    </a>' . $nonce_field;
+        $return_string .= 
+                                '</div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <textarea class="form-control" type="text" name="contact_short_message" id="contact_short_message" placeholder="' . __('Message', 'resideo') . '"></textarea>
-                        </div>
-                        <a href="javascript:void(0);" class="btn btn-lg btn-color" id="contact-short-details-form-send">
-                            <span id="contact-short-details-form-send-text">' . __('Send', 'resideo') . '</span>
-                            <span id="contact-short-details-form-sending-text" class=""><img src="' . esc_url(RESIDEO_PLUGIN_PATH . 'images/loader-light.svg') . '" class="loader"> ' . __('Sending...', 'resideo') . '</span>
-                        </a>
-                        <a href="javascript:void(0);" class="btn btn-lg btn-nocolor" id="contact-short-details-form-cancel">' . __('Cancel', 'resideo') . '</a>'
-                        . wp_nonce_field('contact_form_shortcode_ajax_nonce', 'contact_short_security', true, true) . 
-                    '</div>';
-        }
-        $return_string .= '
+                    </div>
                 </div>
-                <div class="contact-short-map" id="contactMap" data-lat="' . esc_attr($lat) . '" data-lng="' . esc_attr($lng) . '" data-marker="' . esc_url($marker_src) . '"></div>
             </div>';
 
         return $return_string;

@@ -27,6 +27,12 @@ if (!function_exists('resideo_search_properties_shortcode')):
         $fields_settings = get_option('resideo_prop_fields_settings');
         $address_type = isset($fields_settings['resideo_p_address_t_field']) ? $fields_settings['resideo_p_address_t_field'] : '';
 
+        $align = isset($s_array['align']) ? $s_array['align'] : 'left';
+        $align_class = '';
+        if ($align == 'center') {
+            $align_class = 'text-center';
+        }
+
         /**
          * Status field
          */
@@ -44,7 +50,7 @@ if (!function_exists('resideo_search_properties_shortcode')):
             $status_field = 
                 '<div class="col-sm-5 col-md-4 col-lg-3 pxp-search-properties-col">
                     <div class="form-group">
-                        <label for="search_status">Status</label>
+                        <label for="search_status">' . __('Status', 'resideo') . '</label>
                         <select class="custom-select" id="search_status" name="search_status">
                             <option value="0">' . __('All', 'resideo') . '</option>';
             foreach ($status_terms as $status_term) {
@@ -72,10 +78,10 @@ if (!function_exists('resideo_search_properties_shortcode')):
             $address_field = 
                 '<div class="col-sm-7 col-md-8 col-lg-9 pxp-search-properties-col">
                     <div class="form-group">
-                        <label for="search_address">Address</label>';
+                        <label for="search_address">' . __('Address', 'resideo') . '</label>';
             if ($address_type == 'auto') {
                 $address_field .= 
-                        '<input type="text" class="form-control pxp-is-address" id="filter-address-auto" name="search_address" placeholder="' . __('Search by Luca City, Neighborhood, or Address', 'resideo') . '" autocomplete="off">
+                        '<input type="text" class="form-control pxp-is-address" id="filter-address-auto" name="search_address" placeholder="' . __('Search by City, Neighborhood, or Address', 'resideo') . '" autocomplete="off">
                         <input type="hidden" id="filter_street_no_field" name="search_street_no" autocomplete="off">
                         <input type="hidden" id="filter_street_field" name="search_street" autocomplete="off">
                         <input type="hidden" id="filter_neighborhood_field" name="search_neighborhood" autocomplete="off">
@@ -460,7 +466,7 @@ if (!function_exists('resideo_search_properties_shortcode')):
             uasort($custom_fields_settings, "resideo_compare_position");
 
             foreach ($custom_fields_settings as $key => $value) {
-                if ($s_array[$key] == '1') {
+                if (isset($s_array[$key]) && $s_array[$key] == '1') {
                     if ($value['type'] == 'date_field') {
                         $custom_field = 
                             '<div class="col-sm-6 col-md-3 pxp-content-side-search-form-col">';
@@ -590,11 +596,11 @@ if (!function_exists('resideo_search_properties_shortcode')):
             '<div class="container mt-100">';
         if ($s_array['title'] != '') {
             $return_string .= 
-                '<h2 class="pxp-section-h2">' . esc_html($s_array['title']) . '</h2>';
+                '<h2 class="pxp-section-h2 ' . esc_attr($align_class) . '">' . esc_html($s_array['title']) . '</h2>';
         }
         if ($s_array['subtitle'] != '') {
             $return_string .= 
-                '<p class="pxp-text-light">' . esc_html($s_array['subtitle']) . '</p>';
+                '<p class="pxp-text-light ' . esc_attr($align_class) . '">' . esc_html($s_array['subtitle']) . '</p>';
         }
         $return_string .= 
                 '<div class="pxp-search-properties-container mt-4 mt-md-5 rounded-lg">

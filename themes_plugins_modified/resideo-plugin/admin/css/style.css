@@ -1284,6 +1284,10 @@ input:checked + .sliderLabel {
     float: left;
     margin-right: 10px;
 }
+#sh-services-layout .layout-radio {
+    margin-right: 9px;
+    margin-bottom: 9px;
+}
 .layout-radio input[type="radio"] {
     position: absolute;
     left: -9999em;
@@ -1548,5 +1552,16 @@ ul.theme-setup-msg li .msg-done {
     text-transform: uppercase;
 }
 p.theme-setup-done {
+    display: none;
+}
+.pxp-top-element-settings {
+    display: none;
+}
+.pxp-property-page-layout-preview {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+}
+.pxp-map-position-settings {
     display: none;
 }

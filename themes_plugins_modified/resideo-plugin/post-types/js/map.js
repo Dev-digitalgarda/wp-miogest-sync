@@ -208,4 +208,71 @@
         });
     }
 
+    if ($('#page-contact-office-settings-section').length > 0) {
+        var cpo_geocoder;
+        var cpo_options = {
+            zoom : 14,
+            panControl: false,
+            zoomControl: true,
+            mapTypeControl: false,
+            scaleControl: false,
+            streetViewControl: false,
+            overviewMapControl: false,
+            scrollwheel: false,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_BOTTOM,
+            },
+            fullscreenControl: false,
+        };
+        var cpo_newMarker = null;
+        var cpo_map = new google.maps.Map(document.getElementById('contact_page_single_office_map'), cpo_options);
+
+        var cpo_mapLat = 0, cpo_mapLng = 0;
+
+        if ($('#contact_page_single_office_lat').val() != '' && $('#contact_page_single_office_lng').val() != '') {
+            cpo_mapLat = $('#contact_page_single_office_lat').val();
+            cpo_mapLng = $('#contact_page_single_office_lng').val();
+        } else if (ptm_vars.default_lat != '' && ptm_vars.default_lng != '') {
+            cpo_mapLat = ptm_vars.default_lat;
+            cpo_mapLng = ptm_vars.default_lng;
+        }
+
+        var cpo_mapCenter = new google.maps.LatLng(cpo_mapLat, cpo_mapLng);
+        cpo_map.setCenter(cpo_mapCenter);
+        cpo_map.setZoom(14);
+
+        cpo_newMarker = new google.maps.Marker({
+            position: cpo_mapCenter,
+            map: cpo_map,
+            draggable: true
+        });
+
+        google.maps.event.addListener(cpo_newMarker, 'mouseup', function(event) {
+            $('#contact_page_single_office_lat').val(this.position.lat());
+            $('#contact_page_single_office_lng').val(this.position.lng());
+        });
+
+        $('#contact_page_single_office_position_btn').click(function() {
+            cpo_geocoder = new google.maps.Geocoder();
+            var cpo_address_1 = $('#contact_page_single_office_address_line_1').val();
+            var cpo_address_2 = $('#contact_page_single_office_address_line_2').val();
+            var cpo_address = cpo_address_1 + ', ' + cpo_address_2;
+
+            cpo_geocoder.geocode({ 'address': cpo_address }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    cpo_map.setCenter(results[0].geometry.location);
+                    cpo_newMarker.setPosition(results[0].geometry.location);
+                    cpo_newMarker.setVisible(true);
+
+                    $('#contact_page_single_office_lat').val(cpo_newMarker.getPosition().lat());
+                    $('#contact_page_single_office_lng').val(cpo_newMarker.getPosition().lng());
+                } else {
+                    alert(ptm_vars.geocode_error + ': ' + status);
+                }
+            });
+
+            return false;
+        });
+    }
+
 })(jQuery);

@@ -155,6 +155,12 @@
                                                             '</select>' + 
                                                         '</div>'+ 
                                                     '</div>'+ 
+                                                    '<div class="col-xs-12 col-sm-12 col-md-6 rtl-pull-right">' + 
+                                                        '<div class="form-group">' + 
+                                                            '<label for="sh-subscribe-text-color" style="display:block;margin-bottom:2px;">' + sh_vars.text_color_label + '</label>' + 
+                                                            '<input type="text" id="sh-subscribe-text-color" class="color-field" value="' + getObjectProperty(short, "text_color") + '">' + 
+                                                        '</div>'+ 
+                                                    '</div>'+ 
                                                 '</div>' + 
                                             '</div>' + 
                                         '</div>' + 
@@ -200,11 +206,12 @@
 
             $('#shortcode-modal #insert-button').on('click', function(e) {
                 var shortVal = {
-                    'title'    : $('#sh-subscribe-title').val(),
-                    'subtitle' : $('#sh-subscribe-subtitle').val(),
-                    'image'    : $('#sh-subscribe-image').val(),
-                    'image_src': $('#sh-subscribe-image').attr('data-src'),
-                    'margin'   : $('#sh-subscribe-margin').val()
+                    'title'     : $('#sh-subscribe-title').val(),
+                    'subtitle'  : $('#sh-subscribe-subtitle').val(),
+                    'image'     : $('#sh-subscribe-image').val(),
+                    'image_src' : $('#sh-subscribe-image').attr('data-src'),
+                    'margin'    : $('#sh-subscribe-margin').val(),
+                    'text_color': $('#sh-subscribe-text-color').val()
                 }
                 var shortcodeStr = '[' + shortcodeTag + ' data_content="' + encodeURIComponent(JSON.stringify(shortVal)) + '"' + '][/' + shortcodeTag + ']';
 
@@ -245,7 +252,9 @@
                 $('.sh-subscribe-image-placeholder-container').removeClass('has-image');
             });
 
-            $('#sh-subscribe-color').wpColorPicker();
+            $('.color-field').wpColorPicker({
+                defaultColor: '#333333',
+            });
         }
 
         // Open modal
@@ -269,11 +278,11 @@
 
         // Add button
         editor.addButton('res_subscribe', {
-            image: url + '/../images/contact-btn.png',
+            image: url + '/../images/subscribe-btn.png',
             tooltip: sh_vars.subscribe_title,
             onclick: function() {
                 editor.execCommand('res_subscribe_panel_popup', '', {
-                    data_content : '{ "title": "", "subtitle": "", "image": "", "image_src": "", "margin" : "no" }',
+                    data_content : '{ "title": "", "subtitle": "", "image": "", "image_src": "", "margin": "no", "text_color": "" }',
                 });
             }
         });

@@ -49,7 +49,12 @@ if (!function_exists('resideo_work_with_agent_modal')):
                                     <option value="sell"><?php esc_html_e('Sell', 'resideo'); ?></option>
                                     <option value="buy"><?php esc_html_e('Buy', 'resideo'); ?></option>
                                     <option value="rent"><?php esc_html_e('Rent', 'resideo'); ?></option>
+                                    <option value="other"><?php esc_html_e('Other', 'resideo'); ?></option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pxp-work-with-interest"><?php esc_html_e('Message', 'resideo'); ?></label>
+                                <textarea id="pxp-work-with-message" rows="4" class="form-control"></textarea>
                             </div>
                             <div class="form-group mt-4">
                                 <?php wp_nonce_field('contactagent_ajax_nonce', 'pxp-single-agent-security', true); ?>

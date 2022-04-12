@@ -71,7 +71,7 @@
                 var attachment = galleryFrame.state().get('selection').toJSON();
 
                 $.each(attachment, function(index, value) {
-                    if($.inArray(value.id, photos) == -1) {
+                    if($.inArray(value.id, photos) == -1 && value.id != '') {
                         photos.push(value.id);
 
                         $('#prop-gallery-list').append('<li class="list-group-item" data-id="' + value.id + '"><img class="pull-left" src="' + value.url + '" />' + 
@@ -1232,26 +1232,6 @@
         });
 
         // Video header settings
-        $('input[name=page_header_video_show_cta]').on('change', function() {
-            var selected = $(this).is(':checked');
-
-            if(selected === true) {
-                $('.video-cta-settings').show();
-            } else {
-                $('.video-cta-settings').hide();
-            }
-        });
-
-        $('input[name=page_header_video_show_search]').on('change', function() {
-            var selected = $(this).is(':checked');
-
-            if(selected === true) {
-                $('.video-search-settings').show();
-            } else {
-                $('.video-search-settings').hide();
-            }
-        });
-
         $('#header-video-cover-placeholder').click(function(event) {
             event.preventDefault();
 
@@ -1444,11 +1424,13 @@
             }
             init() {
                 subscribe(() => {
-                    const newTemplate = select('core/editor').getEditedPostAttribute('template');
-    
-                    if (newTemplate && newTemplate !== this.template) {
-                        this.template = newTemplate;
-                        this.changeTemplate();
+                    if (select('core/editor')) {
+                        const newTemplate = select('core/editor').getEditedPostAttribute('template');
+        
+                        if (newTemplate && newTemplate !== this.template) {
+                            this.template = newTemplate;
+                            this.changeTemplate();
+                        }
                     }
                 });
             }
@@ -1468,6 +1450,7 @@
                 $('#page-settings-section').toggle(
                     this.template != 'property-search.php' && 
                     this.template != 'contact-page.php' && 
+                    this.template != 'contact-page-office.php' && 
                     this.template != 'wish-list.php' && 
                     this.template != 'my-leads.php' && 
                     this.template != 'account-settings.php' && 
@@ -1475,10 +1458,11 @@
                     this.template != 'paypal-processor.php' && 
                     this.template != 'saved-searches.php' && 
                     this.template != 'submit-property.php' && 
-                    this.template != 'agents-list.php'
+                    this.template != 'agents-list.php' 
                 );
                 $('#page-template-section').toggle(this.template == 'property-search.php');
                 $('#page-contact-settings-section').toggle(this.template == 'contact-page.php');
+                $('#page-contact-office-settings-section').toggle(this.template == 'contact-page-office.php');
                 $('#page-agents-settings-section').toggle(this.template == 'agents-list.php');
             }
         }
@@ -1489,6 +1473,7 @@
         $('#page-header-section').toggle(
             $(this).val() != 'property-search.php' && 
             $(this).val() != 'contact-page.php' && 
+            $(this).val() != 'contact-page-office.php' && 
             $(this).val() != 'wish-list.php' && 
             $(this).val() != 'my-leads.php' && 
             $(this).val() != 'account-settings.php' && 
@@ -1501,6 +1486,7 @@
         $('#page-settings-section').toggle(
             $(this).val() != 'property-search.php' && 
             $(this).val() != 'contact-page.php' && 
+            $(this).val() != 'contact-page-office.php' && 
             $(this).val() != 'wish-list.php' && 
             $(this).val() != 'my-leads.php' && 
             $(this).val() != 'account-settings.php' && 
@@ -1512,6 +1498,7 @@
         );
         $('#page-template-section').toggle($(this).val() == 'property-search.php');
         $('#page-contact-settings-section').toggle($(this).val() == 'contact-page.php');
+        $('#page-contact-office-settings-section').toggle($(this).val() == 'contact-page-office.php');
         $('#page-agents-settings-section').toggle($(this).val() == 'agents-list.php');
     }).change();
 
