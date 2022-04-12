@@ -179,6 +179,8 @@ if (!function_exists('resideo_lead_wishlist_render')):
                     $price       = get_post_meta($prop_id, 'property_price', true);
                     $price_label = get_post_meta($prop_id, 'property_price_label', true);
 
+                    $currency_str = $currency;
+
                     if (is_numeric($price)) {
                         if ($decimals == '1') {
                             $price = money_format('%!i', $price);
@@ -187,7 +189,7 @@ if (!function_exists('resideo_lead_wishlist_render')):
                         }
                     } else {
                         $price_label = '';
-                        $currency = '';
+                        $currency_str = '';
                     }
 
                     $address_arr  = array();
@@ -269,9 +271,9 @@ if (!function_exists('resideo_lead_wishlist_render')):
                                 print '</td>
                                 <td width="15%" valign="top" align="right" class="rtl-align-left">';
                                     if ($currency_pos == 'before') {
-                                        print '<strong>' . esc_html($currency) . esc_html($price) . '</strong> <span>' . esc_html($price_label) . '</span>';
+                                        print '<strong>' . esc_html($currency_str) . esc_html($price) . '</strong> <span>' . esc_html($price_label) . '</span>';
                                     } else {
-                                        print '<strong>' . esc_html($price) . esc_html($currency) . '</strong> <span>' . esc_html($price_label) . '</span>';
+                                        print '<strong>' . esc_html($price) . esc_html($currency_str) . '</strong> <span>' . esc_html($price_label) . '</span>';
                                     }
                                 print '</td>
                             </tr>';

@@ -110,7 +110,7 @@ class Elementor_Resideo_Areas_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Subtitle', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'input_type' => 'string',
                 'placeholder' => __('Enter subtitle', 'resideo'),
             ]
@@ -153,8 +153,8 @@ class Elementor_Resideo_Areas_Widget extends \Elementor\Widget_Base {
                 'label' => __('CTA Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -241,8 +241,8 @@ class Elementor_Resideo_Areas_Widget extends \Elementor\Widget_Base {
                 'label' => __('CTA Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -270,6 +270,26 @@ class Elementor_Resideo_Areas_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
+            'layout',
+            [
+                'label' => __('Layout', 'resideo'),
+                'type' => \Elementor\Controls_Manager::CHOOSE,
+                'options' => [
+                    '1' => [
+                        'title' => __('Layout 1', 'resideo'),
+                        'icon' => 'fa fa-th-large',
+                    ],
+                    '2' => [
+                        'title' => __('Layout 2', 'resideo'),
+                        'icon' => 'fa fa-arrows-h',
+                    ]
+                ],
+                'default' => '1',
+                'toggle' => false,
+            ]
+        );
+
+        $this->add_control(
             'margin',
             [
                 'label' => __('Margin', 'resideo'),
@@ -290,80 +310,206 @@ class Elementor_Resideo_Areas_Widget extends \Elementor\Widget_Base {
         $margin_class = $settings['margin'] == 'yes' ? 'mt-100' : '';
 
         $cta_color = isset($settings['cta_color']) ? $settings['cta_color'] : '';
-        $cta_id = uniqid(); ?>
+        $cta_id = uniqid();
+        
+        $layout = isset($settings['layout']) ? $settings['layout'] : '1';
 
-        <div class="container <?php echo esc_attr($margin_class); ?>">
-            <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
-            <p class="pxp-text-light"><?php echo esc_html($settings['subtitle']); ?></p>
+        $fields_settings   = get_option('resideo_prop_fields_settings');
+        $neighborhood_type = isset($fields_settings['resideo_p_neighborhood_t_field']) ? $fields_settings['resideo_p_neighborhood_t_field'] : '';
+        $city_type         = isset($fields_settings['resideo_p_city_t_field']) ? $fields_settings['resideo_p_city_t_field'] : '';
 
-            <?php $fields_settings   = get_option('resideo_prop_fields_settings');
-                $neighborhood_type = isset($fields_settings['resideo_p_neighborhood_t_field']) ? $fields_settings['resideo_p_neighborhood_t_field'] : '';
-                $city_type         = isset($fields_settings['resideo_p_city_t_field']) ? $fields_settings['resideo_p_city_t_field'] : '';
+        $neighborhoods = array();
+        if ($neighborhood_type == 'list') {
+            $neighborhoods = $this->resideo_get_neighborhoods();
+        }
 
-                $neighborhoods = array();
-                if ($neighborhood_type == 'list') {
-                    $neighborhoods = $this->resideo_get_neighborhoods();
-                }
+        $cities = array();
+        if ($city_type == 'list') {
+            $cities = $this->resideo_get_cities();
+        }
 
-                $cities = array();
-                if ($city_type == 'list') {
-                    $cities = $this->resideo_get_cities();
-                }
-            ?>
+        switch ($layout) {
+            case '1': ?>
+                <div class="container <?php echo esc_attr($margin_class); ?>">
+                    <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
+                    <div class="pxp-text-light"><?php echo $settings['subtitle']; ?></div>
 
-            <div class="row mt-4 mt-md-5">
-                <?php foreach ($settings['areas_list'] as $area) {
-                    $image_src = '';
-                    $image = false;
-                    if (isset($area['area_image'])) {
-                        $image = wp_get_attachment_image_src($area['area_image']['id'], 'pxp-gallery');
+                    <div class="row mt-4 mt-md-5">
+                        <?php foreach ($settings['areas_list'] as $area) {
+                            $image_src = '';
+                            $image = false;
+                            if (isset($area['area_image'])) {
+                                $image = wp_get_attachment_image_src($area['area_image']['id'], 'pxp-gallery');
 
-                        if ($image != false) {
-                            $image_src = $image[0];
-                        }
-                    }
+                                if ($image != false) {
+                                    $image_src = $image[0];
+                                }
+                            }
 
-                    $area_link = add_query_arg(
-                        array(
-                            'search_neighborhood' => $area['area_neighborhood'],
-                            'search_city' => $area['area_city'],
-                        ), $results_page
-                    );
+                            $area_link = add_query_arg(
+                                array(
+                                    'search_neighborhood' => $area['area_neighborhood'],
+                                    'search_city' => $area['area_city'],
+                                ), $results_page
+                            );
 
-                    $properties_count = $this->resideo_count_properties($area); 
+                            $properties_count = $this->resideo_count_properties($area); 
 
-                    $area_cta_color = isset($area['cta_color']) ? $area['cta_color'] : ''; ?>
+                            $area_cta_color = isset($area['cta_color']) ? $area['cta_color'] : ''; ?>
 
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <a href="<?php echo esc_url($area_link); ?>" class="pxp-areas-1-item rounded-lg">
-                            <div class="pxp-areas-1-item-fig pxp-cover" style="background-image: url(<?php echo esc_url($image_src); ?>);"></div>
-                            <div class="pxp-areas-1-item-details">
-                                <?php if (count($neighborhoods) > 0 && isset($neighborhoods[$area['area_neighborhood']])) { ?>
-                                    <div class="pxp-areas-1-item-details-area"><?php echo esc_html($neighborhoods[$area['area_neighborhood']]); ?></div>
-                                <?php } else { ?>
-                                    <div class="pxp-areas-1-item-details-area"><?php echo esc_html($area['area_neighborhood']); ?></div>
-                                <?php }
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <a href="<?php echo esc_url($area_link); ?>" class="pxp-areas-1-item rounded-lg">
+                                    <div class="pxp-areas-1-item-fig pxp-cover" style="background-image: url(<?php echo esc_url($image_src); ?>);"></div>
+                                    <div class="pxp-areas-1-item-details">
+                                        <?php if (count($neighborhoods) > 0 && isset($neighborhoods[$area['area_neighborhood']])) { ?>
+                                            <div class="pxp-areas-1-item-details-area"><?php echo esc_html($neighborhoods[$area['area_neighborhood']]); ?></div>
+                                        <?php } else { ?>
+                                            <div class="pxp-areas-1-item-details-area"><?php echo esc_html($area['area_neighborhood']); ?></div>
+                                        <?php }
 
-                                if (count($cities) > 0 && isset($cities[$area['area_city']])) { ?>
-                                    <div class="pxp-areas-1-item-details-city"><?php echo esc_html($cities[$area['area_city']]); ?></div>
-                                <?php } else { ?>
-                                    <div class="pxp-areas-1-item-details-city"><?php echo esc_html($area['area_city']); ?></div>
-                                <?php } ?>
+                                        if (count($cities) > 0 && isset($cities[$area['area_city']])) { ?>
+                                            <div class="pxp-areas-1-item-details-city"><?php echo esc_html($cities[$area['area_city']]); ?></div>
+                                        <?php } else { ?>
+                                            <div class="pxp-areas-1-item-details-city"><?php echo esc_html($area['area_city']); ?></div>
+                                        <?php } ?>
+                                    </div>
+                                    <div class="pxp-areas-1-item-counter"><span><?php echo esc_html($properties_count) . ' ' . __('Properties', 'resideo'); ?></span></div>
+                                    <div class="pxp-areas-1-item-cta text-uppercase" style="color: <?php echo esc_attr($area_cta_color); ?>"><?php esc_html_e('Explore', 'resideo'); ?></div>
+                                </a>
                             </div>
-                            <div class="pxp-areas-1-item-counter"><span><?php echo esc_html($properties_count) . ' ' . __('Properties', 'resideo'); ?></span></div>
-                            <div class="pxp-areas-1-item-cta text-uppercase" style="color: <?php echo esc_attr($area_cta_color); ?>"><?php esc_html_e('Explore', 'resideo'); ?></div>
-                        </a>
+                        <?php } ?>
                     </div>
-                <?php } ?>
-            </div>
 
-            <?php if ($settings['cta_link']['url'] != '') { 
-                $target = $settings['cta_link']['is_external'] ? ' target="_blank"' : '';
-                $nofollow = $settings['cta_link']['nofollow'] ? ' rel="nofollow"' : ''; ?>
-                <a href="<?php echo esc_url($settings['cta_link']['url']); ?>" class="pxp-primary-cta text-uppercase mt-3 mt-md-5 pxp-animate" id="cta-<?php echo esc_attr($cta_id); ?>" style="color: <?php echo esc_attr($cta_color); ?>" <?php echo $target; ?> <?php echo $nofollow; ?>><?php echo esc_html($settings['cta_label']); ?></a>
-                <style>.pxp-primary-cta#cta-<?php echo esc_attr($cta_id); ?>:after { border-top: 2px solid <?php echo esc_html($cta_color); ?>; }</style>
-            <?php } ?>
-        </div>
-    <?php }
+                    <?php if ($settings['cta_link']['url'] != '') { 
+                        $target = $settings['cta_link']['is_external'] ? ' target="_blank"' : '';
+                        $nofollow = $settings['cta_link']['nofollow'] ? ' rel="nofollow"' : ''; ?>
+                        <a href="<?php echo esc_url($settings['cta_link']['url']); ?>" class="pxp-primary-cta text-uppercase mt-3 mt-md-5 pxp-animate" id="cta-<?php echo esc_attr($cta_id); ?>" style="color: <?php echo esc_attr($cta_color); ?>" <?php echo $target; ?> <?php echo $nofollow; ?>><?php echo esc_html($settings['cta_label']); ?></a>
+                        <style>.pxp-primary-cta#cta-<?php echo esc_attr($cta_id); ?>:after { border-top: 2px solid <?php echo esc_html($cta_color); ?>; }</style>
+                    <?php } ?>
+                </div>
+            <?php break;
+            case '2': ?>
+                <div class="<?php echo esc_attr($margin_class); ?>">
+                    <h2 class="pxp-section-h2 text-center"><?php echo esc_html($settings['title']); ?></h2>
+                    <p class="pxp-text-light text-center"><?php echo $settings['subtitle']; ?></p>
+
+                    <div class="pxp-areas-carousel mt-4 mt-md-5">
+                        <div class="pxp-areas-carousel-stage owl-carousel">
+                            <?php foreach ($settings['areas_list'] as $area) {
+                                $image_src = '';
+                                $image = false;
+                                if (isset($area['area_image'])) {
+                                    $image = wp_get_attachment_image_src($area['area_image']['id'], 'pxp-gallery');
+
+                                    if ($image != false) {
+                                        $image_src = $image[0];
+                                    }
+                                }
+
+                                $area_link = add_query_arg(
+                                    array(
+                                        'search_neighborhood' => $area['area_neighborhood'],
+                                        'search_city' => $area['area_city'],
+                                    ), $results_page
+                                );
+
+                                $properties_count = $this->resideo_count_properties($area); 
+
+                                $area_cta_color = isset($area['cta_color']) ? $area['cta_color'] : ''; ?>
+
+                                <a href="<?php echo esc_url($area_link); ?>" class="pxp-areas-carousel-item">
+                                    <div class="pxp-areas-carousel-item-fig-container">
+                                        <div class="pxp-areas-carousel-item-fig pxp-cover" style="background-image: url(<?php echo esc_url($image_src); ?>);"></div>
+                                    </div>
+                                    <div class="pxp-areas-carousel-item-details mt-1">
+                                        <?php if (count($neighborhoods) > 0 && isset($neighborhoods[$area['area_neighborhood']])) { ?>
+                                            <div class="pxp-areas-carousel-item-details-area"><?php echo esc_html($neighborhoods[$area['area_neighborhood']]); ?></div>
+                                        <?php } else { ?>
+                                            <div class="pxp-areas-carousel-item-details-area"><?php echo esc_html($area['area_neighborhood']); ?></div>
+                                        <?php }
+
+                                        if (count($cities) > 0 && isset($cities[$area['area_city']])) { ?>
+                                            <div class="pxp-areas-carousel-item-details-city"><?php echo esc_html($cities[$area['area_city']]); ?></div>
+                                        <?php } else { ?>
+                                            <div class="pxp-areas-carousel-item-details-city"><?php echo esc_html($area['area_city']); ?></div>
+                                        <?php } ?>
+                                    </div>
+                                    <div class="pxp-areas-carousel-item-counter"><span><?php echo esc_html($properties_count) . ' ' . __('Properties', 'resideo'); ?></span></div>
+                                </a>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+                    <?php if ($settings['cta_link']['url'] != '') { 
+                        $target = $settings['cta_link']['is_external'] ? ' target="_blank"' : '';
+                        $nofollow = $settings['cta_link']['nofollow'] ? ' rel="nofollow"' : ''; ?>
+                        <div class="mt-4 mt-md-5 text-center">
+                            <a href="<?php echo esc_url($settings['cta_link']['url']); ?>" class="pxp-primary-cta text-uppercase mt-3 mt-md-5 pxp-animate" id="cta-<?php echo esc_attr($cta_id); ?>" style="color: <?php echo esc_attr($cta_color); ?>" <?php echo $target; ?> <?php echo $nofollow; ?>><?php echo esc_html($settings['cta_label']); ?></a>
+                            <style>.pxp-primary-cta#cta-<?php echo esc_attr($cta_id); ?>:after { border-top: 2px solid <?php echo esc_html($cta_color); ?>; }</style>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php break;
+            default: ?>
+                <div class="container <?php echo esc_attr($margin_class); ?>">
+                    <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
+                    <p class="pxp-text-light"><?php echo $settings['subtitle']; ?></p>
+
+                    <div class="row mt-4 mt-md-5">
+                        <?php foreach ($settings['areas_list'] as $area) {
+                            $image_src = '';
+                            $image = false;
+                            if (isset($area['area_image'])) {
+                                $image = wp_get_attachment_image_src($area['area_image']['id'], 'pxp-gallery');
+
+                                if ($image != false) {
+                                    $image_src = $image[0];
+                                }
+                            }
+
+                            $area_link = add_query_arg(
+                                array(
+                                    'search_neighborhood' => $area['area_neighborhood'],
+                                    'search_city' => $area['area_city'],
+                                ), $results_page
+                            );
+
+                            $properties_count = $this->resideo_count_properties($area); 
+
+                            $area_cta_color = isset($area['cta_color']) ? $area['cta_color'] : ''; ?>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <a href="<?php echo esc_url($area_link); ?>" class="pxp-areas-1-item rounded-lg">
+                                    <div class="pxp-areas-1-item-fig pxp-cover" style="background-image: url(<?php echo esc_url($image_src); ?>);"></div>
+                                    <div class="pxp-areas-1-item-details">
+                                        <?php if (count($neighborhoods) > 0 && isset($neighborhoods[$area['area_neighborhood']])) { ?>
+                                            <div class="pxp-areas-1-item-details-area"><?php echo esc_html($neighborhoods[$area['area_neighborhood']]); ?></div>
+                                        <?php } else { ?>
+                                            <div class="pxp-areas-1-item-details-area"><?php echo esc_html($area['area_neighborhood']); ?></div>
+                                        <?php }
+
+                                        if (count($cities) > 0 && isset($cities[$area['area_city']])) { ?>
+                                            <div class="pxp-areas-1-item-details-city"><?php echo esc_html($cities[$area['area_city']]); ?></div>
+                                        <?php } else { ?>
+                                            <div class="pxp-areas-1-item-details-city"><?php echo esc_html($area['area_city']); ?></div>
+                                        <?php } ?>
+                                    </div>
+                                    <div class="pxp-areas-1-item-counter"><span><?php echo esc_html($properties_count) . ' ' . __('Properties', 'resideo'); ?></span></div>
+                                    <div class="pxp-areas-1-item-cta text-uppercase" style="color: <?php echo esc_attr($area_cta_color); ?>"><?php esc_html_e('Explore', 'resideo'); ?></div>
+                                </a>
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                    <?php if ($settings['cta_link']['url'] != '') { 
+                        $target = $settings['cta_link']['is_external'] ? ' target="_blank"' : '';
+                        $nofollow = $settings['cta_link']['nofollow'] ? ' rel="nofollow"' : ''; ?>
+                        <a href="<?php echo esc_url($settings['cta_link']['url']); ?>" class="pxp-primary-cta text-uppercase mt-3 mt-md-5 pxp-animate" id="cta-<?php echo esc_attr($cta_id); ?>" style="color: <?php echo esc_attr($cta_color); ?>" <?php echo $target; ?> <?php echo $nofollow; ?>><?php echo esc_html($settings['cta_label']); ?></a>
+                        <style>.pxp-primary-cta#cta-<?php echo esc_attr($cta_id); ?>:after { border-top: 2px solid <?php echo esc_html($cta_color); ?>; }</style>
+                    <?php } ?>
+                </div>
+            <?php break;
+        }
+    }
 }
 ?>

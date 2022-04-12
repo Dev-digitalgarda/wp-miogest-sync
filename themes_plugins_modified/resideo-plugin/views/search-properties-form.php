@@ -5,7 +5,7 @@
  */
 
 if (!function_exists('resideo_get_search_properties_form')):
-    function resideo_get_search_properties_form() {
+    function resideo_get_search_properties_form($status_type = 'dropdown') {
         $fields_no = 0;
         $main_fields = array();
 
@@ -24,6 +24,11 @@ if (!function_exists('resideo_get_search_properties_form')):
         $beds_s          = isset($fields_settings['resideo_p_beds_s_field']) ? $fields_settings['resideo_p_beds_s_field'] : '';
         $baths_s         = isset($fields_settings['resideo_p_baths_s_field']) ? $fields_settings['resideo_p_baths_s_field'] : '';
         $address_type    = isset($fields_settings['resideo_p_address_t_field']) ? $fields_settings['resideo_p_address_t_field'] : '';
+
+        $form_class = '';
+        if ($status_type == 'tabs') {
+            $form_class = 'pxp-has-tabs';
+        }
 
         /**
          * Status field
@@ -154,9 +159,39 @@ if (!function_exists('resideo_get_search_properties_form')):
             <?php }
         endif;
 
+        if (!function_exists('resideo_display_status_tabs_s')):
+            function resideo_display_status_tabs_s() {
+                $status_tax = array( 
+                    'property_status'
+                );
+                $status_args = array(
+                    'orderby'    => 'name',
+                    'order'      => 'ASC',
+                    'hide_empty' => false
+                ); 
+                $status_terms = get_terms($status_tax, $status_args); ?>
+
+                <div class="pxp-hero-search-tabs">
+                    <ul class="list-unstyled">
+                        <?php $tabs_count = 0;
+                        foreach ($status_terms as $status_term) { ?>
+                            <li class="<?php if ($tabs_count == 0) { echo esc_attr('pxp-active'); } ?>">
+                                <input type="radio" name="search_status" value="<?php echo esc_attr($status_term->term_id); ?>" <?php if ($tabs_count == 0) { echo esc_attr('checked="checked"'); } ?>><a href="javascript:void(0);"><?php echo esc_html($status_term->name); ?></a>
+                            </li>
+                            <?php $tabs_count++;
+                        } ?>
+                    </ul>
+                </div>
+            <?php }
+        endif;
+
         if (!function_exists('resideo_display_address_s')):
-            function resideo_display_address_s($address_type) { ?>
-                <div class="col-sm-10 col-md-7">
+            function resideo_display_address_s($address_type, $status_type = 'dropdown') { 
+                $column_class = 'col-sm-10 col-md-7'; 
+                if ($status_type == 'tabs') {
+                    $column_class = 'col-sm-10 col-md-11';
+                } ?>
+                <div class="<?php echo esc_attr($column_class); ?>">
                     <div class="form-group">
                         <?php if($address_type == 'auto') { ?>
                             <input type="text" class="form-control" id="hero-search-address-auto" name="search_address" placeholder="<?php esc_attr_e('Enter address...', 'resideo'); ?>" autocomplete="off">
@@ -407,13 +442,24 @@ if (!function_exists('resideo_get_search_properties_form')):
         endif;
 
         if ($fields_no > 0) { ?>
-            <form class="pxp-hero-search mt-4" role="search" method="get" action="<?php echo esc_url($search_submit); ?>">
+            <form class="pxp-hero-search mt-4 <?php echo esc_attr($form_class); ?>" role="search" method="get" action="<?php echo esc_url($search_submit); ?>">
+                <?php if (in_array('status', $main_fields)) {
+                    if ($status_type == 'tabs') {
+                        resideo_display_status_tabs_s();
+                    }
+                } ?>
                 <div class="row">
                     <?php if (in_array('status', $main_fields)) {
-                        resideo_display_status_s();
+                        if ($status_type != 'tabs') {
+                            resideo_display_status_s();
+                        }
                     }
                     if (in_array('address', $main_fields)) {
-                        resideo_display_address_s($address_type);
+                        if ($status_type == 'tabs') {
+                            resideo_display_address_s($address_type, 'tabs');
+                        } else {
+                            resideo_display_address_s($address_type, 'dropdown');
+                        }
                     }
                     if (in_array('city', $main_fields)) {
                         resideo_display_city_s($city_type);

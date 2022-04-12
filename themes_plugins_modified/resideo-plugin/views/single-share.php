@@ -5,12 +5,17 @@
  */
 
 if (!function_exists('resideo_get_share_menu')):
-    function resideo_get_share_menu($post_id) { ?>
+    function resideo_get_share_menu($post_id, $position = 'right') { 
+        $position_class = 'dropdown-menu-right';
+        if ($position == 'left') {
+            $position_class = 'dropdown-menu-left';
+        } ?>
+
         <div class="dropdown">
             <a class="pxp-sp-top-btn" href="javascript:void(0);" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-share-alt"></span> <?php esc_html_e('Share', 'resideo'); ?>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu <?php echo esc_attr($position_class); ?>" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo esc_url(get_permalink($post_id)); ?>"
                     onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
                     target="_blank">

@@ -12,6 +12,7 @@ if (!function_exists('resideo_add_page_metaboxes')):
         add_meta_box('page-header-section', __('Header', 'resideo'), 'resideo_page_header_render', 'page', 'normal', 'default');
         add_meta_box('page-template-section', __('Template Design', 'resideo'), 'resideo_page_template_render', 'page', 'normal', 'default');
         add_meta_box('page-contact-settings-section', __('Page Settings', 'resideo'), 'resideo_page_contact_settings_render', 'page', 'normal', 'default');
+        add_meta_box('page-contact-office-settings-section', __('Page Settings', 'resideo'), 'resideo_page_contact_office_settings_render', 'page', 'normal', 'default');
         add_meta_box('page-agents-settings-section', __('Page Settings', 'resideo'), 'resideo_page_agents_settings_render', 'page', 'normal', 'default');
         add_meta_box('page-settings-section', __('Page Settings', 'resideo'), 'resideo_page_settings_render', 'page', 'normal', 'default');
     }
@@ -43,6 +44,7 @@ if (!function_exists('resideo_page_header_render')):
             'slider'       => __('Slider', 'resideo'),
             'p_slider'     => __('Properties Slider', 'resideo'),
             'image'        => __('Image', 'resideo'),
+            'video'        => __('Video', 'resideo'),
             'contact_form' => __('Contact Form', 'resideo'),
             'rev'          => __('Slider Revolution', 'resideo'),
         );
@@ -92,10 +94,23 @@ if (!function_exists('resideo_page_header_render')):
                         </td>
                         <td width="50%" valign="top" align="left">
                             <div class="adminField">
+                                <label for="page_header_slideshow_caption_subtitle">' . __('Caption Subtitle', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="page_header_slideshow_caption_subtitle" name="page_header_slideshow_caption_subtitle" value="' . esc_attr(get_post_meta($post->ID, 'page_header_slideshow_caption_subtitle', true)) . '" placeholder="' . __('Enter the caption subtitle', 'resideo') . '" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>';
+        $slideshow_settings .= '
+                <br>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="50%" valign="top" align="left">
+                            <div class="adminField">
                                 <label for="page_header_slideshow_caption_position">' . __('Caption Position', 'resideo') . '</label><br />
                                 <select id="page_header_slideshow_caption_position" name="page_header_slideshow_caption_position" style="width: 50%;">';
         $slideshow_caption_positions = array(
-            'middle'  => __('Middle', 'resideo'),
+            'middle' => __('Middle', 'resideo'),
+            'left'   => __('Left', 'resideo'),
             'bottom' => __('Bottom', 'resideo'),
         );
         foreach ($slideshow_caption_positions as $key => $value) {
@@ -109,13 +124,7 @@ if (!function_exists('resideo_page_header_render')):
                                 </select>
                             </div>
                         </td>
-                    </tr>
-                </table>';
-        $slideshow_settings .= '
-                <br>
-                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td width="100%" valign="top" align="left">
+                        <td width="50%" valign="top" align="left">
                             <div class="adminField">
                                 <label for="page_header_slideshow_opacity">' . __('Caption background opacity', 'resideo') . '</label>
                                 <select id="page_header_slideshow_opacity" name="page_header_slideshow_opacity">';
@@ -137,19 +146,38 @@ if (!function_exists('resideo_page_header_render')):
                 <br><hr>
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                        <td width="25%" valign="top" align="left">
-                            <div class="adminField">
-                                &nbsp;<br>
-                                <label for="page_header_slideshow_show_search">
-                                <input type="hidden" name="page_header_slideshow_show_search" value="">
-                                <input type="checkbox" name="page_header_slideshow_show_search" value="1"';
+                    <td width="25%" valign="top" align="left">
+                        <div class="adminField">
+                            &nbsp;<br>
+                            <label for="page_header_slideshow_show_search">
+                            <input type="hidden" name="page_header_slideshow_show_search" value="">
+                            <input type="checkbox" name="page_header_slideshow_show_search" value="1"';
         if (get_post_meta($post->ID, 'page_header_slideshow_show_search', true) == 1) {
             $slideshow_settings .= ' checked';
         }
         $slideshow_settings .= ' />' . __('Show Search Form', 'resideo') . '</label>
                             </div>
                         </td>
-                        <td width="75%">&nbsp;</td>
+                        <td width="25%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_slideshow_search_status_type">' . __('Status Type', 'resideo') . '</label><br />
+                                <select id="page_header_slideshow_search_status_type" name="page_header_slideshow_search_status_type" style="width: 50%;">';
+        $slideshow_search_status_types = array(
+            'dropdown' => __('Dropdown', 'resideo'),
+            'tabs'     => __('Tabs', 'resideo')
+        );
+        foreach ($slideshow_search_status_types as $key => $value) {
+            $slideshow_settings .= '<option value="' . esc_attr($key) . '"';
+            if (get_post_meta($post->ID, 'page_header_slideshow_search_status_type', true) == $key) {
+                $slideshow_settings .= 'selected="selected"';
+            }
+            $slideshow_settings .= '>' . esc_html($value) . '</option>';
+        }
+        $slideshow_settings .= '
+                                </select>
+                            </div>
+                        </td>
+                        <td width="50%">&nbsp;</td>
                     </tr>
                 </table>
                 <br><hr><br>';
@@ -515,7 +543,7 @@ if (!function_exists('resideo_page_header_render')):
                                 <label for="page_header_image_caption_title">' . __('Caption Title', 'resideo') . '</label><br />
                                 <input type="text" class="formInput" id="page_header_image_caption_title" name="page_header_image_caption_title" value="' . esc_attr(get_post_meta($post->ID, 'page_header_image_caption_title', true)) . '" placeholder="' . __('Enter the caption title', 'resideo') . '" />
                             </div>
-                            <div class="adminField pxp-js-page-header-image-half" style="' . esc_attr($half_height_style) . '">
+                            <div class="adminField">
                                 <label for="page_header_image_caption_subtitle">' . __('Caption Subtitle', 'resideo') . '</label><br />
                                 <input type="text" class="formInput" id="page_header_image_caption_subtitle" name="page_header_image_caption_subtitle" value="' . esc_attr(get_post_meta($post->ID, 'page_header_image_caption_subtitle', true)) . '" placeholder="' . __('Enter the caption subtitle', 'resideo') . '" />
                             </div>
@@ -525,7 +553,8 @@ if (!function_exists('resideo_page_header_render')):
                                 <label for="page_header_image_caption_position">' . __('Caption Position', 'resideo') . '</label><br />
                                 <select id="page_header_image_caption_position" name="page_header_image_caption_position" style="width: 50%;">';
         $image_caption_positions = array(
-            'middle'  => __('Middle', 'resideo'),
+            'middle' => __('Middle', 'resideo'),
+            'left'   => __('Left', 'resideo'),
             'bottom' => __('Bottom', 'resideo'),
         );
         foreach ($image_caption_positions as $key => $value) {
@@ -579,7 +608,26 @@ if (!function_exists('resideo_page_header_render')):
                                 />' . __('Show Search Form', 'resideo') . '</label>
                             </div>
                         </td>
-                        <td width="75%">&nbsp;</td>
+                        <td width="25%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_image_search_status_type">' . __('Status Type', 'resideo') . '</label><br />
+                                <select id="page_header_image_search_status_type" name="page_header_image_search_status_type" style="width: 50%;">';
+        $image_search_status_types = array(
+            'dropdown' => __('Dropdown', 'resideo'),
+            'tabs'     => __('Tabs', 'resideo')
+        );
+        foreach ($image_search_status_types as $key => $value) {
+            $image_settings .= '<option value="' . esc_attr($key) . '"';
+            if (get_post_meta($post->ID, 'page_header_image_search_status_type', true) == $key) {
+                $image_settings .= 'selected="selected"';
+            }
+            $image_settings .= '>' . esc_html($value) . '</option>';
+        }
+        $image_settings .= '
+                                </select>
+                            </div>
+                        </td>
+                        <td width="50%">&nbsp;</td>
                     </tr>
                 </table>
                 <br><hr>';
@@ -608,6 +656,172 @@ if (!function_exists('resideo_page_header_render')):
             </div>';
 
         print $image_settings;
+
+        /* ---------------------------------------------------
+            Video settings
+        --------------------------------------------------- */
+        if ($header_types_value == 'video') {
+            $hide_video = 'block';
+        } else {
+            $hide_video = 'none';
+        }
+
+        $video_settings = ' 
+            <div class="header-settings header-video-settings" style="display: ' . esc_attr($hide_video) . '">
+                <p><strong>' . __('Video Settings', 'resideo') . '</strong></p>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="50%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_video_caption_title">' . __('Caption Title', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="page_header_video_caption_title" name="page_header_video_caption_title" value="' . esc_attr(get_post_meta($post->ID, 'page_header_video_caption_title', true)) . '" placeholder="' . __('Enter the caption title', 'resideo') . '" />
+                            </div>
+                        </td>
+                        <td width="50%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_video_caption_position">' . __('Caption Position', 'resideo') . '</label><br />
+                                <select id="page_header_video_caption_position" name="page_header_video_caption_position" style="width: 50%;">';
+        $video_caption_positions = array(
+            'middle' => __('Middle', 'resideo'),
+            'left'   => __('Left', 'resideo'),
+            'bottom' => __('Bottom', 'resideo'),
+        );
+        foreach ($video_caption_positions as $key => $value) {
+            $video_settings .= '<option value="' . esc_attr($key) . '"';
+            if (get_post_meta($post->ID, 'page_header_video_caption_position', true) == $key) {
+                $video_settings .= 'selected="selected"';
+            }
+            $video_settings .= '>' . esc_html($value) . '</option>';
+        }
+        $video_settings .= '
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_video_caption_subtitle">' . __('Caption Subtitle', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="page_header_video_caption_subtitle" name="page_header_video_caption_subtitle" value="' . esc_attr(get_post_meta($post->ID, 'page_header_video_caption_subtitle', true)) . '" placeholder="' . __('Enter the caption subtitle', 'resideo') . '" />
+                            </div>
+                        </td>
+                        <td width="50%" valign="top" align="left"></td>
+                </table>';
+        $video_settings .= '
+                <br>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="100%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_video_opacity">' . __('Caption background opacity', 'resideo') . '</label>
+                                <select id="page_header_video_opacity" name="page_header_video_opacity">';
+        $video_opacity = array('0' => '0%', '0.1' => '10%', '0.2' => '20%', '0.3' => '30%', '0.4' => '40%', '0.5' => '50%', '0.6' => '60%', '0.7' => '70%', '0.8' => '80%', '0.9' => '90%', '1' => '100%');
+        foreach ($video_opacity as $key => $value) {
+            $video_settings .= '<option value="' . esc_attr($key) . '"';
+
+            if (get_post_meta($post->ID, 'page_header_video_opacity', true) == $key) {
+                $video_settings .= 'selected="selected"';
+            }
+            $video_settings .= '>' . esc_html($value) . '</option>';
+        }
+        $video_settings .= '
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <br><hr>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="25%" valign="top" align="left">
+                            <div class="adminField">
+                                &nbsp;<br>
+                                <label for="page_header_video_show_search">
+                                <input type="hidden" name="page_header_video_show_search" value="">
+                                <input type="checkbox" name="page_header_video_show_search" value="1"';
+        if (get_post_meta($post->ID, 'page_header_video_show_search', true) == 1) {
+            $video_settings .= ' checked';
+        }
+        $video_settings .= ' />' . __('Show Search Form', 'resideo') . '</label>
+                            </div>
+                        </td>
+                        <td width="25%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_video_search_status_type">' . __('Status Type', 'resideo') . '</label><br />
+                                <select id="page_header_video_search_status_type" name="page_header_video_search_status_type" style="width: 50%;">';
+        $video_search_status_types = array(
+            'dropdown' => __('Dropdown', 'resideo'),
+            'tabs'     => __('Tabs', 'resideo')
+        );
+        foreach ($video_search_status_types as $key => $value) {
+            $video_settings .= '<option value="' . esc_attr($key) . '"';
+            if (get_post_meta($post->ID, 'page_header_video_search_status_type', true) == $key) {
+                $video_settings .= 'selected="selected"';
+            }
+            $video_settings .= '>' . esc_html($value) . '</option>';
+        }
+        $video_settings .= '
+                                </select>
+                            </div>
+                        </td>
+                        <td width="50%">&nbsp;</td>
+                    </tr>
+                </table>
+                <br><hr><br>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="25%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_video_id">' . __('Youtube video ID', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="page_header_video_id" name="page_header_video_id" value="' . esc_attr(get_post_meta($post->ID, 'page_header_video_id', true)) . '" placeholder="d1EaFyBqH5o" />
+                                <p class="help" style="margin-top: 5px; font-size: 11px !important;">E.g. <span style="color: #999;">https://www.youtube.com/watch?v=</span><strong style="color: green; font-style: normal;">d1EaFyBqH5o</strong></p>
+                            </div>
+                        </td>
+                        <td width="25%" valign="top" align="left">
+                            <div class="adminField">
+                                <label for="page_header_video_sound">' . __('Sound', 'resideo') . '</label><br />
+                                <select id="page_header_video_sound" name="page_header_video_sound" style="width: 80px;">';
+        $sound = array(
+            'off' => __('Off', 'resideo'),
+            'on'  => __('On', 'resideo'),
+        );
+        foreach ($sound as $key => $value) {
+            $video_settings .= '<option value="' . esc_attr($key) . '"';
+            if (get_post_meta($post->ID, 'page_header_video_sound', true) == $key) {
+                $video_settings .= 'selected="selected"';
+            }
+            $video_settings .= '>' . esc_html($value) . '</option>';
+        }
+        $video_settings .= '
+                                </select>
+                            </div>
+                        </td>
+                        <td width="50%">&nbsp;</td>
+                    </tr>
+                </table>';
+        $cover_src = wp_get_attachment_image_src(get_post_meta($post->ID, 'page_header_video_cover', true), 'avatar');
+        $video_settings .=  '
+                <p>' . __('Video Cover', 'resideo') . '</p>
+                <div class="adminField">
+                    <input type="hidden" id="page_header_video_cover" name="page_header_video_cover" value="' . esc_attr(get_post_meta($post->ID, 'page_header_video_cover', true)) . '">
+                    <div class="header-video-cover-placeholder-container';
+        if ($cover_src !== false) { 
+            $video_settings .= ' has-image'; 
+        }
+        $video_settings .= '
+                    "><div id="header-video-cover-placeholder" style="background-image: url(';
+        if ($cover_src !== false) { 
+            $video_settings .= $cover_src[0]; 
+        } else { 
+            $video_settings .= RESIDEO_PLUGIN_PATH . 'images/image-placeholder.png';
+        }
+        $video_settings .= '
+                    );"></div>
+                        <div id="delete-header-video-cover"><span class="fa fa-trash-o"></span></div>
+                    </div></div>
+                </div>';
+
+        print $video_settings;
 
         /* ---------------------------------------------------
             Contact form settings
@@ -796,12 +1010,15 @@ if (!function_exists('resideo_page_template_render')):
 
         if (isset($post_id)) {
             $page_templates_value = get_post_meta($post_id, 'page_template_type', true);
+            $page_listing_type = get_post_meta($post_id, 'page_listing_type', true);
         }
 
         $page_templates = array(
             'half_map_left'  => __('Half map left side', 'resideo'),
             'half_map_right' => __('Half map right side', 'resideo'),
             'no_map'         => __('No map', 'resideo'),
+            'sidebar_left'   => __('Sidebar left', 'resideo'),
+            'sidebar_right'  => __('Sidebar right', 'resideo'),
         );
 
         $page_templates_select = '
@@ -822,6 +1039,33 @@ if (!function_exists('resideo_page_template_render')):
                             </div>
                         </div>
                     </td>
+                </tr>
+            </table>
+            <br>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td width="25%" valign="top" align="left">
+                        <div class="adminField">
+                            <label for="page_listing_type">' . __('Listing Type', 'resideo') . '</label><br />
+                            <select id="page_listing_type" name="page_listing_type" style="width: 50%;">';
+        $listing_types = array(
+            'grid_1' => __('Grid 1', 'resideo'),
+            'grid_2' => __('Grid 2', 'resideo'),
+            'grid_3' => __('Grid 3', 'resideo'),
+            'list'   => __('List', 'resideo'),
+        );
+        foreach ($listing_types as $key => $value) {
+            $page_templates_select .= '<option value="' . esc_attr($key) . '"';
+            if (isset($page_listing_type) && $page_listing_type == $key) {
+                $page_templates_select .= 'selected="selected"';
+            }
+            $page_templates_select .= '>' . esc_html($value) . '</option>';
+        }
+        $page_templates_select .= '
+                            </select>
+                        </div>
+                    </td>
+                    <td width="75%" valign="top" align="left">&nbsp;</td>
                 </tr>
             </table>';
 
@@ -986,6 +1230,130 @@ if (!function_exists('resideo_page_contact_settings_render')):
     }
 endif;
 
+if (!function_exists('resideo_page_contact_office_settings_render')):
+    function resideo_page_contact_office_settings_render($post) {
+        wp_nonce_field('resideo_page', 'page_noncename');
+
+        if (isset($_GET['post'])) {
+            $post_id = sanitize_text_field($_GET['post']);
+        } else if (isset($_POST['post_ID'])) {
+            $post_id = sanitize_text_field($_POST['post_ID']);
+        }
+
+        /* ---------------------------------------------------
+            Contact details
+        --------------------------------------------------- */
+
+        $contact_details = '
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td width="50%" valign="top" align="left">
+                        <div class="adminField">
+                            <label>' . __('Page subtitle', 'resideo') . '</label><br />
+                            <input type="text" class="formInput" id="contact_page_office_subtitle" name="contact_page_office_subtitle" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_office_subtitle', true)) . '" />
+                        </div>
+                    </td>
+                    <td width="50%" valign="top" align="left">
+                        <div class="adminField">
+                            <label>' . __('Email', 'resideo') . '</label><br />
+                            <input type="text" class="formInput" id="contact_page_office_email" name="contact_page_office_email" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_office_email', true)) . '" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <p style="padding-top: 20px;"><strong>' . __('Office Info', 'resideo') . '</strong></p>
+            <div class="contact-office-container">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="50%" valign="middle" align="left">
+                            <div class="adminField">
+                                <label for="contact_page_single_office_title">' . __('Office Title', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="contact_page_single_office_title" name="contact_page_single_office_title" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_single_office_title', true)) . '" />
+                            </div>
+                        </td>';
+        if (wp_script_is('gmaps', 'enqueued')) {
+            $contact_details .= '
+                        <td width="25%" valign="middle" align="left">
+                            <div class="adminField">
+                                <label for="contact_page_single_office_lat">' . __('Latitude', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="contact_page_single_office_lat" name="contact_page_single_office_lat" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_single_office_lat', true)) . '" />
+                            </div>
+                        </td>
+                        <td width="25%" valign="middle" align="left">
+                            <div class="adminField">
+                                <label for="contact_page_single_office_lng">' . __('Longitude', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="contact_page_single_office_lng" name="contact_page_single_office_lng" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_single_office_lng', true)) . '" />
+                            </div>
+                        </td>';
+        } else {
+            $contact_details .= '
+                        <td width="50%" valign="middle" align="left">&nbsp;</td>';
+        }
+        $contact_details .= '
+                    </tr>
+                </table>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="50%" valign="top" align="left">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="80%" valign="top" align="left">
+                                        <div class="adminField">
+                                            <label for="contact_page_single_office_address_line_1">' . __('Address', 'resideo') . '</label><br />
+                                            <input type="text" class="formInput" id="contact_page_single_office_address_line_1" name="contact_page_single_office_address_line_1" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_single_office_address_line_1', true)) . '" placeholder="' . __('Street address', 'resideo') . '" />
+                                            <input type="text" class="formInput" id="contact_page_single_office_address_line_2" name="contact_page_single_office_address_line_2" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_single_office_address_line_2', true)) . '" placeholder="' . __('State/Zip', 'resideo') . '" />
+                                        </div>
+                                    </td>';
+        if (wp_script_is('gmaps', 'enqueued')) {
+            $contact_details .= '
+                                    <td width="20%" valign="middle" align="left">
+                                        <label>&nbsp;</label><br />
+                                        <button id="contact_page_single_office_position_btn" title="' . __('Position pin by address', 'resideo') . '" class="button"><span class="icon-target"></span></button>
+                                    </td>';
+        }
+        $contact_details .= '
+                                </tr>
+                            </table>
+                            <div class="adminField">
+                                <label for="contact_page_single_office_phone">' . __('Phone', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="contact_page_single_office_phone" name="contact_page_single_office_phone" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_single_office_phone', true)) . '" />
+                            </div>
+                            <div class="adminField">
+                                <label for="contact_page_single_office_email">' . __('Email', 'resideo') . '</label><br />
+                                <input type="text" class="formInput" id="contact_page_single_office_email" name="contact_page_single_office_email" value="' . esc_attr(get_post_meta($post->ID, 'contact_page_single_office_email', true)) . '" />
+                            </div>
+                            <div class="adminField">
+                                &nbsp;<br>
+                                <label for="contact_page_margin_bottom">
+                                <input type="hidden" name="contact_page_margin_bottom" value="">
+                                <input type="checkbox" name="contact_page_margin_bottom" value="1"';
+        if (get_post_meta($post->ID, 'contact_page_margin_bottom', true) == 1) {
+            $contact_details .= ' checked';
+        }
+        $contact_details .= ' />' . __('Margin Bottom', 'resideo') . '</label>
+                            </div>
+                        </td>';
+        if (wp_script_is('gmaps', 'enqueued')) {
+            $contact_details .= '
+                        <td width="50%" valign="top" align="left">
+                            <div id="contact_page_single_office_map"></div>
+                        </td>';
+        } else {
+            $contact_details .= '
+                        <td width="50%" valign="top" align="left">&nbsp;</td>';
+        }
+        $contact_details .= '
+                    </tr>
+                </table>';
+
+        $contact_details .= '
+            </div>';
+
+        print $contact_details;
+    }
+endif;
+
 if (!function_exists('resideo_page_agents_settings_render')):
     function resideo_page_agents_settings_render($post) {
         wp_nonce_field('resideo_page', 'page_noncename');
@@ -1070,11 +1438,17 @@ if (!function_exists('resideo_page_meta_save')):
         if (isset($_POST['page_header_slideshow_caption_title'])) {
             update_post_meta($post_id, 'page_header_slideshow_caption_title', sanitize_text_field($_POST['page_header_slideshow_caption_title']));
         }
+        if (isset($_POST['page_header_slideshow_caption_subtitle'])) {
+            update_post_meta($post_id, 'page_header_slideshow_caption_subtitle', sanitize_text_field($_POST['page_header_slideshow_caption_subtitle']));
+        }
         if (isset($_POST['page_header_slideshow_caption_position'])) {
             update_post_meta($post_id, 'page_header_slideshow_caption_position', sanitize_text_field($_POST['page_header_slideshow_caption_position']));
         }
         if (isset($_POST['page_header_slideshow_opacity'])) {
             update_post_meta($post_id, 'page_header_slideshow_opacity', sanitize_text_field($_POST['page_header_slideshow_opacity']));
+        }
+        if (isset($_POST['page_header_slideshow_search_status_type'])) {
+            update_post_meta($post_id, 'page_header_slideshow_search_status_type', sanitize_text_field($_POST['page_header_slideshow_search_status_type']));
         }
         if (isset($_POST['page_header_slideshow_show_search'])) {
             update_post_meta($post_id, 'page_header_slideshow_show_search', sanitize_text_field($_POST['page_header_slideshow_show_search']));
@@ -1127,8 +1501,38 @@ if (!function_exists('resideo_page_meta_save')):
         if (isset($_POST['page_header_image_show_search'])) {
             update_post_meta($post_id, 'page_header_image_show_search', sanitize_text_field($_POST['page_header_image_show_search']));
         }
+        if (isset($_POST['page_header_image_search_status_type'])) {
+            update_post_meta($post_id, 'page_header_image_search_status_type', sanitize_text_field($_POST['page_header_image_search_status_type']));
+        }
         if (isset($_POST['page_header_image'])) {
             update_post_meta($post_id, 'page_header_image', sanitize_text_field($_POST['page_header_image']));
+        }
+        if (isset($_POST['page_header_video_caption_title'])) {
+            update_post_meta($post_id, 'page_header_video_caption_title', sanitize_text_field($_POST['page_header_video_caption_title']));
+        }
+        if (isset($_POST['page_header_video_caption_subtitle'])) {
+            update_post_meta($post_id, 'page_header_video_caption_subtitle', sanitize_text_field($_POST['page_header_video_caption_subtitle']));
+        }
+        if (isset($_POST['page_header_video_caption_position'])) {
+            update_post_meta($post_id, 'page_header_video_caption_position', sanitize_text_field($_POST['page_header_video_caption_position']));
+        }
+        if (isset($_POST['page_header_video_opacity'])) {
+            update_post_meta($post_id, 'page_header_video_opacity', sanitize_text_field($_POST['page_header_video_opacity']));
+        }
+        if (isset($_POST['page_header_video_show_search'])) {
+            update_post_meta($post_id, 'page_header_video_show_search', sanitize_text_field($_POST['page_header_video_show_search']));
+        }
+        if (isset($_POST['page_header_video_search_status_type'])) {
+            update_post_meta($post_id, 'page_header_video_search_status_type', sanitize_text_field($_POST['page_header_video_search_status_type']));
+        }
+        if (isset($_POST['page_header_video_id'])) {
+            update_post_meta($post_id, 'page_header_video_id', sanitize_text_field($_POST['page_header_video_id']));
+        }
+        if (isset($_POST['page_header_video_sound'])) {
+            update_post_meta($post_id, 'page_header_video_sound', sanitize_text_field($_POST['page_header_video_sound']));
+        }
+        if (isset($_POST['page_header_video_cover'])) {
+            update_post_meta($post_id, 'page_header_video_cover', sanitize_text_field($_POST['page_header_video_cover']));
         }
         if (isset($_POST['page_header_rev_alias'])) {
             update_post_meta($post_id, 'page_header_rev_alias', sanitize_text_field($_POST['page_header_rev_alias']));
@@ -1141,6 +1545,9 @@ if (!function_exists('resideo_page_meta_save')):
         }
         if (isset($_POST['page_template_type'])) {
             update_post_meta($post_id, 'page_template_type', sanitize_text_field($_POST['page_template_type']));
+        }
+        if (isset($_POST['page_listing_type'])) {
+            update_post_meta($post_id, 'page_listing_type', sanitize_text_field($_POST['page_listing_type']));
         }
         if (isset($_POST['page_template_half_map_left'])) {
             update_post_meta($post_id, 'page_template_half_map_left', sanitize_text_field($_POST['page_template_half_map_left']));
@@ -1156,6 +1563,36 @@ if (!function_exists('resideo_page_meta_save')):
         }
         if (isset($_POST['contact_page_offices'])) {
             update_post_meta($post_id, 'contact_page_offices', sanitize_text_field($_POST['contact_page_offices']));
+        }
+        if (isset($_POST['contact_page_office_subtitle'])) {
+            update_post_meta($post_id, 'contact_page_office_subtitle', sanitize_text_field($_POST['contact_page_office_subtitle']));
+        }
+        if (isset($_POST['contact_page_office_email'])) {
+            update_post_meta($post_id, 'contact_page_office_email', sanitize_text_field($_POST['contact_page_office_email']));
+        }
+        if (isset($_POST['contact_page_single_office_title'])) {
+            update_post_meta($post_id, 'contact_page_single_office_title', sanitize_text_field($_POST['contact_page_single_office_title']));
+        }
+        if (isset($_POST['contact_page_single_office_lat'])) {
+            update_post_meta($post_id, 'contact_page_single_office_lat', sanitize_text_field($_POST['contact_page_single_office_lat']));
+        }
+        if (isset($_POST['contact_page_single_office_lng'])) {
+            update_post_meta($post_id, 'contact_page_single_office_lng', sanitize_text_field($_POST['contact_page_single_office_lng']));
+        }
+        if (isset($_POST['contact_page_single_office_address_line_1'])) {
+            update_post_meta($post_id, 'contact_page_single_office_address_line_1', sanitize_text_field($_POST['contact_page_single_office_address_line_1']));
+        }
+        if (isset($_POST['contact_page_single_office_address_line_2'])) {
+            update_post_meta($post_id, 'contact_page_single_office_address_line_2', sanitize_text_field($_POST['contact_page_single_office_address_line_2']));
+        }
+        if (isset($_POST['contact_page_single_office_phone'])) {
+            update_post_meta($post_id, 'contact_page_single_office_phone', sanitize_text_field($_POST['contact_page_single_office_phone']));
+        }
+        if (isset($_POST['contact_page_single_office_email'])) {
+            update_post_meta($post_id, 'contact_page_single_office_email', sanitize_text_field($_POST['contact_page_single_office_email']));
+        }
+        if (isset($_POST['contact_page_margin_bottom'])) {
+            update_post_meta($post_id, 'contact_page_margin_bottom', sanitize_text_field($_POST['contact_page_margin_bottom']));
         }
         if (isset($_POST['agents_page_subtitle'])) {
             update_post_meta($post_id, 'agents_page_subtitle', sanitize_text_field($_POST['agents_page_subtitle']));

@@ -29,21 +29,22 @@ class ResideoPageTemplater {
         add_filter('template_include', array($this, 'view_project_template'));
 
         $this->templates = array(
-            'contact-page.php'     => 'Contact Page',
-            'agents-list.php'      => 'Agents List',
-            'property-search.php'  => 'Property Search',
-            'idx.php'              => 'dsIDXPress',
-            'idx-map-right.php'    => 'dsIDXPress Map Right',
-            'idx-map-left.php'     => 'dsIDXPress Map Left',
-            'idx-single.php'       => 'dsIDXPress Details',
-            'idx.php'              => 'dsIDXPress',
-            'account-settings.php' => 'Account Settings',
-            'my-leads.php'         => 'My Leads',
-            'my-properties.php'    => 'My Properties',
-            'paypal-processor.php' => 'Paypal Processor',
-            'saved-searches.php'   => 'Saved Searches',
-            'wish-list.php'        => 'Whish List',
-            'submit-property.php'  => 'Submit Property',
+            'contact-page.php'        => 'Contact Page',
+            'contact-page-office.php' => 'Contact Page Office',
+            'agents-list.php'         => 'Agents List',
+            'property-search.php'     => 'Property Search',
+            'idx.php'                 => 'dsIDXPress',
+            'idx-map-right.php'       => 'dsIDXPress Map Right',
+            'idx-map-left.php'        => 'dsIDXPress Map Left',
+            'idx-single.php'          => 'dsIDXPress Details',
+            'idx.php'                 => 'dsIDXPress',
+            'account-settings.php'    => 'Account Settings',
+            'my-leads.php'            => 'My Leads',
+            'my-properties.php'       => 'My Properties',
+            'paypal-processor.php'    => 'Paypal Processor',
+            'saved-searches.php'      => 'Saved Searches',
+            'wish-list.php'           => 'Whish List',
+            'submit-property.php'     => 'Submit Property',
         );
     }
 

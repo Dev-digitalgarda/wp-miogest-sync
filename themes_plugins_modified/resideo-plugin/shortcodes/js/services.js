@@ -113,8 +113,11 @@
                                                     '<div class="layout-radio-container" id="sh-services-layout">' + 
                                                         '<div class="layout-radio layout-radio-services-1"><label class="';
             var cta_style = '';
+            var img_style = '';
+            var display_style = '';
             if (getObjectProperty(short, "layout") == '1') {
                 cta_style = 'display: none;';
+                display_style = 'display: none;';
                 modalContent += 
                                                             'layout-active';
             }
@@ -122,6 +125,7 @@
                                                         '"><input type="radio" name="sh_services_layout" value="1"><span><span class="fa fa-check"></span></span></label></div>' + 
                                                         '<div class="layout-radio layout-radio-services-2"><label class="';
             if (getObjectProperty(short, "layout") == '2') {
+                display_style = 'display: none;';
                 modalContent += 
                                                             'layout-active';
             }
@@ -129,13 +133,13 @@
                                                         '"><input type="radio" name="sh_services_layout" value="2"><span><span class="fa fa-check"></span></span></label></div>' + 
                                                         '<div class="layout-radio layout-radio-services-3"><label class="';
             if (getObjectProperty(short, "layout") == '3') {
+                display_style = 'display: none;';
                 modalContent += 
                                                             'layout-active';
             }
             modalContent += 
                                                         '"><input type="radio" name="sh_services_layout" value="3"><span><span class="fa fa-check"></span></span></label></div>' + 
                                                         '<div class="layout-radio layout-radio-services-4"><label class="';
-            var img_style = '';
             if (getObjectProperty(short, "layout") == '4') {
                 cta_style = 'display: none;';
                 img_style = 'display: none;';
@@ -146,16 +150,37 @@
                                                         '"><input type="radio" name="sh_services_layout" value="4"><span><span class="fa fa-check"></span></span></label></div>' + 
                                                         '<div class="layout-radio layout-radio-services-5"><label class="';
             if (getObjectProperty(short, "layout") == '5') {
+                display_style = 'display: none;';
                 modalContent += 
                                                             'layout-active';
             }
             modalContent += 
                                                         '"><input type="radio" name="sh_services_layout" value="5"><span><span class="fa fa-check"></span></span></label></div>' + 
+                                                        '<div class="layout-radio layout-radio-services-6"><label class="';
+            if (getObjectProperty(short, "layout") == '6') {
+                cta_style = 'display: none;';
+                img_style = 'display: none;';
+                display_style = 'display: none;';
+                modalContent += 
+                                                            'layout-active';
+            }
+            modalContent += 
+                                                        '"><input type="radio" name="sh_services_layout" value="6"><span><span class="fa fa-check"></span></span></label></div>' + 
+                                                        '<div class="layout-radio layout-radio-services-7"><label class="';
+            if (getObjectProperty(short, "layout") == '7') {
+                cta_style = 'display: none;';
+                img_style = 'display: none;';
+                display_style = 'display: none;';
+                modalContent += 
+                                                            'layout-active';
+            }
+            modalContent += 
+                                                        '"><input type="radio" name="sh_services_layout" value="7"><span><span class="fa fa-check"></span></span></label></div>' + 
                                                         '<div class="clearfix"></div>' + 
                                                     '</div>'+ 
                                                 '</div>'+ 
                                             '</div>' + 
-                                            '<div class="col-xs-12 col-md-6 rtl-pull-right">' + 
+                                            '<div class="col-xs-12 col-md-3 rtl-pull-right">' + 
                                                 '<div class="form-group">' + 
                                                     '<label for="sh-services-margin">' + sh_vars.margin_label + '</label>';
             var marginNo   = '';
@@ -172,6 +197,22 @@
                                                         '<option value="yes"' + marginYes + '>' + sh_vars.margin_yes + '</option>' + 
                                                     '</select>' + 
                                                 '</div>' + 
+                                                '<div class="form-group pxp-is-display" style="' + display_style + '">' + 
+                                                    '<label for="sh-services-display">' + sh_vars.display_label + '</label>';
+            var displayColumns   = '';
+            var displayGrid = '';
+            if (getObjectProperty(short, "display") == 'columns') {
+                displayColumns = ' selected="selected"';
+            }
+            if (getObjectProperty(short, "display") == 'grid') {
+                displayGrid = ' selected="selected"';
+            }
+            modalContent += 
+                                                    '<select class="form-control" id="sh-services-display">' + 
+                                                        '<option value="columns"' + displayColumns + '>' + sh_vars.display_columns + '</option>' + 
+                                                        '<option value="grid"' + displayGrid + '>' + sh_vars.display_grid + '</option>' + 
+                                                    '</select>' + 
+                                                '</div>' + 
                                                 '<div class="form-group is-custom" style="' + cta_style + '">' + 
                                                     '<label for="sh-services-cta-label">' + sh_vars.cta_text_label + '</label>' + 
                                                     '<input type="text" id="sh-services-cta-label" class="form-control" value="' + getObjectProperty(short, "cta_label") + '" placeholder="' + sh_vars.cta_text_placeholder + '">' + 
@@ -180,7 +221,17 @@
                                                     '<label for="sh-services-cta-link">' + sh_vars.cta_link_label + '</label>' + 
                                                     '<input type="text" id="sh-services-cta-link" class="form-control" value="' + getObjectProperty(short, "cta_link") + '" placeholder="' + sh_vars.cta_link_placeholder + '">' + 
                                                 '</div>'+ 
+                                                '<div class="form-group is-custom" style="' + cta_style + '">' + 
+                                                    '<label for="sh-services-cta-color" style="display:block;margin-bottom:2px;">' + sh_vars.cta_color_label + '</label>' + 
+                                                    '<input type="text" id="sh-services-cta-color" class="color-field" value="' + getObjectProperty(short, "cta_color") + '">' + 
+                                                '</div>'+ 
                                             '</div>' + 
+                                            '<div class="col-xs-12 col-md-3 rtl-pull-right">' + 
+                                                '<div class="form-group">' + 
+                                                    '<label for="sh-services-text-color" style="display:block;margin-bottom:2px;">' + sh_vars.text_color_label + '</label>' + 
+                                                    '<input type="text" id="sh-services-text-color" class="color-field" value="' + getObjectProperty(short, "text_color") + '">' + 
+                                                '</div>'+ 
+                                            '</div>'+ 
                                         '</div>' + 
                                         '<div class="row">' + 
                                             '<div class="col-xs-12 col-md-4 rtl-pull-right pxp-is-img" style="' + img_style + '">' + 
@@ -217,7 +268,7 @@
                         modalContent += 
                                             '<li class="list-group-item">' + 
                                                 '<div class="list-group-item-elem">' + 
-                                                    '<div class="list-group-item-img" data-src="' + elem.src + '" data-isicon="' + elem.isicon + '" data-value="' + elem.value + '" data-color="' + elem.color + '">';
+                                                    '<div class="list-group-item-img" data-src="' + elem.src + '" data-isicon="' + elem.isicon + '" data-value="' + elem.value + '" data-bgsrc="' + getObjectProperty(elem, "bgsrc") + '" data-bgvalue="' + getObjectProperty(elem, "bgvalue") + '" data-color="' + elem.color + '">';
                         if (elem.isicon == '1') {
                             modalContent += 
                                                         '<span class="' + elem.value + '" style="color: ' + elem.color + '"></span>';
@@ -257,14 +308,24 @@
                                             '<div class="sortcode-modal-subtitle" style="padding-top: 0; padding-bottom: 10px;">' + sh_vars.new_service_header + '</div>' + 
                                             '<div class="row">' + 
                                                 '<div class="col-xs-12 col-md-3 rtl-pull-right">' + 
-                                                    '<input type="hidden" id="sh-new-service-img" data-isicon="" data-src="">' + 
-                                                    '<div class="sh-new-service-img-container">' + 
-                                                        '<div class="sh-new-service-img-placeholder" style="background-image: url(' + sh_vars.plugin_url + 'images/image-placeholder.png);"></div>' + 
-                                                        '<div class="sh-new-service-add-btns">' + 
-                                                            '<div class="sh-new-service-add-img">' + sh_vars.service_add_img + '</div>' + 
-                                                            '<div class="sh-new-service-add-icon">' + sh_vars.service_add_icon + '</div>' + 
+                                                    '<div class="form-group">' + 
+                                                        '<input type="hidden" id="sh-new-service-img" data-isicon="" data-src="">' + 
+                                                        '<div class="sh-new-service-img-container">' + 
+                                                            '<div class="sh-new-service-img-placeholder" style="background-image: url(' + sh_vars.plugin_url + 'images/image-placeholder.png);"></div>' + 
+                                                            '<div class="sh-new-service-add-btns">' + 
+                                                                '<div class="sh-new-service-add-img">' + sh_vars.service_add_img + '</div>' + 
+                                                                '<div class="sh-new-service-add-icon">' + sh_vars.service_add_icon + '</div>' + 
+                                                            '</div>'+ 
                                                         '</div>'+ 
                                                     '</div>'+ 
+                                                    '<div class="form-group">' + 
+                                                        '<label style="display: block; padding-bottom: 3px;">' + sh_vars.img_label + '</label>' + 
+                                                        '<input type="hidden" id="sh-new-service-bg-image" name="sh-new-service-bg-image" data-src="">' + 
+                                                        '<div class="sh-new-service-bg-image-placeholder-container">' + 
+                                                            '<div id="sh-new-service-bg-image-placeholder" style="background-image: url(' + sh_vars.plugin_url + 'images/image-placeholder.png);"></div>' + 
+                                                            '<div id="delete-new-service-bg-image"><span class="fa fa-trash-o"></span></div>' +
+                                                        '</div>' +
+                                                    '</div>' + 
                                                 '</div>'+ 
                                                 '<div class="col-xs-12 col-md-9 rtl-pull-right">' + 
                                                     '<div class="row">' + 
@@ -354,15 +415,18 @@
 
             $('#shortcode-modal #insert-button').on('click', function(e) {
                 var shortVal = {
-                    'title'    : $('#sh-services-title').val(),
-                    'subtitle' : $('#sh-services-subtitle').val(),
-                    'image'    : $('#sh-services-image').val(),
-                    'image_src': $('#sh-services-image').attr('data-src'),
-                    'layout'   : $('#sh-services-layout .layout-active > input').val(),
-                    'margin'   : $('#sh-services-margin').val(),
-                    'cta_label': $('#sh-services-cta-label').val(),
-                    'cta_link' : $('#sh-services-cta-link').val(),
-                    'services' : services
+                    'title'     : $('#sh-services-title').val(),
+                    'subtitle'  : $('#sh-services-subtitle').val(),
+                    'image'     : $('#sh-services-image').val(),
+                    'image_src' : $('#sh-services-image').attr('data-src'),
+                    'layout'    : $('#sh-services-layout .layout-active > input').val(),
+                    'margin'    : $('#sh-services-margin').val(),
+                    'display'   : $('#sh-services-display').val(),
+                    'text_color': $('#sh-services-text-color').val(),
+                    'cta_label' : $('#sh-services-cta-label').val(),
+                    'cta_link'  : $('#sh-services-cta-link').val(),
+                    'cta_color' : $('#sh-services-cta-color').val(),
+                    'services'  : services
                 }
                 var shortcodeStr = '[' + shortcodeTag + ' data_content="' + encodeURIComponent(JSON.stringify(shortVal)) + '"' + '][/' + shortcodeTag + ']';
 
@@ -384,10 +448,16 @@
                     $('.form-group.is-custom').hide();
                 }
 
-                if (!$(this).parent().hasClass('layout-radio-services-4')) {
-                    $('.pxp-is-img').show();
-                } else {
+                if ($(this).parent().hasClass('layout-radio-services-4') || $(this).parent().hasClass('layout-radio-services-6') || $(this).parent().hasClass('layout-radio-services-7')) {
                     $('.pxp-is-img').hide();
+                } else {
+                    $('.pxp-is-img').show();
+                }
+
+                if ($(this).parent().hasClass('layout-radio-services-4')) {
+                    $('.pxp-is-display').show();
+                } else {
+                    $('.pxp-is-display').hide();
                 }
             });
 
@@ -428,6 +498,35 @@
                 openIconsModal($(this));
             });
 
+            $('#sh-new-service-bg-image-placeholder').on('click', function(event) {
+                event.preventDefault();
+
+                var frame = wp.media({
+                    title: sh_vars.media_services_image_title,
+                    button: {
+                        text: sh_vars.media_services_image_btn
+                    },
+                    multiple: false
+                });
+
+                frame.on('select', function() {
+                    var attachment = frame.state().get('selection').toJSON();
+                    $.each(attachment, function(index, value) {
+                        $('#sh-new-service-bg-image').val(value.id).attr('data-src', value.url);
+                        $('#sh-new-service-bg-image-placeholder').css('background-image', 'url(' + value.url + ')');
+                        $('.sh-new-service-bg-image-placeholder-container').addClass('has-image');
+                    });
+                });
+
+                frame.open();
+            });
+
+            $('#delete-new-service-bg-image').on('click', function() {
+                $('#sh-new-service-bg-image').val('').attr('data-src', '');
+                $('#sh-new-service-bg-image-placeholder').css('background-image', 'url(' + sh_vars.plugin_url + 'images/image-placeholder.png)');
+                $('.sh-new-service-bg-image-placeholder-container').removeClass('has-image');
+            });
+
             $('#add-service').on('click', function(event) {
                 $(this).hide();
                 $('.shortcode-modal-new-container').show();
@@ -440,6 +539,11 @@
                     'data-isicon' : '0',
                     'data-src'    : '',
                 });
+                $('#sh-new-service-bg-image-placeholder').empty().css('background-image', 'url(' + sh_vars.plugin_url + 'images/image-placeholder.png)').removeClass('has-image');
+                $('#sh-new-service-bg-image').val('').attr({
+                    'data-src' : '',
+                });
+                $('.sh-new-service-bg-image-placeholder-container').removeClass('has-image');
                 $('#sh-new-service-title').val('');
                 $('#sh-new-service-text').val('');
                 $('#sh-new-service-link').val('');
@@ -450,20 +554,24 @@
             });
 
             $('#ok-service').on('click', function(event) {
-                var newImgSrc   = $('#sh-new-service-img').attr('data-src');
-                var newIsIcon   = $('#sh-new-service-img').attr('data-isicon');
-                var newImgValue = $('#sh-new-service-img').val();
-                var newTitle    = $('#sh-new-service-title').val();
-                var newText     = $('#sh-new-service-text').val();
-                var newLink     = $('#sh-new-service-link').val();
-                var newCtalabel = $('#sh-new-service-cta-label').val();
-                var newColor    = $('#sh-new-service-color').val();
-                var newCTAColor = $('#sh-new-service-cta-color').val();
+                var newImgSrc     = $('#sh-new-service-img').attr('data-src');
+                var newIsIcon     = $('#sh-new-service-img').attr('data-isicon');
+                var newImgValue   = $('#sh-new-service-img').val();
+                var newBgImgSrc   = $('#sh-new-service-bg-image').attr('data-src');
+                var newBgImgValue = $('#sh-new-service-bg-image').val();
+                var newTitle      = $('#sh-new-service-title').val();
+                var newText       = $('#sh-new-service-text').val();
+                var newLink       = $('#sh-new-service-link').val();
+                var newCtalabel   = $('#sh-new-service-cta-label').val();
+                var newColor      = $('#sh-new-service-color').val();
+                var newCTAColor   = $('#sh-new-service-cta-color').val();
 
                 services.push({
                     'src'     : newImgSrc,
                     'isicon'  : newIsIcon,
                     'value'   : newImgValue,
+                    'bgsrc'   : newBgImgSrc,
+                    'bgvalue' : newBgImgValue,
                     'title'   : newTitle,
                     'text'    : newText,
                     'link'    : newLink,
@@ -475,7 +583,7 @@
                 var newService = 
                     '<li class="list-group-item">' + 
                         '<div class="list-group-item-elem">' + 
-                            '<div class="list-group-item-img" data-src="' + newImgSrc + '" data-isicon="' + newIsIcon + '" data-value="' + newImgValue + '" data-color="' + newColor + '">';
+                            '<div class="list-group-item-img" data-src="' + newImgSrc + '" data-isicon="' + newIsIcon + '" data-value="' + newImgValue + '" data-bgsrc="' + newBgImgSrc + '" data-bgvalue="' + newBgImgValue + '" data-color="' + newColor + '">';
                 if (newIsIcon == '1') {
                     newService += 
                                 '<span class="' + newImgValue + '" style="color: ' + newColor + '"></span>';
@@ -506,6 +614,10 @@
                     'data-isicon' : '0',
                     'data-src'    : '',
                 });
+                $('#sh-new-service-bg-image-placeholder').empty().css('background-image', 'url(' + sh_vars.plugin_url + 'images/image-placeholder.png)').removeClass('has-image');
+                $('#sh-new-service-bg-image').val('').attr({
+                    'data-src' : '',
+                });
                 $('#sh-new-service-title').val('');
                 $('#sh-new-service-text').val('');
                 $('#sh-new-service-link').val('');
@@ -529,20 +641,24 @@
                     services = [];
 
                     $('#services-list .list-group-item').each(function() {
-                        var newImgSrc   = $(this).find('.list-group-item-img').attr('data-src');
-                        var newIsIcon   = $(this).find('.list-group-item-img').attr('data-isicon');
-                        var newImgValue = $(this).find('.list-group-item-img').attr('data-value');
-                        var newTitle    = $(this).find('.service-title').text();
-                        var newText     = $(this).find('.service-text').text();
-                        var newLink     = $(this).find('.list-group-item-info').attr('data-link');
-                        var newCtalabel = $(this).find('.list-group-item-info').attr('data-cta');
-                        var newColor    = $(this).find('.list-group-item-img').attr('data-color');
-                        var newCTAColor = $(this).find('.list-group-item-info').attr('data-ctacolor');
+                        var newImgSrc     = $(this).find('.list-group-item-img').attr('data-src');
+                        var newIsIcon     = $(this).find('.list-group-item-img').attr('data-isicon');
+                        var newImgValue   = $(this).find('.list-group-item-img').attr('data-value');
+                        var newBgImgSrc   = $(this).find('.list-group-item-img').attr('data-bgsrc');
+                        var newBgImgValue = $(this).find('.list-group-item-img').attr('data-bgvalue');
+                        var newTitle      = $(this).find('.service-title').text();
+                        var newText       = $(this).find('.service-text').text();
+                        var newLink       = $(this).find('.list-group-item-info').attr('data-link');
+                        var newCtalabel   = $(this).find('.list-group-item-info').attr('data-cta');
+                        var newColor      = $(this).find('.list-group-item-img').attr('data-color');
+                        var newCTAColor   = $(this).find('.list-group-item-info').attr('data-ctacolor');
 
                         services.push({
                             'src'     : newImgSrc,
                             'isicon'  : newIsIcon,
                             'value'   : newImgValue,
+                            'bgsrc'   : newBgImgSrc,
+                            'bgvalue' : newBgImgValue,
                             'title'   : newTitle,
                             'text'    : newText,
                             'link'    : newLink,
@@ -559,41 +675,65 @@
             });
 
             function editService(btn) {
-                var editImgSrc   = btn.parent().find('.list-group-item-img').attr('data-src');
-                var editIsIcon   = btn.parent().find('.list-group-item-img').attr('data-isicon');
-                var editImgValue = btn.parent().find('.list-group-item-img').attr('data-value');
-                var editTitle    = btn.parent().find('.service-title').text();
-                var editText     = btn.parent().find('.service-text').text();
-                var editLink     = btn.parent().find('.list-group-item-info').attr('data-link');
-                var editCtaLabel = btn.parent().find('.list-group-item-info').attr('data-cta');
-                var editColor    = btn.parent().find('.list-group-item-img').attr('data-color');
-                var editCTAColor = btn.parent().find('.list-group-item-info').attr('data-ctacolor');
+                var editImgSrc     = btn.parent().find('.list-group-item-img').attr('data-src');
+                var editIsIcon     = btn.parent().find('.list-group-item-img').attr('data-isicon');
+                var editImgValue   = btn.parent().find('.list-group-item-img').attr('data-value');
+                var editBgImgSrc   = btn.parent().find('.list-group-item-img').attr('data-bgsrc');
+                var editBgImgValue = btn.parent().find('.list-group-item-img').attr('data-bgvalue');
+                var editTitle      = btn.parent().find('.service-title').text();
+                var editText       = btn.parent().find('.service-text').text();
+                var editLink       = btn.parent().find('.list-group-item-info').attr('data-link');
+                var editCtaLabel   = btn.parent().find('.list-group-item-info').attr('data-cta');
+                var editColor      = btn.parent().find('.list-group-item-img').attr('data-color');
+                var editCTAColor   = btn.parent().find('.list-group-item-info').attr('data-ctacolor');
 
                 var editServiceForm = 
                     '<div class="sh-edit-service">' + 
                         '<div class="sortcode-modal-subtitle" style="padding-top: 0; padding-bottom: 10px;">' + sh_vars.edit_service_header + '</div>' + 
                         '<div class="row">' + 
                             '<div class="col-xs-12 col-sm-12 col-md-3 rtl-pull-right">' + 
-                                '<input type="hidden" id="sh-edit-service-img" data-isicon="' + editIsIcon + '" data-src="' + editImgSrc + '" value="' + editImgValue + '" data-color="' + editColor + '">' + 
-                                '<div class="sh-new-service-img-container">';
+                                '<div class="form-group">' + 
+                                    '<input type="hidden" id="sh-edit-service-img" data-isicon="' + editIsIcon + '" data-src="' + editImgSrc + '" value="' + editImgValue + '" data-color="' + editColor + '">' + 
+                                    '<div class="sh-new-service-img-container">';
                 if (editIsIcon == '1') {
                     editServiceForm += 
-                                    '<div class="sh-new-service-img-placeholder"><span class="' + editImgValue + '" style="color: ' + editColor + '"></span></div>';
+                                        '<div class="sh-new-service-img-placeholder"><span class="' + editImgValue + '" style="color: ' + editColor + '"></span></div>';
                 } else {
                     if (editImgSrc != '') {
                         editServiceForm += 
-                                    '<div class="sh-new-service-img-placeholder has-image" style="background-image: url(' + editImgSrc + ');"></div>';
+                                        '<div class="sh-new-service-img-placeholder has-image" style="background-image: url(' + editImgSrc + ');"></div>';
                     } else {
                         editServiceForm += 
-                                    '<div class="sh-new-service-img-placeholder" style="background-image: url(' + sh_vars.plugin_url + 'images/image-placeholder.png);"></div>';
+                                        '<div class="sh-new-service-img-placeholder" style="background-image: url(' + sh_vars.plugin_url + 'images/image-placeholder.png);"></div>';
                     }
                 }
                 editServiceForm += 
-                                    '<div class="sh-new-service-add-btns">' + 
-                                        '<div class="sh-new-service-add-img">' + sh_vars.service_add_img + '</div>' + 
-                                        '<div class="sh-new-service-add-icon">' + sh_vars.service_add_icon + '</div>' + 
+                                        '<div class="sh-new-service-add-btns">' + 
+                                            '<div class="sh-new-service-add-img">' + sh_vars.service_add_img + '</div>' + 
+                                            '<div class="sh-new-service-add-icon">' + sh_vars.service_add_icon + '</div>' + 
+                                        '</div>'+ 
                                     '</div>'+ 
                                 '</div>'+ 
+                                '<div class="form-group">' + 
+                                    '<label style="display: block; padding-bottom: 3px;">' + sh_vars.img_label + '</label>' + 
+                                    '<input type="hidden" id="sh-edit-service-bg-image" name="sh-edit-service-bg-image" data-src="' + editBgImgSrc + '" value="' + editBgImgValue + '">' + 
+                                    '<div class="sh-edit-service-bg-image-placeholder-container';
+                if (editBgImgSrc != '') { 
+                    editServiceForm += 
+                                        ' has-image'; 
+                }
+                editServiceForm += 
+                                        '"><div id="sh-edit-service-bg-image-placeholder" style="background-image: url(';
+                if (editBgImgSrc != '') { 
+                    editServiceForm += editBgImgSrc;
+                } else { 
+                    editServiceForm += sh_vars.plugin_url + 'images/image-placeholder.png'; 
+                }
+                editServiceForm += 
+                                        ');"></div>'+
+                                        '<div id="delete-edit-service-bg-image"><span class="fa fa-trash-o"></span></div>' +
+                                    '</div>' +
+                                '</div>' + 
                             '</div>'+ 
                             '<div class="col-xs-12 col-md-9 rtl-pull-right">' + 
                                 '<div class="row">' + 
@@ -664,6 +804,35 @@
                     openIconsModal($(this));
                 });
 
+                $('#sh-edit-service-bg-image-placeholder').on('click', function(event) {
+                    event.preventDefault();
+    
+                    var frame = wp.media({
+                        title: sh_vars.media_services_image_title,
+                        button: {
+                            text: sh_vars.media_services_image_btn
+                        },
+                        multiple: false
+                    });
+    
+                    frame.on('select', function() {
+                        var attachment = frame.state().get('selection').toJSON();
+                        $.each(attachment, function(index, value) {
+                            $('#sh-edit-service-bg-image').val(value.id).attr('data-src', value.url);
+                            $('#sh-edit-service-bg-image-placeholder').css('background-image', 'url(' + value.url + ')');
+                            $('.sh-edit-service-bg-image-placeholder-container').addClass('has-image');
+                        });
+                    });
+    
+                    frame.open();
+                });
+    
+                $('#delete-edit-service-bg-image').on('click', function() {
+                    $('#sh-edit-service-bg-image').val('').attr('data-src', '');
+                    $('#sh-edit-service-bg-image-placeholder').css('background-image', 'url(' + sh_vars.plugin_url + 'images/image-placeholder.png)');
+                    $('.sh-edit-service-bg-image-placeholder-container').removeClass('has-image');
+                });
+
                 $('.color-field').wpColorPicker({
                     defaultColor: '#333333',
                 });
@@ -676,13 +845,22 @@
                     var eColor    = $(this).parent().find('#sh-edit-service-color').val();
                     var eCTAColor = $(this).parent().find('#sh-edit-service-cta-color').val();
                     var eImgValue = $(this).parent().find('#sh-edit-service-img').val();
+                    var eBgImgSrc   = $(this).parent().find('#sh-edit-service-bg-image').attr('data-src');
+                    var eBgImgValue = $(this).parent().find('#sh-edit-service-bg-image').val();
                     var eTitle    = $(this).parent().find('#sh-edit-service-title').val();
                     var eText     = $(this).parent().find('#sh-edit-service-text').val();
                     var eLink     = $(this).parent().find('#sh-edit-service-link').val();
                     var eCtaLabel = $(this).parent().find('#sh-edit-service-cta-label').val();
                     var listElem  = $(this).parent().parent().find('.list-group-item-elem');
 
-                    listElem.find('.list-group-item-img').attr('data-src', eImgSrc).attr('data-isicon', eIsIcon).attr('data-value', eImgValue).attr('data-color', eColor);
+                    listElem.find('.list-group-item-img').attr({
+                        'data-src'    : eImgSrc,
+                        'data-isicon' : eIsIcon,
+                        'data-value'  : eImgValue,
+                        'data-bgsrc'  : eBgImgSrc,
+                        'data-bgvalue': eBgImgValue,
+                        'data-color'  : eColor
+                    });
 
                     if (eIsIcon == '1') {
                         listElem.find('.list-group-item-img').html('<span class="' + eImgValue + '" style="color: ' + eColor + '"></span>');
@@ -709,6 +887,8 @@
                         var newImgSrc   = $(this).find('.list-group-item-img').attr('data-src');
                         var newIsIcon   = $(this).find('.list-group-item-img').attr('data-isicon');
                         var newImgValue = $(this).find('.list-group-item-img').attr('data-value');
+                        var newBgImgSrc   = $(this).find('.list-group-item-img').attr('data-bgsrc');
+                        var newBgImgValue = $(this).find('.list-group-item-img').attr('data-bgvalue');
                         var newColor    = $(this).find('.list-group-item-img').attr('data-color');
                         var newCTAColor = $(this).find('.list-group-item-info').attr('data-ctacolor');
                         var newTitle    = $(this).find('.service-title').text();
@@ -720,6 +900,8 @@
                             'src'     : newImgSrc,
                             'isicon'  : newIsIcon,
                             'value'   : newImgValue,
+                            'bgsrc'   : newBgImgSrc,
+                            'bgvalue' : newBgImgValue,
                             'title'   : newTitle,
                             'text'    : newText,
                             'link'    : newLink,
@@ -755,20 +937,24 @@
                 btn.parent().parent().remove();
                 if ($('#services-list .list-group-item').length > 0) {
                     $('#services-list .list-group-item').each(function() {
-                        var newImgSrc   = $(this).find('.list-group-item-img').attr('data-src');
-                        var newIsIcon   = $(this).find('.list-group-item-img').attr('data-isicon');
-                        var newImgValue = $(this).find('.list-group-item-img').attr('data-value');
-                        var newColor    = $(this).find('.list-group-item-img').attr('data-color');
-                        var newCTAColor = $(this).find('.list-group-item-info').attr('data-ctacolor');
-                        var newTitle    = $(this).find('.service-title').text();
-                        var newText     = $(this).find('.service-text').text();
-                        var newLink     = $(this).find('.list-group-item-info').attr('data-link');
-                        var newCtalabel = $(this).find('.list-group-item-info').attr('data-cta');
+                        var newImgSrc     = $(this).find('.list-group-item-img').attr('data-src');
+                        var newIsIcon     = $(this).find('.list-group-item-img').attr('data-isicon');
+                        var newImgValue   = $(this).find('.list-group-item-img').attr('data-value');
+                        var newBgImgSrc   = $(this).find('.list-group-item-img').attr('data-bgsrc');
+                        var newBgImgValue = $(this).find('.list-group-item-img').attr('data-bgvalue');
+                        var newColor      = $(this).find('.list-group-item-img').attr('data-color');
+                        var newCTAColor   = $(this).find('.list-group-item-info').attr('data-ctacolor');
+                        var newTitle      = $(this).find('.service-title').text();
+                        var newText       = $(this).find('.service-text').text();
+                        var newLink       = $(this).find('.list-group-item-info').attr('data-link');
+                        var newCtalabel   = $(this).find('.list-group-item-info').attr('data-cta');
 
                         services.push({
                             'src'     : newImgSrc,
                             'isicon'  : newIsIcon,
                             'value'   : newImgValue,
+                            'bgsrc'   : newBgImgSrc,
+                            'bgvalue' : newBgImgValue,
                             'title'   : newTitle,
                             'text'    : newText,
                             'link'    : newLink,
@@ -931,7 +1117,7 @@
             tooltip: sh_vars.services_title,
             onclick: function() {
                 editor.execCommand('res_services_panel_popup', '', {
-                    data_content: '{ "title": "", "subtitle": "", "image": "", "image_src": "", "layout": "1", "margin": "no", "cta_label": "", "cta_link": "", "services": [] }',
+                    data_content: '{ "title": "", "subtitle": "", "image": "", "image_src": "", "layout": "1", "margin": "no", "display": "columns", "text_color": "", "cta_label": "", "cta_link": "", "cta_color": "", "services": [] }',
                 });
             }
         });

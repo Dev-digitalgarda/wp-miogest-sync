@@ -295,7 +295,10 @@ if (!function_exists('resideo_add_custom_fields')):
         $var_name = str_replace(' ', '_', trim($name));
         $var_name = sanitize_key($var_name);
 
-        $resideo_fields_settings                          = get_option('resideo_fields_settings');
+        $resideo_fields_settings = get_option('resideo_fields_settings');
+        if (!is_array($resideo_fields_settings)) {
+            $resideo_fields_settings = array();
+        }
         $resideo_fields_settings[$var_name]['name']       = $name;
         $resideo_fields_settings[$var_name]['label']      = $label;
         $resideo_fields_settings[$var_name]['type']       = $type;

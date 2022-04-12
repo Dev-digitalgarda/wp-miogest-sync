@@ -201,14 +201,13 @@ if (!function_exists('resideo_featured_properties_shortcode')) :
             $p_link  = get_permalink($post['ID']);
 
             $gallery     = get_post_meta($post['ID'], 'property_gallery', true);
-            $photos      = array_slice(explode(',', $gallery), 1);
-            $first_gallery = $photos[0];
+            $photos      = explode(',', $gallery);
             $first_photo = wp_get_attachment_image_src($photos[0], 'pxp-gallery');
 
-            if ($first_gallery != '') {
-                $p_photo = 'https://img.miogest.com/' . $first_gallery;
+            if ($first_photo != '') {
+                $p_photo = $first_photo[0];
             } else {
-                $p_photo = 'https://gardahomeproject.it/wp-content/uploads/2021/07/placeholdervertical.png';
+                $p_photo = RESIDEO_PLUGIN_PATH . 'images/property-tile.png';
             }
 
             $p_price       = get_post_meta($post['ID'], 'property_price', true);
@@ -233,20 +232,20 @@ if (!function_exists('resideo_featured_properties_shortcode')) :
             $return_string .= '
                 <div class="' . esc_attr($column_class) . '">
                     <a href="' . esc_url($p_link) . '" class="pxp-prop-card-1 rounded-lg ' . esc_attr($card_margin_class) . '">
-                        <div class="pxp-prop-card-1-fig pxp-cover" style="background-image: url( ' . $p_photo . ');"></div>
+                        <div class="pxp-prop-card-1-fig pxp-cover" style="background-image: url(' . esc_url($p_photo) . ');"></div>
                         <div class="pxp-prop-card-1-gradient pxp-animate"></div>
                         <div class="pxp-prop-card-1-details">
                             <div class="pxp-prop-card-1-details-title">' . esc_html($p_title) . '</div>
                             <div class="pxp-prop-card-1-details-price">';
-                            if (!$p_price_reserved) {
-                                if ($currency_pos == 'before') {
-                                    $return_string .= esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
-                                } else {
-                                    $return_string .= esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
-                                }
-                            } else {
-                                $return_string .= 'Prezzo riservato' . ' <span>' . esc_html($p_price_label) . '</span>';
-                            }
+            if (!$p_price_reserved) {
+                if ($currency_pos == 'before') {
+                    $return_string .= esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
+                } else {
+                    $return_string .= esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
+                }
+            } else {
+                $return_string .= 'Prezzo riservato' . ' <span>' . esc_html($p_price_label) . '</span>';
+            }
             $return_string .= '
                             </div>
                             <div class="pxp-prop-card-1-details-features text-uppercase">';

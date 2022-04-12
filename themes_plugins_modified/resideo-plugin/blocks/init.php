@@ -22,5 +22,7 @@ if (function_exists('register_block_type')) {
     require_once 'gallery-carousel.php';
     require_once 'numbers.php';
     require_once 'awards.php';
+    require_once 'contact.php';
+    require_once 'video.php';
 }
 ?>

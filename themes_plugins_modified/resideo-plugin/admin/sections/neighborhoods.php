@@ -94,7 +94,10 @@ if (!function_exists('resideo_add_neighborhoods')):
         $var_name = str_replace(' ', '_', trim($id));
         $var_name = sanitize_key($var_name);
 
-        $resideo_neighborhoods_settings                        = get_option('resideo_neighborhoods_settings');
+        $resideo_neighborhoods_settings = get_option('resideo_neighborhoods_settings');
+        if (!is_array($resideo_neighborhoods_settings)) {
+            $resideo_neighborhoods_settings = array();
+        }
         $resideo_neighborhoods_settings[$var_name]['id']       = $id;
         $resideo_neighborhoods_settings[$var_name]['name']     = $name;
         $resideo_neighborhoods_settings[$var_name]['position'] = $position;

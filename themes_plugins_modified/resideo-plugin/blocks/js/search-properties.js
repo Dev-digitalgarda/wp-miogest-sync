@@ -42,6 +42,7 @@
 
         var title        = getObjectProperty(data_json, 'title');
         var subtitle     = getObjectProperty(data_json, 'subtitle');
+        var align        = getObjectProperty(data_json, 'align');
         var id           = getObjectProperty(data_json, 'id');
         var address      = getObjectProperty(data_json, 'address');
         var city         = getObjectProperty(data_json, 'city');
@@ -96,7 +97,7 @@
                 },
                 el('div',
                     {
-                        className: 'col-xs-12 col-sm-6'
+                        className: 'col-xs-12 col-sm-5'
                     },
                     el(TextControl, 
                         {
@@ -112,7 +113,7 @@
                 ),
                 el('div',
                     {
-                        className: 'col-xs-12 col-sm-6'
+                        className: 'col-xs-12 col-sm-5'
                     },
                     el(TextControl, 
                         {
@@ -121,6 +122,25 @@
                             placeholder: __('Enter subtitle', 'resideo'),
                             onChange: function(value) {
                                 data_json.subtitle = value;
+                                setAttributes({ data_content: encodeURIComponent(JSON.stringify(data_json)) });
+                            }
+                        }
+                    )
+                ),
+                el('div',
+                    {
+                        className: 'col-xs-12 col-sm-2'
+                    },
+                    el(SelectControl, 
+                        {
+                            label: __('Align', 'resideo'),
+                            value: align,
+                            options: [
+                                { label: __('Left', 'resideo'), value: 'left' },
+                                { label: __('Center', 'resideo'), value: 'center' }
+                            ],
+                            onChange: function(value) {
+                                data_json.align = value;
                                 setAttributes({ data_content: encodeURIComponent(JSON.stringify(data_json)) });
                             }
                         }
@@ -436,7 +456,7 @@
         attributes: {
             data_content: {
                 type: 'string',
-                default: '%7B%22title%22%3A%22%22%2C%22subtitle%22%3A%22%22%2C%22id%22%3A%22%22%2C%22address%22%3A%22%22%2C%22city%22%3A%22%22%2C%22neighborhood%22%3A%22%22%2C%22state%22%3A%22%22%2C%22price%22%3A%22%22%2C%22size%22%3A%22%22%2C%22beds%22%3A%22%22%2C%22baths%22%3A%22%22%2C%22type%22%3A%22%22%2C%22status%22%3A%22%22%2C%22keywords%22%3A%22%22%2C%22limit%22%3A%222%22%2C%22amenities%22%3A%22%22%7D'
+                default: '%7B%22title%22%3A%22%22%2C%22subtitle%22%3A%22%22%2C%22align%22%3A%22left%22%2C%22id%22%3A%22%22%2C%22address%22%3A%22%22%2C%22city%22%3A%22%22%2C%22neighborhood%22%3A%22%22%2C%22state%22%3A%22%22%2C%22price%22%3A%22%22%2C%22size%22%3A%22%22%2C%22beds%22%3A%22%22%2C%22baths%22%3A%22%22%2C%22type%22%3A%22%22%2C%22status%22%3A%22%22%2C%22keywords%22%3A%22%22%2C%22limit%22%3A%222%22%2C%22amenities%22%3A%22%22%7D'
             }
         },
         edit: withState({})(SearchPropertiesControl),

@@ -46,7 +46,7 @@ class Elementor_Resideo_Awards_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Subtitle', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'input_type' => 'string',
                 'placeholder' => __('Enter subtitle', 'resideo'),
             ]
@@ -57,7 +57,7 @@ class Elementor_Resideo_Awards_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Text', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXTAREA,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'placeholder' => __('Enter text', 'resideo'),
             ]
         );
@@ -140,12 +140,12 @@ class Elementor_Resideo_Awards_Widget extends \Elementor\Widget_Base {
                 <div class="row">
                     <div class="col-md-4">
                         <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
-                        <p class="pxp-text-light"><?php echo esc_html($settings['subtitle']); ?></p>
+                        <div class="pxp-text-light"><?php echo $settings['subtitle']; ?></div>
                     </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-6">
                         <?php if ($settings['text'] != '') { ?>
-                            <p class="pxp-text-light"><?php echo esc_html($settings['text']); ?></p>
+                            <div class="pxp-text-light"><?php echo $settings['text']; ?></div>
                         <?php } ?>
                         <div class="row">
                             <?php foreach ($settings['awards_list'] as $award) { ?>

@@ -8,10 +8,12 @@ if (!function_exists('resideo_get_page_header')):
     function resideo_get_page_header($header_info) {
         switch ($header_info['header_type']) {
             case 'slideshow': 
-                $caption_title = get_post_meta($header_info['post_id'], 'page_header_slideshow_caption_title', true);
+                $caption_title    = get_post_meta($header_info['post_id'], 'page_header_slideshow_caption_title', true);
+                $caption_subtitle = get_post_meta($header_info['post_id'], 'page_header_slideshow_caption_subtitle', true);
                 $caption_position = get_post_meta($header_info['post_id'], 'page_header_slideshow_caption_position', true);
-                $opacity = get_post_meta($header_info['post_id'], 'page_header_slideshow_opacity', true);
-                $show_search = get_post_meta($header_info['post_id'], 'page_header_slideshow_show_search', true);
+                $opacity          = get_post_meta($header_info['post_id'], 'page_header_slideshow_opacity', true);
+                $show_search      = get_post_meta($header_info['post_id'], 'page_header_slideshow_show_search', true);
+                $status_type      = get_post_meta($header_info['post_id'], 'page_header_slideshow_search_status_type', true);
 
                 $gallery = get_post_meta($header_info['post_id'], 'page_header_slideshow_gallery', true);
                 $ids = explode(',', $gallery);
@@ -28,7 +30,16 @@ if (!function_exists('resideo_get_page_header')):
                 if ($caption_position == 'bottom') {
                     $caption_class = 'pxp-hero-caption-bottom-left container';
                     $caption_container_class = '';
-                } 
+                }
+                if ($caption_position == 'left') {
+                    $caption_class = 'pxp-hero-caption-left container';
+                    $caption_container_class = '';
+                }
+
+                $hero_search_class = '';
+                if ($status_type == 'tabs') {
+                    $hero_search_class = 'pxp-has-tabs-margin';
+                }
 
                 $no_form_class = '';
                 if ($show_search != '1') {
@@ -56,11 +67,12 @@ if (!function_exists('resideo_get_page_header')):
                     <div class="pxp-hero-caption <?php echo esc_attr($caption_class); ?> <?php echo esc_attr($no_form_class); ?>">
                         <div class="<?php echo esc_attr($caption_container_class); ?>">
                             <h1 class="text-white"><?php echo esc_html($caption_title); ?></h1>
+                            <p class="pxp-text-light text-white mb-0"><?php echo esc_html($caption_subtitle); ?></p>
 
                             <?php if ($show_search == '1') { ?>
-                                <div class="hero-search">
+                                <div class="hero-search <?php echo esc_attr($hero_search_class); ?>">
                                     <?php if (function_exists('resideo_get_search_properties_form')) {
-                                        resideo_get_search_properties_form();
+                                        resideo_get_search_properties_form($status_type);
                                     } ?>
                                 </div>
                             <?php } ?>
@@ -80,6 +92,13 @@ if (!function_exists('resideo_get_page_header')):
                 if ($interval != '') {
                     $data_interval = intval($interval) * 1000;
                     $timer = floatval($interval) - 0.6;
+                }
+
+                $prev_class = 'prev';
+                $next_class = 'next';
+                if (is_rtl()) {
+                    $prev_class = 'next';
+                    $next_class = 'prev';
                 }
 
                 if ($timer) { ?>
@@ -131,7 +150,7 @@ if (!function_exists('resideo_get_page_header')):
                                 </div>
                             </div>
                             <div class="pxp-carousel-controls">
-                                <a class="pxp-carousel-control-prev" role="button" data-slide="prev">
+                                <a class="pxp-carousel-control-<?php echo esc_attr($prev_class); ?>" role="button" data-slide="<?php echo esc_attr($prev_class); ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                         <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
                                             <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
@@ -140,7 +159,7 @@ if (!function_exists('resideo_get_page_header')):
                                         </g>
                                     </svg>
                                 </a>
-                                <a class="pxp-carousel-control-next" role="button" data-slide="next">
+                                <a class="pxp-carousel-control-<?php echo esc_attr($next_class); ?>" role="button" data-slide="<?php echo esc_attr($next_class); ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                         <g id="Symbol_1_1" data-name="Symbol 1 – 1" transform="translate(-1847.5 -1589.086)">
                                             <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
@@ -180,9 +199,9 @@ if (!function_exists('resideo_get_page_header')):
                                                     <div class="row">
                                                         <div class="col-sm-12 col-md-8 col-lg-6">
                                                             <div class="pxp-caption-prop-title"><?php echo esc_html($obj['title']); ?></div>
+                                                            <div class="pxp-caption-prop-features mt-4"><?php echo esc_html($obj['subtitle']); ?></div>
                                                         </div>
                                                     </div>
-                                                    <div class="pxp-caption-prop-features mt-4"><?php echo esc_html($obj['subtitle']); ?></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -191,7 +210,7 @@ if (!function_exists('resideo_get_page_header')):
                                 } ?>
                             </div>
                             <div class="pxp-carousel-controls">
-                                <a class="pxp-carousel-control-prev" role="button" data-slide="prev">
+                                <a class="pxp-carousel-control-<?php echo esc_attr($prev_class); ?>" role="button" data-slide="<?php echo esc_attr($prev_class); ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                         <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
                                             <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
@@ -200,7 +219,7 @@ if (!function_exists('resideo_get_page_header')):
                                         </g>
                                     </svg>
                                 </a>
-                                <a class="pxp-carousel-control-next" role="button" data-slide="next">
+                                <a class="pxp-carousel-control-<?php echo esc_attr($next_class); ?>" role="button" data-slide="<?php echo esc_attr($next_class); ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                         <g id="Symbol_1_1" data-name="Symbol 1 – 1" transform="translate(-1847.5 -1589.086)">
                                             <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
@@ -254,6 +273,13 @@ if (!function_exists('resideo_get_page_header')):
                     $timer = floatval($interval) - 0.6;
                 }
 
+                $prev_class = 'prev';
+                $next_class = 'next';
+                if (is_rtl()) {
+                    $prev_class = 'next';
+                    $next_class = 'prev';
+                }
+
                 if ($timer) { ?>
                     <input type="hidden" class="pxp-hero-props-carousel-1-timer" value="<?php echo esc_attr($timer); ?>">
                 <?php }
@@ -305,6 +331,8 @@ if (!function_exists('resideo_get_page_header')):
                                                             <?php $p_price = $obj->price;
                                                             $p_price_label = $obj->price_label;
 
+                                                            $currency_str = $currency;
+
                                                             if (is_numeric($p_price)) {
                                                                 if ($decimals == '1') {
                                                                     $p_price = money_format('%!i', $p_price);
@@ -313,13 +341,13 @@ if (!function_exists('resideo_get_page_header')):
                                                                 }
                                                             } else {
                                                                 $p_price_label = '';
-                                                                $currency = '';
+                                                                $currency_str = '';
                                                             }
 
                                                             if ($currency_pos == 'before') {
-                                                                echo esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
+                                                                echo esc_html($currency_str) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
                                                             } else {
-                                                                echo esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
+                                                                echo esc_html($p_price) . esc_html($currency_str) . ' <span>' . esc_html($p_price_label) . '</span>';
                                                             } ?>
                                                         </div>
                                                     </div>
@@ -345,7 +373,7 @@ if (!function_exists('resideo_get_page_header')):
                                     </div>
                                 </div>
                                 <div class="pxp-carousel-controls">
-                                    <a class="pxp-carousel-control-prev" role="button" data-slide="prev">
+                                    <a class="pxp-carousel-control-<?php echo esc_attr($prev_class); ?>" role="button" data-slide="<?php echo esc_attr($prev_class); ?>">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                             <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
                                                 <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
@@ -354,7 +382,7 @@ if (!function_exists('resideo_get_page_header')):
                                             </g>
                                         </svg>
                                     </a>
-                                    <a class="pxp-carousel-control-next" role="button" data-slide="next">
+                                    <a class="pxp-carousel-control-<?php echo esc_attr($next_class); ?>" role="button" data-slide="<?php echo esc_attr($next_class); ?>">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                             <g id="Symbol_1_1" data-name="Symbol 1 – 1" transform="translate(-1847.5 -1589.086)">
                                                 <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
@@ -415,7 +443,7 @@ if (!function_exists('resideo_get_page_header')):
                                 </div>
 
                                 <div class="pxp-carousel-controls">
-                                    <a class="pxp-carousel-control-prev" role="button" data-slide="prev">
+                                    <a class="pxp-carousel-control-<?php echo esc_attr($prev_class); ?>" role="button" data-slide="<?php echo esc_attr($prev_class); ?>">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                             <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
                                                 <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
@@ -424,7 +452,7 @@ if (!function_exists('resideo_get_page_header')):
                                             </g>
                                         </svg>
                                     </a>
-                                    <a class="pxp-carousel-control-next" role="button" data-slide="next">
+                                    <a class="pxp-carousel-control-<?php echo esc_attr($next_class); ?>" role="button" data-slide="<?php echo esc_attr($next_class); ?>">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                             <g id="Symbol_1_1" data-name="Symbol 1 – 1" transform="translate(-1847.5 -1589.086)">
                                                 <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
@@ -442,6 +470,9 @@ if (!function_exists('resideo_get_page_header')):
                                         foreach ($slider_obj as $obj) {
                                             $p_price = $obj->price;
                                             $p_price_label = $obj->price_label;
+
+                                            $currency_str = $currency;
+
                                             if (is_numeric($p_price)) {
                                                 if ($decimals == '1') {
                                                     $p_price = money_format('%!i', $p_price);
@@ -450,7 +481,7 @@ if (!function_exists('resideo_get_page_header')):
                                                 }
                                             } else {
                                                 $p_price_label = '';
-                                                $currency = '';
+                                                $currency_str = '';
                                             } ?>
                                             <div class="carousel-item <?php if($count == 0) { echo esc_attr('active'); } ?>" data-slide="<?php echo esc_attr($count); ?>">
                                                 <span></span>
@@ -458,9 +489,9 @@ if (!function_exists('resideo_get_page_header')):
                                                 <div class="pxp-price">
                                                     <span>
                                                     <?php if ($currency_pos == 'before') {
-                                                        echo esc_html($currency) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
+                                                        echo esc_html($currency_str) . esc_html($p_price) . ' <span>' . esc_html($p_price_label) . '</span>';
                                                     } else {
-                                                        echo esc_html($p_price) . esc_html($currency) . ' <span>' . esc_html($p_price_label) . '</span>';
+                                                        echo esc_html($p_price) . esc_html($currency_str) . ' <span>' . esc_html($p_price_label) . '</span>';
                                                     } ?>
                                                     </span>
                                                 </div>
@@ -482,10 +513,11 @@ if (!function_exists('resideo_get_page_header')):
 
                 break;
             case 'image':
-                $caption_title = get_post_meta($header_info['post_id'], 'page_header_image_caption_title', true);
+                $caption_title    = get_post_meta($header_info['post_id'], 'page_header_image_caption_title', true);
                 $caption_subtitle = get_post_meta($header_info['post_id'], 'page_header_image_caption_subtitle', true);
-                $opacity = get_post_meta($header_info['post_id'], 'page_header_image_opacity', true);
-                $show_search = get_post_meta($header_info['post_id'], 'page_header_image_show_search', true);
+                $opacity          = get_post_meta($header_info['post_id'], 'page_header_image_opacity', true);
+                $show_search      = get_post_meta($header_info['post_id'], 'page_header_image_show_search', true);
+                $status_type      = get_post_meta($header_info['post_id'], 'page_header_image_search_status_type', true);
                 $caption_position = get_post_meta($header_info['post_id'], 'page_header_image_caption_position', true);
 
                 $image = get_post_meta($header_info['post_id'], 'page_header_image', true);
@@ -496,10 +528,18 @@ if (!function_exists('resideo_get_page_header')):
                 if ($caption_position == 'bottom') {
                     $caption_class = 'pxp-hero-caption-bottom-left container';
                     $caption_container_class = '';
-                } 
+                }
+                if ($caption_position == 'left') {
+                    $caption_class = 'pxp-hero-caption-left container';
+                    $caption_container_class = '';
+                }
 
                 $hero_height = get_post_meta($header_info['post_id'], 'page_header_image_height', true);
 
+                $hero_search_class = '';
+                if ($status_type == 'tabs') {
+                    $hero_search_class = 'pxp-has-tabs-margin';
+                }
 
                 $no_form_class = '';
                 if ($show_search != '1') {
@@ -515,9 +555,9 @@ if (!function_exists('resideo_get_page_header')):
                             <p class="pxp-text-light text-white mb-0"><?php echo esc_html($caption_subtitle); ?></p>
 
                             <?php if ($show_search == '1') { ?>
-                                <div class="hero-search">
+                                <div class="hero-search <?php echo esc_attr($hero_search_class); ?>">
                                     <?php if (function_exists('resideo_get_search_properties_form')) {
-                                        resideo_get_search_properties_form();
+                                        resideo_get_search_properties_form($status_type);
                                     } ?>
                                 </div>
                             <?php } ?>
@@ -530,11 +570,12 @@ if (!function_exists('resideo_get_page_header')):
                         <div class="pxp-hero-caption <?php echo esc_attr($caption_class); ?> <?php echo esc_attr($no_form_class); ?>">
                             <div class="<?php echo esc_attr($caption_container_class); ?>">
                                 <h1 class="text-white"><?php echo esc_html($caption_title); ?></h1>
+                                <p class="pxp-text-light text-white mb-0"><?php echo esc_html($caption_subtitle); ?></p>
     
                                 <?php if ($show_search == '1') { ?>
-                                    <div class="hero-search">
+                                    <div class="hero-search <?php echo esc_attr($hero_search_class); ?>">
                                         <?php if (function_exists('resideo_get_search_properties_form')) {
-                                            resideo_get_search_properties_form();
+                                            resideo_get_search_properties_form($status_type);
                                         } ?>
                                     </div>
                                 <?php } ?>
@@ -544,6 +585,65 @@ if (!function_exists('resideo_get_page_header')):
                 <?php }
 
                 break;
+            case 'video':
+                $caption_title    = get_post_meta($header_info['post_id'], 'page_header_video_caption_title', true);
+                $caption_subtitle = get_post_meta($header_info['post_id'], 'page_header_video_caption_subtitle', true);
+                $opacity          = get_post_meta($header_info['post_id'], 'page_header_video_opacity', true);
+                $show_search      = get_post_meta($header_info['post_id'], 'page_header_video_show_search', true);
+                $status_type      = get_post_meta($header_info['post_id'], 'page_header_video_search_status_type', true);
+                $caption_position = get_post_meta($header_info['post_id'], 'page_header_video_caption_position', true);
+
+                $caption_class = '';
+                $caption_container_class = 'container';
+                if ($caption_position == 'bottom') {
+                    $caption_class = 'pxp-hero-caption-bottom-left container';
+                    $caption_container_class = '';
+                }
+                if ($caption_position == 'left') {
+                    $caption_class = 'pxp-hero-caption-left container';
+                    $caption_container_class = '';
+                }
+
+                $no_form_class = '';
+                if ($show_search != '1') {
+                    $no_form_class = 'pxp-no-form';
+                }
+
+                $hero_search_class = '';
+                if ($status_type == 'tabs') {
+                    $hero_search_class = 'pxp-has-tabs-margin';
+                }
+
+                $video_id = get_post_meta($header_info['post_id'], 'page_header_video_id', true);
+                $video_sound = get_post_meta($header_info['post_id'], 'page_header_video_sound', true);
+
+                $cover = get_post_meta($header_info['post_id'], 'page_header_video_cover', true);
+                $cover_src = wp_get_attachment_image_src($cover, 'pxp-full'); ?>
+
+                <div class="pxp-hero pxp-has-video vh-100">
+                    <?php if ($cover_src !== false) { ?>
+                        <div class="pxp-hero-video-cover" style="background-image: url(<?php echo esc_url($cover_src[0]); ?>)"></div>
+                    <?php } ?>
+                    <div class="pxp-hero-video" data-id="<?php echo esc_attr($video_id); ?>" data-sound="<?php echo esc_attr($video_sound); ?>">
+                        <div class="pxp-screen mute" id="pxp-hero-video"></div>
+                    </div>
+                    <div class="pxp-hero-opacity" style="background: rgba(0,0,0,<?php print esc_attr($opacity); ?>);"></div>
+                    <div class="pxp-hero-caption <?php echo esc_attr($caption_class); ?> <?php echo esc_attr($no_form_class); ?>">
+                        <div class="<?php echo esc_attr($caption_container_class); ?>">
+                            <h1 class="text-white"><?php echo esc_html($caption_title); ?></h1>
+                            <p class="pxp-text-light text-white mb-0"><?php echo esc_html($caption_subtitle); ?></p>
+
+                            <?php if ($show_search == '1') { ?>
+                                <div class="hero-search <?php echo esc_attr($hero_search_class); ?>">
+                                    <?php if (function_exists('resideo_get_search_properties_form')) {
+                                        resideo_get_search_properties_form($status_type);
+                                    } ?>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <?php break;
             case 'contact_form':
                 $caption_title = get_post_meta($header_info['post_id'], 'page_header_contact_form_caption_title', true);
                 $caption_subtitle = get_post_meta($header_info['post_id'], 'page_header_contact_form_caption_subtitle', true);
@@ -635,6 +735,13 @@ if (!function_exists('resideo_get_page_header')):
                                                                     <div class="col-sm-6">
                                                                         <div class="form-group">
                                                                             <input data-type="date_field" type="text" name="<?php echo esc_attr($key); ?>" id="<?php echo esc_attr($key); ?>" class="form-control pxp-js-hero-contact-field date-picker" data-mandatory="<?php echo esc_attr($value['mandatory']); ?>" data-label="<?php echo esc_attr($value['label']); ?>" placeholder="<?php echo esc_attr($value['label']); ?> <?php echo esc_attr($is_optional); ?>" />
+                                                                        </div>
+                                                                    </div>
+                                                                <?php break;
+                                                                default: ?>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <input type="text" data-type="text_input_field" name="<?php echo esc_attr($key); ?>" id="<?php echo esc_attr($key); ?>" class="form-control pxp-js-hero-contact-field" data-mandatory="<?php echo esc_attr($value['mandatory']); ?>" data-label="<?php echo esc_attr($value['label']); ?>" placeholder="<?php echo esc_attr($value['label']); ?> <?php echo esc_attr($is_optional); ?>" />
                                                                         </div>
                                                                     </div>
                                                                 <?php break;

@@ -123,7 +123,7 @@ if (!function_exists('resideo_get_autocomplete_properties')):
         $keyword = isset($_POST['keyword']) ? sanitize_text_field($_POST['keyword']) : '';
 
         $args = array(
-            'posts_per_page' => -1,
+            'posts_per_page' => 20,
             'post_type'      => 'property',
             'orderby'        => 'post_date',
             'order'          => 'DESC',

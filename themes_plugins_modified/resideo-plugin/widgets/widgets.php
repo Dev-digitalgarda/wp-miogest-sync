@@ -30,4 +30,6 @@ if (!function_exists('resideo_register_widgets')):
     }
 endif;
 add_action('widgets_init', 'resideo_register_widgets');
+
+add_filter('use_widgets_block_editor', '__return_false');
 ?>

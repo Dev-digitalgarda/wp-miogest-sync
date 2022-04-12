@@ -279,6 +279,9 @@
 .layout-radio.layout-radio-image label > span {
     background-image: url(../images/page-header-image-icon.png);
 }
+.layout-radio.layout-radio-video label > span {
+    background-image: url(../images/page-header-video-icon.png);
+}
 .layout-radio.layout-radio-contact_form label > span {
     background-image: url(../images/page-header-contact-form-icon.png);
 }
@@ -302,6 +305,12 @@
 }
 .layout-radio.layout-radio-no_map label > span {
     background-image: url(../images/properties-page-no-map-icon.png);
+}
+.layout-radio.layout-radio-sidebar_left label > span {
+    background-image: url(../images/properties-page-sidebar-left-icon.png);
+}
+.layout-radio.layout-radio-sidebar_right label > span {
+    background-image: url(../images/properties-page-sidebar-right-icon.png);
 }
 .new-slide-container,
 .new-office-container {
@@ -577,7 +586,8 @@
 }
 #page-header-section,
 #page-template-section,
-#page-contact-settings-section {
+#page-contact-settings-section,
+#page-contact-office-settings-section {
     display: none;
 }
 .page-edit-slider.ui-slider {
@@ -680,7 +690,8 @@
 .image-field.hide-image-field {
     display: none;
 }
-#contact_page_office_map {
+#contact_page_office_map,
+#contact_page_single_office_map {
     background: #e8e8e8;
     width: 100%;
     height: 314px;
@@ -775,7 +786,8 @@
     font-weight: bold;
     text-decoration: none;
 }
-#contact_page_office_position_btn {
+#contact_page_office_position_btn,
+#contact_page_single_office_position_btn {
     height: 62px;
     width: 40px;
 }

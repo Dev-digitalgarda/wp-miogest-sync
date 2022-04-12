@@ -230,7 +230,7 @@ if (!function_exists('resideo_search_properties')):
             uasort($custom_fields_settings, "resideo_compare_position");
 
             foreach ($custom_fields_settings as $key => $value) {
-                if ($value['search'] == 'yes') {
+                if ($value['search'] == 'yes' || $value['filter'] == 'yes') {
                     if ($value['type'] == 'interval_field') {
                         $field_min = isset($_GET[$key . '_min']) ? sanitize_text_field($_GET[$key . '_min']) : '';
                         $field_max = isset($_GET[$key . '_max']) ? sanitize_text_field($_GET[$key . '_max']) : '';
@@ -604,6 +604,7 @@ if (!function_exists('resideo_get_searched_properties')):
                     }
                 }
             }
+
         }
 
         $resideo_general_settings = get_option('resideo_general_settings');
@@ -619,7 +620,6 @@ if (!function_exists('resideo_get_searched_properties')):
         $props = array();
 
         $query = new WP_Query($args);
-        echo '<div style="position: fixed; top: 200; left: 200; z-index: 100; background: red">'.$query->found_posts.'</div>';
 
         while ($query->have_posts()) {
             $query->the_post();

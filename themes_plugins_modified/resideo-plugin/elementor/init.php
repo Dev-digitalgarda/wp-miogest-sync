@@ -52,6 +52,8 @@ final class Elementor_Resideo_Extension {
         require_once(__DIR__ . '/widgets/gallery_carousel.php');
         require_once(__DIR__ . '/widgets/numbers.php');
         require_once(__DIR__ . '/widgets/awards.php');
+        require_once(__DIR__ . '/widgets/contact.php');
+        require_once(__DIR__ . '/widgets/video.php');
 
         // Register widgets
         $widgets_manager = \Elementor\Plugin::instance()->widgets_manager;
@@ -72,6 +74,8 @@ final class Elementor_Resideo_Extension {
         $widgets_manager->register_widget_type(new \Elementor_Resideo_Gallery_Carousel_Widget());
         $widgets_manager->register_widget_type(new \Elementor_Resideo_Numbers_Widget());
         $widgets_manager->register_widget_type(new \Elementor_Resideo_Awards_Widget());
+        $widgets_manager->register_widget_type(new \Elementor_Resideo_Contact_Widget());
+        $widgets_manager->register_widget_type(new \Elementor_Resideo_Video_Widget());
     }
 }
 

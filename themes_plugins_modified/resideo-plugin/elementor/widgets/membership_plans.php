@@ -46,7 +46,7 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Subtitle', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'input_type' => 'string',
                 'placeholder' => __('Enter subtitle', 'resideo'),
             ]
@@ -68,8 +68,8 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
                 'label' => __('Plans Title Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -83,8 +83,8 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
                 'label' => __('Plans Price Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -98,8 +98,8 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
                 'label' => __('Plans CTA Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -113,8 +113,8 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
                 'label' => __('Featured Plan Title Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -128,8 +128,8 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
                 'label' => __('Featured Plan Price Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -143,8 +143,8 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
                 'label' => __('Featured Plan CTA Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -158,8 +158,8 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
                 'label' => __('Featured Plan Label Color', 'resideo'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'scheme' => [
-                    'type' => \Elementor\Scheme_Color::get_type(),
-                    'value' => \Elementor\Scheme_Color::COLOR_1,
+                    'type' => \Elementor\Core\Schemes\Color::get_type(),
+                    'value' => \Elementor\Core\Schemes\Color::COLOR_1,
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .title' => 'color: {{VALUE}}',
@@ -231,7 +231,7 @@ class Elementor_Resideo_Membership_Plans_Widget extends \Elementor\Widget_Base {
 
         <div class="container <?php echo esc_attr($margin_class); ?>">
             <h2 class="pxp-section-h2 text-center"><?php echo esc_html($settings['title']); ?></h2>
-            <p class="pxp-text-light text-center"><?php echo esc_html($settings['subtitle']); ?></p>
+            <div class="pxp-text-light text-center"><?php echo $settings['subtitle']; ?></div>
             <div class="row justify-content-center mt-5">
                 <?php $plans_total = count($posts);
                 $column_class = 'col-sm-12 col-md-6 col-lg-4';

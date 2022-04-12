@@ -127,6 +127,30 @@
                                             '</div>'+ 
                                         '</div>' + 
                                         '<div class="row">' + 
+                                            '<div class="col-xs-12 col-md-6 rtl-pull-right">' + 
+                                                '<div class="form-group">' + 
+                                                    '<label>' + sh_vars.layout_label + '</label>' + 
+                                                    '<div class="layout-radio-container" id="sh-areas-layout">' + 
+                                                        '<div class="layout-radio layout-radio-areas-1"><label class="';
+            if (getObjectProperty(short, "layout") == '1' || getObjectProperty(short, "layout") == '') {
+                modalContent += 
+                                                            'layout-active';
+            }
+            modalContent += 
+                                                        '"><input type="radio" name="sh_areas_layout" value="1"><span><span class="fa fa-check"></span></span></label></div>' + 
+                                                        '<div class="layout-radio layout-radio-areas-2"><label class="';
+            var caption_position_style = '';
+            if (getObjectProperty(short, "layout") == '2') {
+                caption_position_style = 'display: none;';
+                modalContent += 
+                                                            'layout-active';
+            }
+            modalContent += 
+                                                        '"><input type="radio" name="sh_areas_layout" value="2"><span><span class="fa fa-check"></span></span></label></div>' + 
+                                                        '<div class="clearfix"></div>' + 
+                                                    '</div>'+ 
+                                                '</div>'+ 
+                                            '</div>' + 
                                             '<div class="col-xs-12 col-md-4 rtl-pull-right">' + 
                                                 '<div class="form-group">' + 
                                                     '<label for="sh-areas-margin">' + sh_vars.margin_label + '</label>';
@@ -318,8 +342,9 @@
                     'subtitle' : $('#sh-areas-subtitle').val(),
                     'cta_label': $('#sh-areas-cta-label').val(),
                     'cta_link' : $('#sh-areas-cta-link').val(),
-                    'cta_color' : $('#sh-areas-cta-color').val(),
+                    'cta_color': $('#sh-areas-cta-color').val(),
                     'margin'   : $('#sh-areas-margin').val(),
+                    'layout'   : $('#sh-areas-layout .layout-active > input').val(),
                     'areas'    : areas
                 }
                 var shortcodeStr = '[' + shortcodeTag + ' data_content="' + encodeURIComponent(JSON.stringify(shortVal)) + '"' + '][/' + shortcodeTag + ']';
@@ -330,6 +355,11 @@
                     $('#shortcode-modal').remove();
                 }, 100);
                 e.preventDefault();
+            });
+
+            $('#sh-areas-layout label').on('click', function() {
+                $('#sh-areas-layout label').removeClass('layout-active');
+                $(this).addClass('layout-active');
             });
 
             $('.sh-new-area-add-img').on('click', function(event) {
@@ -747,7 +777,7 @@
             tooltip: sh_vars.areas_title,
             onclick: function() {
                 editor.execCommand('res_areas_panel_popup', '', {
-                    data_content : '{ "title": "", "subtitle": "", "cta_label": "", "cta_link": "", "cta_color": "#333333", "margin": "no", "areas": [] }',
+                    data_content : '{ "title": "", "subtitle": "", "cta_label": "", "cta_link": "", "cta_color": "#333333", "margin": "no", "layout": "1", "areas": [] }',
                 });
             }
         });

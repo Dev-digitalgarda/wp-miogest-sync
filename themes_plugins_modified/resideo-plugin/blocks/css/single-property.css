@@ -30,4 +30,62 @@
     font-size: 13px;
     padding-bottom: 4px;
 }
-
+.pxp-single-property-list-modal .components-modal__header {
+    margin-bottom: 0;
+}
+.pxp-single-property-list-modal .pxp-properties-search-field input {
+    margin-bottom: 0;
+}
+.pxp-single-property-list-modal .pxp-properties-modal-search {
+    box-sizing: border-box;
+    border-bottom: 1px solid #e2e4e7;
+    padding: 16px;
+    background: #fff;
+    height: 64px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    margin: 0 -16px 16px;
+}
+.pxp-single-property-list-modal .pxp-properties-search-field {
+    position: relative;
+}
+.pxp-single-property-list-modal .pxp-properties-search-field span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 8px;
+}
+.pxp-single-property-list-modal .pxp-properties-search-field input {
+    padding-left: 24px !important;
+}
+.pxp-single-property-list-modal .pxp-properties-item {
+    font-size: 11px;
+    line-height: 16px;
+    padding: 6px 8px;
+    border: 1px solid #e2e4e7;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #444;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.pxp-single-property-list-modal .pxp-properties-item:hover {
+    border: 1px solid #00a0d2;
+}
+.pxp-single-property-list-modal .pxp-properties-item.is-selected {
+    background-color: #00a0d2;
+    border: 1px solid #00a0d2;
+    color: #fff;
+}
+.pxp-single-property-list-modal .is-property {
+    margin-bottom: 10px;
+}
+.wp-block-resideo-plugin-single-property .pxp-add-single-property-btn {
+    margin-bottom: 20px;
+}

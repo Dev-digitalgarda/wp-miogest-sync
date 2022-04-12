@@ -19,7 +19,8 @@ class Resideo_Social_Widget extends WP_Widget {
             'twitter'   => '',
             'linkedin'  => '',
             'pinterest' => '',
-            'instagram' => ''
+            'instagram' => '',
+            'youtube'   => ''
         );
 
         $instance = wp_parse_args((array) $instance, $defaults);
@@ -48,6 +49,10 @@ class Resideo_Social_Widget extends WP_Widget {
             <p>
                 <label for="' . esc_attr($this->get_field_id('pinterest')) . '">' . __('Pinterest Link', 'resideo') . ':</label>
                 <input type="text" class="widefat" id="' . esc_attr($this->get_field_id('pinterest')) . '" name="' . esc_attr($this->get_field_name('pinterest')) . '" value="' . esc_attr($instance['pinterest']) . '" />
+            </p>
+            <p>
+                <label for="' . esc_attr($this->get_field_id('youtube')) . '">' . __('YouTube Link', 'resideo') . ':</label>
+                <input type="text" class="widefat" id="' . esc_attr($this->get_field_id('youtube')) . '" name="' . esc_attr($this->get_field_name('youtube')) . '" value="' . esc_attr($instance['youtube']) . '" />
             </p>';
 
         print $display;
@@ -62,6 +67,7 @@ class Resideo_Social_Widget extends WP_Widget {
         $instance['twitter']   = sanitize_text_field($new_instance['twitter']);
         $instance['linkedin']  = sanitize_text_field($new_instance['linkedin']);
         $instance['pinterest'] = sanitize_text_field($new_instance['pinterest']);
+        $instance['youtube']   = sanitize_text_field($new_instance['youtube']);
 
         if (function_exists('icl_register_string')) {
             icl_register_string('resideo_social_widget', 'resideo_social_widget_title', sanitize_text_field($new_instance['title']));
@@ -70,6 +76,7 @@ class Resideo_Social_Widget extends WP_Widget {
             icl_register_string('resideo_social_widget', 'resideo_social_widget_twitter', sanitize_text_field($new_instance['twitter']));
             icl_register_string('resideo_social_widget', 'resideo_social_widget_linkedin', sanitize_text_field($new_instance['linkedin']));
             icl_register_string('resideo_social_widget', 'resideo_social_widget_pinterest', sanitize_text_field($new_instance['pinterest']));
+            icl_register_string('resideo_social_widget', 'resideo_social_widget_youtube', sanitize_text_field($new_instance['youtube']));
         }
 
         return $instance;
@@ -90,7 +97,7 @@ class Resideo_Social_Widget extends WP_Widget {
         $display .= '<div>';
 
         if ($instance['instagram']) {
-            if(function_exists('icl_t')) {
+            if (function_exists('icl_t')) {
                 $social_instagram = icl_t('resideo_social_widget', 'social_widget_instagram', $instance['instagram']);
             } else {
                 $social_instagram = $instance['instagram'];
@@ -110,7 +117,7 @@ class Resideo_Social_Widget extends WP_Widget {
         }
 
         if ($instance['twitter']) {
-            if(function_exists('icl_t')) {
+            if (function_exists('icl_t')) {
                 $social_twitter = icl_t('resideo_social_widget', 'social_widget_twitter', $instance['twitter']);
             } else {
                 $social_twitter = $instance['twitter'];
@@ -120,7 +127,7 @@ class Resideo_Social_Widget extends WP_Widget {
         }
 
         if ($instance['linkedin']) {
-            if(function_exists('icl_t')) {
+            if (function_exists('icl_t')) {
                 $social_linkedin = icl_t('resideo_social_widget', 'social_widget_linkedin', $instance['linkedin']);
             } else {
                 $social_linkedin = $instance['linkedin'];
@@ -130,13 +137,23 @@ class Resideo_Social_Widget extends WP_Widget {
         }
 
         if ($instance['pinterest']) {
-            if(function_exists('icl_t')) {
-                $social_pinterest = icl_t('resideo_social_widget', 'social_widget_google', $instance['pinterest']);
+            if (function_exists('icl_t')) {
+                $social_pinterest = icl_t('resideo_social_widget', 'social_widget_pinterest', $instance['pinterest']);
             } else {
                 $social_pinterest = $instance['pinterest'];
             }
 
             $display .= '<a href="' . esc_url($social_pinterest) . '" target="_blank"><span class="fa fa-pinterest"></span></a> ';
+        }
+
+        if (array_key_exists('youtube', $instance) && $instance['youtube'] != '') {
+            if (function_exists('icl_t')) {
+                $social_youtube = icl_t('resideo_social_widget', 'social_widget_youtube', $instance['youtube']);
+            } else {
+                $social_youtube = $instance['youtube'];
+            }
+
+            $display .= '<a href="' . esc_url($social_youtube) . '" target="_blank"><span class="fa fa-youtube-play"></span></a> ';
         }
 
         $display .= '</div>';

@@ -28,6 +28,10 @@ if (!function_exists('resideo_testimonials_shortcode')):
         $margin_class = $s_array['margin'] == 'yes' ? 'mt-100' : '';
         $layout = isset($s_array['layout']) ? $s_array['layout'] : '1';
 
+        $text_color = isset($s_array['text_color']) ? 'color: ' . $s_array['text_color'] : '';
+        $cta_color = isset($s_array['cta_color']) ? $s_array['cta_color'] : '';
+        $cta_id = uniqid();
+
         $args = array(
             'numberposts'      => -1,
             'post_type'        => 'testimonial',
@@ -44,11 +48,15 @@ if (!function_exists('resideo_testimonials_shortcode')):
                 $return_string = 
                     '<div class="pxp-testim-1 pt-100 pb-100 ' . esc_attr($margin_class) . ' pxp-cover" style="background-image: url(' . esc_url($photo_src) . ');">
                         <div class="pxp-testim-1-intro">
-                            <h2 class="pxp-section-h2">' . esc_html($s_array['title']) . '</h2>
-                            <p class="pxp-text-light">' . esc_html($s_array['subtitle']) . '</p>';
+                            <h2 class="pxp-section-h2" style="' . esc_attr($text_color) . '">' . esc_html($s_array['title']) . '</h2>
+                            <p class="pxp-text-light" style="' . esc_attr($text_color) . '">' . esc_html($s_array['subtitle']) . '</p>';
                 if ($s_array['cta_text'] != '') {
                     $return_string .=
-                            '<a href="' . esc_url($s_array['cta_link']) . '" class="pxp-primary-cta text-uppercase mt-2 mt-md-3 mt-lg-5 pxp-animate">' . esc_html($s_array['cta_text']) . '</a>';
+                            '<a href="' . esc_url($s_array['cta_link']) . '" class="pxp-primary-cta text-uppercase mt-2 mt-md-3 mt-lg-5 pxp-animate" id="cta-' . esc_attr($cta_id) . '" style="color: ' . esc_attr($cta_color) . '">' . esc_html($s_array['cta_text']) . '</a>';
+                    if ($cta_color != '') {
+                        $return_string .= 
+                            '<style>.pxp-primary-cta#cta-' . esc_attr($cta_id) . ':after { border-top: 2px solid ' . esc_html($cta_color) . '; }</style>';
+                    }
                 }
                 $return_string .=
                         '</div>
@@ -87,8 +95,8 @@ if (!function_exists('resideo_testimonials_shortcode')):
                         <div class="row no-gutters align-items-center">
                             <div class="col-md-6">
                                 <div class="pxp-testim-2-caption pt-100 pb-100">
-                                    <h2 class="pxp-section-h2">' . esc_html($s_array['title']) . '</h2>
-                                    <p class="pxp-text-light">' . esc_html($s_array['subtitle']) . '</p>
+                                    <h2 class="pxp-section-h2" style="' . esc_attr($text_color) . '">' . esc_html($s_array['title']) . '</h2>
+                                    <p class="pxp-text-light" style="' . esc_attr($text_color) . '">' . esc_html($s_array['subtitle']) . '</p>
                                     <div id="pxp-testim-2-caption-carousel" class="carousel slide pxp-testim-2-caption-carousel mt-4 mt-md-5" data-ride="carousel" data-pause="false" data-interval="7000">
                                         <div class="carousel-inner">';
                 $counter_1 = 0;
@@ -102,33 +110,60 @@ if (!function_exists('resideo_testimonials_shortcode')):
 
                     $return_string .= 
                                             '<div class="carousel-item ' . esc_attr($slide_active_1) . '" data-slide="' . esc_attr($counter_1) . '">
-                                                <div class="pxp-testim-2-item-message">' . esc_html($text) . '</div>
-                                                <div class="pxp-testim-2-item-name">' . esc_html($post['post_title']) . '</div>
-                                                <div class="pxp-testim-2-item-location">' . esc_html($location) . '</div>
+                                                <div class="pxp-testim-2-item-message" style="' . esc_attr($text_color) . '">' . esc_html($text) . '</div>
+                                                <div class="pxp-testim-2-item-name" style="' . esc_attr($text_color) . '">' . esc_html($post['post_title']) . '</div>
+                                                <div class="pxp-testim-2-item-location" style="' . esc_attr($text_color) . '">' . esc_html($location) . '</div>
                                             </div>';
                     $counter_1++;
                 }
+
                 $return_string .= 
                                         '</div>
                                         <div class="pxp-carousel-controls mt-4 mt-md-5">
-                                            <a class="pxp-carousel-control-prev" role="button" data-slide="prev">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
+                                            <a class="pxp-carousel-control-prev" role="button" data-slide="prev">';
+                if (is_rtl()) {
+                    $return_string .=
+                                                '<svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
+                                                    <g id="Symbol_1_1" data-name="Symbol 1 - 1" transform="translate(-1847.5 -1589.086)">
+                                                        <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_6" data-name="Line 3" x2="9" y2="9" transform="translate(1869.5 1590.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_7" data-name="Line 4" y1="9" x2="9" transform="translate(1869.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                    </g>
+                                                </svg>';
+                } else {
+                    $return_string .=
+                                                '<svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
                                                     <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
                                                         <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
                                                         <line id="Line_3" data-name="Line 3" x1="9" y2="9" transform="translate(1846.5 1587.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
                                                         <line id="Line_4" data-name="Line 4" x1="9" y1="9" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
                                                     </g>
-                                                </svg>
-                                            </a>
-                                            <a class="pxp-carousel-control-next" role="button" data-slide="next">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
-                                                    <g id="Symbol_1_1" data-name="Symbol 1 – 1" transform="translate(-1847.5 -1589.086)">
+                                                </svg>';
+                }
+                $return_string .=
+                                            '</a>
+                                            <a class="pxp-carousel-control-next" role="button" data-slide="next">';
+                if (is_rtl()) {
+                    $return_string .=
+                                                '<svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
+                                                    <g id="Group_30" data-name="Group 30" transform="translate(-1845.086 -1586.086)">
+                                                        <line id="Line_2" data-name="Line 2" x1="30" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_3" data-name="Line 3" x1="9" y2="9" transform="translate(1846.5 1587.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                        <line id="Line_4" data-name="Line 4" x1="9" y1="9" transform="translate(1846.5 1596.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
+                                                    </g>
+                                                </svg>';
+                } else {
+                    $return_string .=
+                                                '<svg xmlns="http://www.w3.org/2000/svg" width="32.414" height="20.828" viewBox="0 0 32.414 20.828">
+                                                    <g id="Symbol_1_1" data-name="Symbol 1 - 1" transform="translate(-1847.5 -1589.086)">
                                                         <line id="Line_5" data-name="Line 2" x2="30" transform="translate(1848.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
                                                         <line id="Line_6" data-name="Line 3" x2="9" y2="9" transform="translate(1869.5 1590.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
                                                         <line id="Line_7" data-name="Line 4" y1="9" x2="9" transform="translate(1869.5 1599.5)" fill="none" stroke="#333" stroke-linecap="round" stroke-width="2"/>
                                                     </g>
-                                                </svg>
-                                            </a>
+                                                </svg>';
+                }
+                $return_string .=
+                                            '</a>
                                         </div>
                                     </div>
                                 </div>

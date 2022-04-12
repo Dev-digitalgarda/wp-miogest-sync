@@ -46,7 +46,7 @@ class Elementor_Resideo_Numbers_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Subtitle', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXT,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'input_type' => 'string',
                 'placeholder' => __('Enter subtitle', 'resideo'),
             ]
@@ -148,7 +148,7 @@ class Elementor_Resideo_Numbers_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Text', 'resideo'),
                 'label_block' => true,
-                'type' => \Elementor\Controls_Manager::TEXTAREA,
+                'type' => \Elementor\Controls_Manager::WYSIWYG,
                 'placeholder' => __('Enter number text', 'resideo'),
             ]
         );
@@ -205,14 +205,14 @@ class Elementor_Resideo_Numbers_Widget extends \Elementor\Widget_Base {
             <div class="pxp-numbers pt-100 pb-100 <?php echo esc_attr($margin_class); ?>">
                 <div class="container">
                     <h2 class="pxp-section-h2"><?php echo esc_html($settings['title']); ?></h2>
-                    <p class="pxp-text-light"><?php echo esc_html($settings['subtitle']); ?></p>
+                    <div class="pxp-text-light"><?php echo $settings['subtitle']; ?></div>
                     <div class="row">
                         <?php foreach ($settings['numbers_list'] as $number) { ?>
                             <div class="col-sm-4">
                                 <div class="pxp-numbers-item mt-4 mt-md-5">
                                     <div class="pxp-numbers-item-number"><span class="numscroller" data-min="0" data-max="<?php echo esc_attr($number['number_sum']); ?>" data-delay="<?php echo esc_attr($number['number_delay']); ?>" data-increment="<?php echo esc_attr($number['number_increment']); ?>"></span><?php echo esc_html($number['number_sign']); ?></div>
                                     <div class="pxp-numbers-item-title"><?php echo esc_html($number['number_title']); ?></div>
-                                    <div class="pxp-numbers-item-text pxp-text-light"><?php echo esc_html($number['number_text']); ?></div>
+                                    <div class="pxp-numbers-item-text pxp-text-light"><?php echo $number['number_text']; ?></div>
                                 </div>
                             </div>
                         <?php } ?>
@@ -231,7 +231,7 @@ class Elementor_Resideo_Numbers_Widget extends \Elementor\Widget_Base {
                                             <div class="pxp-counters-fig-item">
                                                 <div class="pxp-numbers-item-number"><span class="numscroller" data-min="0" data-max="<?php echo esc_attr($number['number_sum']); ?>" data-delay="<?php echo esc_attr($number['number_delay']); ?>" data-increment="<?php echo esc_attr($number['number_increment']); ?>"></span><?php echo esc_html($number['number_sign']); ?></div>
                                                 <div class="pxp-numbers-item-title"><?php echo esc_html($number['number_title']); ?></div>
-                                                <div class="pxp-numbers-item-text pxp-text-light"><?php echo esc_html($number['number_text']); ?></div>
+                                                <div class="pxp-numbers-item-text pxp-text-light"><?php echo $number['number_text']; ?></div>
                                             </div>
                                         </div>
                                     <?php } ?>

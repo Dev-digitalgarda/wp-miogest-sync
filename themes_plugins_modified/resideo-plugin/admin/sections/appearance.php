@@ -8,9 +8,10 @@ if (!function_exists('resideo_admin_appearance')):
     function resideo_admin_appearance() {
         add_settings_section('resideo_appearance_section', __( 'Appearance', 'resideo' ), 'resideo_appearance_section_callback', 'resideo_appearance_settings');
         add_settings_field('resideo_theme_mode_field', __( 'Theme Mode', 'resideo' ), 'resideo_theme_mode_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
+        add_settings_field('resideo_header_background_field', __( 'Header Background', 'resideo' ), 'resideo_header_background_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
         add_settings_field('resideo_sidebar_field', __( 'Sidebar Position', 'resideo' ), 'resideo_sidebar_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
         add_settings_field('resideo_properties_per_page_field', __( 'Properties per Page', 'resideo' ), 'resideo_properties_per_page_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
-        add_settings_field('resideo_property_top_field', __( 'Property Page Top Element', 'resideo' ), 'resideo_property_top_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
+        add_settings_field('resideo_properties_per_page_agent_field', __( 'Properties per Page on Agent Profile', 'resideo' ), 'resideo_properties_per_page_agent_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
         add_settings_field('resideo_similar_field', __( 'Show Similar Properties on Property Page', 'resideo' ), 'resideo_similar_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
         add_settings_field('resideo_sticky_agent_cta_field', __( 'Make Contact Agent CTA Sticky on Property Page - Mobile View', 'resideo' ), 'resideo_sticky_agent_cta_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
         add_settings_field('resideo_agents_per_page_field', __( 'Agents per Page', 'resideo' ), 'resideo_agents_per_page_field_render', 'resideo_appearance_settings', 'resideo_appearance_section');
@@ -42,6 +43,32 @@ if (!function_exists('resideo_theme_mode_field_render')):
             $modes_select .= '<option value="' . esc_attr($key) . '"';
 
             if (isset($options['resideo_theme_mode_field']) && $options['resideo_theme_mode_field'] == $key) {
+                $modes_select .= 'selected="selected"';
+            }
+
+            $modes_select .= '>' . esc_html($value) . '</option>';
+        }
+
+        $modes_select .= '</select>';
+
+        print $modes_select;
+    }
+endif;
+
+if (!function_exists('resideo_header_background_field_render')): 
+    function resideo_header_background_field_render() { 
+        $options = get_option('resideo_appearance_settings');
+        $modes = array(
+            'transparent' => __('Transparent', 'resideo'),
+            'opaque' => __('Opaque', 'resideo'),
+        );
+
+        $modes_select = '<select id="resideo_appearance_settings[resideo_header_background_field]" name="resideo_appearance_settings[resideo_header_background_field]">';
+
+        foreach ($modes as $key => $value) {
+            $modes_select .= '<option value="' . esc_attr($key) . '"';
+
+            if (isset($options['resideo_header_background_field']) && $options['resideo_header_background_field'] == $key) {
                 $modes_select .= 'selected="selected"';
             }
 
@@ -88,30 +115,12 @@ if (!function_exists('resideo_properties_per_page_field_render')):
     <?php }
 endif;
 
-if (!function_exists('resideo_property_top_field_render')): 
-    function resideo_property_top_field_render() { 
-        $options = get_option('resideo_appearance_settings');
-        $elements = array(
-            'title'  => __('Title', 'resideo'),
-            'gallery' => __('Photo gallery', 'resideo'),
-        );
+if (!function_exists('resideo_properties_per_page_agent_field_render')): 
+    function resideo_properties_per_page_agent_field_render() { 
+        $options = get_option('resideo_appearance_settings'); ?>
 
-        $element_select = '<select id="resideo_appearance_settings[resideo_property_top_field]" name="resideo_appearance_settings[resideo_property_top_field]">';
-
-        foreach ($elements as $key => $value) {
-            $element_select .= '<option value="' . esc_attr($key) . '"';
-
-            if (isset($options['resideo_property_top_field']) && $options['resideo_property_top_field'] == $key) {
-                $element_select .= 'selected="selected"';
-            }
-
-            $element_select .= '>' . esc_html($value) . '</option>';
-        }
-
-        $element_select .= '</select>';
-
-        print $element_select;
-    }
+        <input id="resideo_appearance_settings[resideo_properties_per_page_agent_field]" type="number" step="1" min="1" style="width: 65px;" name="resideo_appearance_settings[resideo_properties_per_page_agent_field]" value="<?php if (isset($options['resideo_properties_per_page_agent_field'])) { echo esc_attr($options['resideo_properties_per_page_agent_field']); } ?>" />
+    <?php }
 endif;
 
 if (!function_exists('resideo_similar_field_render')): 

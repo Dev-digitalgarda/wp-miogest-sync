@@ -82,7 +82,7 @@ if (wp_script_is('gmaps', 'enqueued')) {
                             <div class="pxp-contact-form-response"></div>
                             <input type="hidden" id="pxp-contact-form-company-email" value="<?php echo esc_attr($email); ?>">
 
-                            <?php $contact_fields_settings = get_option('resideo_contact_fields_settings'); 
+                            <?php $contact_fields_settings = get_option('resideo_contact_fields_settings');
 
                             $has_fields = false;
                             if (is_array($contact_fields_settings)) {
@@ -164,11 +164,13 @@ if (wp_script_is('gmaps', 'enqueued')) {
                                     <div class="<?php echo esc_attr($field_column_class); ?>">
                                         <div class="form-group">
                                             <select class="custom-select" id="pxp-contact-form-reg">
-                                                <option value=""><?php esc_html_e('Motivo del contatto?', 'resideo'); ?></option>
-                                                <option value="<?php esc_attr_e('Richiesta informazioni immobili', 'resideo'); ?>"><?php esc_html_e('Richiesta informazioni immobili', 'resideo'); ?></option>
-                                                <option value="<?php esc_attr_e('Vendita immobile', 'resideo'); ?>"><?php esc_html_e('Vendita immobile', 'resideo'); ?></option>
-                                                <option value="<?php esc_attr_e('Domanda generale', 'resideo'); ?>"><?php esc_html_e('Domanda generale', 'resideo'); ?></option>
-                                               
+                                                <option value=""><?php esc_html_e('What is this regarding?', 'resideo'); ?></option>
+                                                <option value="<?php esc_attr_e('Customer support / feedback', 'resideo'); ?>"><?php esc_html_e('Customer support / feedback', 'resideo'); ?></option>
+                                                <option value="<?php esc_attr_e('Applying', 'resideo'); ?>"><?php esc_html_e('Applying', 'resideo'); ?></option>
+                                                <option value="<?php esc_attr_e('Press', 'resideo'); ?>"><?php esc_html_e('Press', 'resideo'); ?></option>
+                                                <option value="<?php esc_attr_e('Listings', 'resideo'); ?>"><?php esc_html_e('Listings', 'resideo'); ?></option>
+                                                <option value="<?php esc_attr_e('Partnerships', 'resideo'); ?>"><?php esc_html_e('Partnerships', 'resideo'); ?></option>
+                                                <option value="<?php esc_attr_e('General questions', 'resideo'); ?>"><?php esc_html_e('General questions', 'resideo'); ?></option>
                                             </select>
                                         </div>
                                     </div>
@@ -184,7 +186,7 @@ if (wp_script_is('gmaps', 'enqueued')) {
                             <?php } ?>
 
                             <a href="javascript:void(0);" class="btn pxp-contact-form-btn" data-custom="<?php echo esc_attr($has_fields); ?>">
-                                <span class="pxp-contact-form-btn-text"><?php esc_html_e('Send message', 'resideo'); ?></span>
+                                <span class="pxp-contact-form-btn-text"><?php esc_html_e('Send Message', 'resideo'); ?></span>
                                 <span class="pxp-contact-form-btn-sending"><img src="<?php echo esc_url(RESIDEO_PLUGIN_PATH . 'images/loader-light.svg'); ?>" class="pxp-loader pxp-is-btn" alt="..."> <?php esc_html_e('Sending...', 'resideo'); ?></span>
                             </a>
                             <?php wp_nonce_field('contact_form_page_ajax_nonce', 'contact_page_security', true, true); ?>
@@ -196,7 +198,7 @@ if (wp_script_is('gmaps', 'enqueued')) {
                                 <div class="col-6">
                                     <h2 class="pxp-section-h2"><?php esc_html_e('Our Locations', 'resideo'); ?></h2>
                                 </div>
-                                <div class="col-6 text-right">
+                                <div class="col-6 text-right pxp-contact-locations-select-container">
                                     <select class="custom-select pxp-contact-locations-select">
                                         <?php if (is_array($offices_list)) {
                                             foreach ($offices_list as $office) { ?>
