@@ -134,6 +134,17 @@ class Syncer
         return $fotos_str;
     }
 
+    private function getVideosFromAnnuncio(array $annuncio): ?string
+    {
+        $videos_str = null;
+
+        if (array_key_exists('Video', $annuncio)) {
+            $videos_str = $annuncio['Video'];
+        }
+
+        return $videos_str;
+    }
+
     private function addThumbnailToAnnuncio(array $post_ids, array $annuncio): void
     {
         if (array_key_exists('Foto', $annuncio) && is_array($annuncio['Foto'])) {
@@ -175,6 +186,7 @@ class Syncer
         return [
             'locality' => strtolower(str_replace(' ', '', $annuncio['Comune'])),
             'property_gallery' => $this->getFotosFromAnnuncio($annuncio),
+            'property_videos' => $this->getVideosFromAnnuncio($annuncio),
             'property_price' => !is_array($annuncio['Prezzo']) ? $annuncio['Prezzo'] : '',
             'property_price_reserved' => $annuncio['Prezzo_Riservato'] == '1' ? 'true' : 'false',
             'built_in' => !is_array($annuncio['Anno']) ? $annuncio['Anno'] : '',
