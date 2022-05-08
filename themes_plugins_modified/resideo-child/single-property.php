@@ -105,6 +105,11 @@ while (have_posts()) : the_post();
 
     $gallery = get_post_meta($prop_id, 'property_gallery', true);
     $photos  = array_slice(explode(',', $gallery), 1);
+    $videos_gallery = get_post_meta($prop_id, 'property_videos', true);
+    $videos = explode(',', $videos_gallery);
+    // $videos = array_map(function ($val) {
+    //     str_replace("/watch/", "/embed/", $val);
+    // }, explode(',', $videos_gallery));
 
 
     $floor_plans = get_post_meta($prop_id, 'property_floor_plans', true);
@@ -144,11 +149,65 @@ while (have_posts()) : the_post();
     $show_print = isset($general_settings['resideo_show_print_property_field']) ? $general_settings['resideo_show_print_property_field'] : '';
     $show_report = isset($general_settings['resideo_show_report_property_field']) ? $general_settings['resideo_show_report_property_field'] : ''; ?>
 
+    <!-- ADDED -->
+    <style>
+        .pswp__zoom-wrap {
+            text-align: center;
+
+
+        }
+
+        .pswp__zoom-wrap:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+
+        .wrapper {
+            line-height: 0;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 auto;
+            text-align: left;
+            z-index: 1045;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 */
+            padding-top: 25px;
+            height: 0;
+            width: 100%;
+
+
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        video {
+            width: 100% !important;
+            height: auto !important;
+        }
+    </style>
+
     <input type="hidden" name="single_id" id="single_id" value="<?php echo esc_attr($prop_id); ?>" />
     <input type="hidden" name="lat" id="lat" value="<?php echo esc_attr($lat); ?>" />
     <input type="hidden" name="lng" id="lng" value="<?php echo esc_attr($lng); ?>" />
     <input type="hidden" name="taxes" id="taxes" value="<?php echo esc_attr($taxes); ?>" />
     <input type="hidden" name="hoa_dues" id="hoa_dues" value="<?php echo esc_attr($hoa_dues); ?>" />
+
+
 
     <div class="pxp-content">
         <?php if ($top_element == 'title') { ?>
@@ -229,12 +288,12 @@ while (have_posts()) : the_post();
                                     $price_str = esc_html($currency) . esc_html($price) . ' <span>' . esc_html($price_label) . '</span>';
                                 } else {
                                     $price_str = esc_html($price) . esc_html($currency) . ' <span>' . esc_html($price_label) . '</span>';
-                                } 
-                                
+                                }
+
                                 if ($price_reserved) {
                                     $price_str = 'Prezzo riservato' . ' <span>' . esc_html($price_label) . '</span>';
                                 }
-                                
+
                                 echo $price_str; ?>
                             </div>
                         </div>
@@ -294,6 +353,21 @@ while (have_posts()) : the_post();
                             <figcaption itemprop="caption description"><?php echo esc_html($p_photo_info['caption']); ?></figcaption>
                         </figure>
                     <?php } ?>
+
+                    <!-- ADDED -->
+                    <!-- preso spunto da: https://codepen.io/euberdeveloper/pen/RwxdRxg -->
+                    <?php for ($i = 0; $i < count($videos); $i++) {
+                        $video = $videos[$i];
+                        $data_video = '<div class="wrapper"><div class="video-wrapper"><iframe class="pswp__video" width="960" height="640" src="' . $video . '" frameborder="0" allowfullscreen></iframe></div></div>';
+                    ?>
+                        <div class="photoswipe-item">
+                            <a href="#" data-size="1280x700" data-type="video" data-video='<?php echo $data_video ?>'>
+                                <!-- <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Image description" class="img-responsive"> -->
+                            </a>
+                        </div>
+                    <?php } ?>
+
+
                 </div>
                 <a href="javascript:void(0);" class="pxp-sp-gallery-btn"><?php esc_html_e('View Photos', 'resideo'); ?></a>
                 <div class="clearfix"></div>
@@ -350,16 +424,16 @@ while (have_posts()) : the_post();
                                 <?php } ?>
                             </div>
                             <div class="pxp-sp-top-price mt-3 mt-md-0">
-                            <?php if ($currency_pos == 'before') {
+                                <?php if ($currency_pos == 'before') {
                                     $price_str = esc_html($currency) . esc_html($price) . ' <span>' . esc_html($price_label) . '</span>';
                                 } else {
                                     $price_str = esc_html($price) . esc_html($currency) . ' <span>' . esc_html($price_label) . '</span>';
-                                } 
-                                
+                                }
+
                                 if ($price_reserved) {
                                     $price_str = 'Prezzo riservato' . ' <span>' . esc_html($price_label) . '</span>';
                                 }
-                                
+
                                 echo $price_str; ?>
                             </div>
                         </div>
