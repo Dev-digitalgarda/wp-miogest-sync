@@ -124,10 +124,11 @@ class Syncer
     {
         $fotos_str = null;
 
-        if (array_key_exists('Foto', $annuncio) && is_array($annuncio['Foto'])) {
+        if (array_key_exists('Foto', $annuncio)) {
+            $fotos = is_array($annuncio['Foto']) ? $annuncio['Foto'] : [$annuncio['Foto']];
             $fotos = array_map(function ($foto) {
-                return str_replace('https://img.miogest.com/', '',$foto);
-            }, $annuncio['Foto']);
+                return str_replace('https://img.miogest.com/', '', $foto);
+            }, $fotos);
             $fotos_str = implode(',', $fotos);
         }
 
@@ -139,7 +140,8 @@ class Syncer
         $videos_str = null;
 
         if (array_key_exists('Video', $annuncio)) {
-            $videos_str = $annuncio['Video'];
+            $videos = is_array($annuncio['Video']) ? $annuncio['Video'] : [$annuncio['Video']];
+            $videos_str = implode(',', $videos);
         }
 
         return $videos_str;

@@ -132,7 +132,8 @@ while (have_posts()) : the_post();
         }
     }
 
-    $video = get_post_meta($prop_id, 'property_video', true);
+    // $video = get_post_meta($prop_id, 'property_video', true);
+    $video = $videos[0] ? end(explode('/', $videos[0])) : null;
     $virtual_tour = get_post_meta($prop_id, 'property_virtual_tour', true);
 
     $lat = get_post_meta($prop_id, 'property_lat', true);
@@ -357,12 +358,11 @@ while (have_posts()) : the_post();
                     <!-- ADDED -->
                     <!-- preso spunto da: https://codepen.io/euberdeveloper/pen/RwxdRxg -->
                     <?php for ($i = 0; $i < count($videos); $i++) {
-                        $video = $videos[$i];
-                        $data_video = '<div class="wrapper"><div class="video-wrapper"><iframe class="pswp__video" width="960" height="640" src="' . $video . '" frameborder="0" allowfullscreen></iframe></div></div>';
+                        $youtubeVideo = $videos[$i];
+                        $data_video = '<div class="wrapper"><div class="video-wrapper"><iframe class="pswp__video" width="960" height="640" src="' . $youtubeVideo . '" frameborder="0" allowfullscreen></iframe></div></div>';
                     ?>
                         <div class="photoswipe-item">
                             <a href="#" data-size="1280x700" data-type="video" data-video='<?php echo $data_video ?>'>
-                                <!-- <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Image description" class="img-responsive"> -->
                             </a>
                         </div>
                     <?php } ?>
