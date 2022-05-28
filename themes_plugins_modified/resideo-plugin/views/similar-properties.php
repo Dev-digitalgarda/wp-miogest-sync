@@ -81,7 +81,7 @@ if (!function_exists('resideo_get_similar_properties')):
                             $p_link  = get_permalink($similar->ID);
 
                             $gallery     = get_post_meta($similar->ID, 'property_gallery', true);
-                            $photos      = explode(',', $gallery);
+                            $photos      = array_slice(explode(',', $gallery), 1);
                             //$first_photo = wp_get_attachment_image_src($photos[0], 'pxp-gallery');
                             $first_photo = $photos[0];
 
