@@ -22,6 +22,9 @@ In particular, the files that has been modified are:
 * On the resideo child theme:
    - `single-property.php`
 
+* On the resideo theme:
+   - `gallery.js`
+
 * On the resideo plugin:
    - `page-templates/property-search.php`
    - `shortcodes/featured_properties.php`
@@ -29,6 +32,8 @@ In particular, the files that has been modified are:
    - `views/contact-agent-modal.php`
 
 Almost all the modifications were about the fact that **resideo expected images to be attachments, local saved in the worpress site**. Instead, the photos are saved **by url provided by miogest**, so some little changes about that have been made by the first programmer. The other modification was done after the **thumbnail fix**, in practice, the first image is a thumbnail that should be removed in some places of the resideo plugin.
+
+**Note:** The resideo theme itself should not be edited, but it was the only way found to edit the gallery and make it support videos. In that folder, there are just the changed files, so during the migration in the production environment, this folder should be copied onto the old one, without deleting the old one.
 
 ### Plugin
 
@@ -74,6 +79,7 @@ The second programmer also solved the first issues:
 * Added `"Prezzo riservato"` instead of the price if the price is reserved. Before that, `0€` appeared. The issue was solved **by adding a meta prop `price_reserved` and by changing slightly the resideo theme/plugin**.
 * There was a problem because all the properties posts **had "in vendita" (for sale) as status in the taxonomies**
 * The taxonomies and terms for the properties **had been added manually to the db** and **the code used the specific ids** to connect xml annunci's categories with the taxonomies. It was not reproducible and very, very dumb. In addition all the languages' posts received the italian taxonomies, so filters worked only with the Italian language. All of this has been **rewritten from scratch**.
+* Adding a way to **parse the videos** from the xml and **show the videos in the website**. The video is shown using the default Resideo field to show it but, for future usage, in case of multiple videos, the gallery has been modified and should show all the videos in that case.
 
 ## Deployment
 
