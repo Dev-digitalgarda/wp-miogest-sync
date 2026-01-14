@@ -80,6 +80,7 @@ The second programmer also solved the first issues:
 * There was a problem because all the properties posts **had "in vendita" (for sale) as status in the taxonomies**
 * The taxonomies and terms for the properties **had been added manually to the db** and **the code used the specific ids** to connect xml annunci's categories with the taxonomies. It was not reproducible and very, very dumb. In addition all the languages' posts received the italian taxonomies, so filters worked only with the Italian language. All of this has been **rewritten from scratch**.
 * Adding a way to **parse the videos** from the xml and **show the videos in the website**. The video is shown using the default Resideo field to show it but, for future usage, in case of multiple videos, the gallery has been modified and should show all the videos in that case.
+* Adding `"Affitto"` to the *allowed property types*. A new record with that category was being excluded for that reason.
 
 ## Deployment
 
