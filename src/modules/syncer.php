@@ -385,7 +385,8 @@ class Syncer
             "Terreno Edificabile",
             "Villa",
             "Villa Bifamiliare",
-            "Villetta schiera"
+            "Villetta schiera",
+            "Appartamento"
         ];
         // This is because there can be only one term for property type, so the affito ones are mapped to the vendita ones
         $this->map_affitto_property_types_to_in_vendita_ones = [];
