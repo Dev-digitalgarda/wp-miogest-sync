@@ -36,11 +36,58 @@ class Syncer
     private string $icl_translations_table;
     public array $miogest_sync_annunci_ids;
 
+    private function fetchXmlFromUrl(string $url): ?\SimpleXMLElement
+    {
+        libxml_use_internal_errors(true);
+
+        $resp = wp_remote_get($url, [
+            'timeout' => 30,
+            'redirection' => 5,
+            'headers' => [
+                'User-Agent' => 'wp-miogest-sync'
+            ]
+        ]);
+
+        if (is_wp_error($resp)) {
+            Logger::$logger->warning('Failed to fetch remote XML (wp_remote_get)', ['url' => $url, 'error' => $resp->get_error_message()]);
+            return null;
+        }
+
+        $code = wp_remote_retrieve_response_code($resp);
+        if ($code < 200 || $code >= 300) {
+            Logger::$logger->warning('Failed to fetch remote XML (bad HTTP code)', ['url' => $url, 'http_code' => $code]);
+            return null;
+        }
+
+        $body = wp_remote_retrieve_body($resp);
+        if (!$body) {
+            Logger::$logger->warning('Failed to fetch remote XML (empty body)', ['url' => $url]);
+            return null;
+        }
+
+        $xml = simplexml_load_string($body);
+        if ($xml === false) {
+            $errs = array_map(fn($e) => trim($e->message), libxml_get_errors() ?: []);
+            Logger::$logger->warning('Failed to parse remote XML', ['url' => $url, 'errors' => $errs]);
+            libxml_clear_errors();
+            return null;
+        }
+
+        libxml_clear_errors();
+        return $xml;
+    }
+
     private function fetchAnnunci(): void
     {
         Logger::$logger->debug('Fetching annunci');
         $urlAnnunci = "http://partner.miogest.com/agenzie/gardahomeproject.xml";
-        $xmlAnnunci = simplexml_load_file($urlAnnunci);
+        $xmlAnnunci = $this->fetchXmlFromUrl($urlAnnunci);
+
+        if (!$xmlAnnunci) {
+            Logger::$logger->warning('Unable to fetch annunci XML');
+            die("Unable to fetch annunci XML");
+        }
+
         $jsonAnnunci = json_encode($xmlAnnunci);
         $annunci = json_decode($jsonAnnunci, true);
         $this->annunci = $annunci['Annuncio'];
@@ -50,7 +97,13 @@ class Syncer
     {
         Logger::$logger->debug('Fetching categorie');
         $urlCategorie = "http://www.miogest.com/apps/revo.aspx?tipo=categorie";
-        $xmlCategorie = simplexml_load_file($urlCategorie);
+        $xmlCategorie = $this->fetchXmlFromUrl($urlCategorie);
+        
+        if (!$xmlCategorie) {
+            Logger::$logger->warning('Unable to fetch categorie XML. Will create property_type terms on demand.');
+            die("Unable to fetch categorie XML");
+        }
+
         $jsonCategorie = json_encode($xmlCategorie);
         $rawCategorie = json_decode($jsonCategorie, true)['cat'];
         $filteredCategorie = array_filter($rawCategorie, function ($categoria) {
@@ -87,7 +140,13 @@ class Syncer
     {
         Logger::$logger->debug('Fetching stati immobili');
         $urlSchedeImmobili = "http://www.miogest.com/apps/revo.aspx?tipo=schede";
-        $xmlSchedeImmobili = simplexml_load_file($urlSchedeImmobili);
+        $xmlSchedeImmobili = $this->fetchXmlFromUrl($urlSchedeImmobili);
+        
+        if (!$xmlSchedeImmobili) {
+            Logger::$logger->warning('Unable to fetch stati immobili XML. Field stato_immobile will be empty.');
+            die("Unable to fetch stati immobili XML");
+        }
+
         $jsonSchedeImmobili = json_encode($xmlSchedeImmobili);
         $schedeImmobili = json_decode($jsonSchedeImmobili, true)['scheda'];
         $schedaStatiImmobili = array_values(
